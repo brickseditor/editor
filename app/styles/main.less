@@ -1,5 +1,223 @@
 @import "../bower_components/bootstrap/less/bootstrap.less";
-@import "../bower_components/bootstrap/less/theme.less";
 
+// Bootstap variables
 @icon-font-path: "../bower_components/bootstrap/fonts/";
 
+@border-radius-base: 0;
+@border-radius-large: 0;
+@border-radius-small: 0;
+
+@navbar-height: 40px;
+@navbar-margin-bottom: 0;
+@navbar-default-color: #d0d0d0;
+@navbar-default-bg: #151515;
+
+@navbar-default-link-color: #d0d0d0;
+@navbar-default-link-hover-color: #b0b0b0;
+@navbar-default-link-hover-bg: #303030;
+@navbar-default-link-active-color: #b0b0b0;
+@navbar-default-link-active-bg: #303030;
+
+@nav-link-hover-bg: inherit;
+
+@nav-tabs-border-color: #505050;
+@nav-tabs-link-hover-border-color: #505050;
+@nav-tabs-active-link-hover-bg: inherit;
+@nav-tabs-active-link-hover-color: #b0b0b0;
+@nav-tabs-active-link-hover-border-color: #505050;
+@nav-tabs-justified-link-border-color: #505050;
+@nav-tabs-justified-active-link-border-color: #f5f5f5;
+
+@btn-default-color:              #151515;
+@btn-default-bg:                 #b0b0b0;
+@btn-default-border:             #b0b0b0;
+
+// Custom variables
+@sidebar-width: 240px;
+@panels-color: #f5f5f5;
+@panels-bg: #202020;
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+
+.container {
+  height: 100%;
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.navbar {
+  position: absolute;
+  width: 100%;
+}
+
+.navbar-brand {
+  width: @sidebar-width;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+.navbar-nav li {
+  margin-right: 1px;
+}
+
+.nav-tabs > li {
+  > a {
+    color: #f5f5f5;
+    &:hover {
+      border-bottom-color: @nav-tabs-justified-active-link-border-color;
+    }
+  }
+
+  &.active > a {
+    &,
+    &:hover,
+    &:focus {
+      border-bottom-color: @nav-tabs-justified-active-link-border-color;
+    }
+  }
+}
+
+.tab-content {
+  padding: (@padding-base-horizontal / 2);
+}
+
+#apps {
+  float: right;
+  padding-right: (@navbar-padding-vertical / 2) - 1;
+
+  .btn {
+    width: (@sidebar-width - @navbar-padding-vertical) / 2;
+  }
+}
+
+.sidebar {
+  background-color: @panels-bg;
+  color: @panels-color;
+  position: relative;
+  padding-top: (@navbar-height + 2px);
+  height: 100%;
+  width: @sidebar-width;
+
+  .toggle {
+    background-color: @panels-bg;
+    color: @panels-color;
+    border: 0;
+    position: absolute;
+    top: 50%;
+    padding: 0;
+    width: 16px;
+    height: 24px;
+    font-size: 12px;
+    font-family: 'Glyphicons Halflings';
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+#structure {
+  float: left;
+
+  &.closed {
+    margin-left: -@sidebar-width;
+  }
+
+  .toggle {
+    right: -16px;
+  }
+
+  .block {
+    background-color: #505050;
+    float: left;
+    padding: @padding-large-vertical 0;
+    margin: 2px;
+    width: 72px;
+    text-align: center;
+    cursor: move;
+
+    .icon,
+    .title {
+      display: block;
+      margin: 0 auto;
+      font-size: @font-size-small;
+    }
+    .title {
+      margin-top: (@line-height-computed / 3);
+    }
+  }
+}
+
+#details {
+  float: right;
+  padding: @padding-base-vertical @padding-base-horizontal;
+  padding-top: (@navbar-height + @padding-base-vertical);
+
+  &.closed {
+    margin-right: -@sidebar-width;
+  }
+
+  .toggle {
+    left: -16px;
+  }
+}
+
+#structure,
+#details .closed {
+  .toggle {
+    padding-right: 2px;
+    .glyphicon-arrow-left;
+  }
+}
+
+#details,
+#structure .closed {
+  .toggle {
+    padding-left: 2px;
+    .glyphicon-arrow-right;
+  }
+}
+
+#canvas {
+  padding: (@navbar-height + 2px) @sidebar-width 0 @sidebar-width;
+  width: 100%;
+  height: 100%;
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+}
+
+#database {
+  padding-top: (@navbar-height + 2px);
+
+  .tables {
+    background-color: @panels-bg;
+    .clearfix;
+
+    .nav-tabs {
+      float: left;
+    }
+  }
+  .actions {
+    padding: (@line-height-computed / 2);
+  }
+}
+
+#settings {
+  padding-top: (@navbar-height + @line-height-computed * 2);
+}
+
+#about {
+  padding: @navbar-height;
+  max-width: @container-tablet;
+  margin: 0 auto;
+}

@@ -1,0 +1,41 @@
+<div id="structure" class="sidebar">
+  <ul class="nav nav-tabs nav-justified">
+    <li class="active"><a href data-target="#blocks" data-toggle="tab">Blocks</a></li>
+    <li><a href data-target="#pages" data-toggle="tab">Pages</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade in active" id="blocks">
+      <div class="block" ng-repeat="i in [0, 1, 2, 3, 4, 5, 6]">
+        <img class="icon" src="http://placehold.it/32x32" width="32" height="32" alt="">
+        <span class="title">heading</span>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="pages">
+      <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="#">/</a></li>
+        <li><a href="#">/products</a></li>
+        <li><a href="#">/products/:id</a></li>
+      </ul>
+      <button class="btn btn-default btn-block">
+        <span class="glyphicon glyphicon-plus"></span>
+        New Page
+      </button>
+    </div>
+  </div>
+
+  <button class="toggle">
+  </button>
+</div>
+
+<div id="details" class="sidebar">
+  <p>Click on any element on the page to display its options here.</p>
+
+  <button class="toggle">
+  </button>
+</div>
+
+<div id="canvas">
+  <iframe src=""></iframe>
+</div>

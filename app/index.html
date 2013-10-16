@@ -25,7 +25,37 @@
       <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
 
-    <!-- Add your site or application content here -->
+    <div class="navbar navbar-default">
+      <div class="navbar-brand">BRICKS</div>
+      <ul class="nav navbar-nav">
+        <li activelink="active"><a href="#">Editor</a></li>
+        <li activelink="active"><a href="#/database">Database</a></li>
+        <li activelink="active"><a href="#/settings">Settings</a></li>
+        <li activelink="active"><a href="#/about">About</a></li>
+      </ul>
+
+      <div id="apps">
+        <div class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            Super App 1 <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Super App 2</a></li>
+            <li><a href="#">Super App 3</a></li>
+            <li class="divider"></li>
+            <li>
+              <a href="#">
+                <span class="glyphicon glyphicon-plus"></span>
+                New App
+              </a>
+            </li>
+          </ul>
+        </div>
+        <button class="btn btn-default navbar-btn">Preview</button>
+        <button class="btn btn-primary navbar-btn">Publish</button>
+      </div>
+    </div>
+
     <div class="container" ng-view=""></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -65,7 +95,11 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/controllers/database.js"></script>
+        <script src="scripts/controllers/editor.js"></script>
+        <script src="scripts/controllers/settings.js"></script>
+        <script src="scripts/directives/activelink.js"></script>
         <!-- endbuild -->
 </body>
 </html>
