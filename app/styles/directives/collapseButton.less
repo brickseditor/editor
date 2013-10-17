@@ -1,0 +1,81 @@
+.collapse-button {
+  background-color: @panels-bg;
+  color: @panels-color;
+  border: 0;
+  position: absolute;
+  top: 50%;
+  padding: 0;
+  width: 16px;
+  height: 24px;
+  font-size: 12px;
+  font-family: 'Glyphicons Halflings';
+  -webkit-font-smoothing: antialiased;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.collapse-button-parent.closed-add,
+.collapse-button-parent.closed-remove {
+  -webkit-transition: 0.2s linear all;
+  -moz-transition: 0.2s linear all;
+  -o-transition: 0.2s linear all;
+  transition: 0.2s linear all;
+}
+
+.collapse-button-parent.right {
+  &.closed,
+  &.closed-remove,
+  &.closed-add.closed-add-active {
+    margin-left: -@sidebar-width;
+
+    .collapse-button {
+      padding-left: 2px;
+      .glyphicon-arrow-right;
+    }
+  }
+
+  .collapse-button {
+    right: -16px;
+  }
+}
+
+.collapse-button-parent.left {
+  &.closed,
+  &.closed-remove,
+  &.closed-add.closed-add-active {
+    margin-right: -@sidebar-width;
+
+    .collapse-button {
+      padding-right: 2px;
+      .glyphicon-arrow-left;
+    }
+  }
+
+  .collapse-button {
+    left: -16px;
+  }
+}
+
+.collapse-button-parent.right,
+.collapse-button-parent.right.closed-add,
+.collapse-button-parent.right.closed-remove.closed-remove-active {
+  margin-left: 0;
+
+  .collapse-button {
+    padding-right: 2px;
+    .glyphicon-arrow-left;
+  }
+}
+
+.collapse-button-parent.left,
+.collapse-button-parent.left.closed-add,
+.collapse-button-parent.left.closed-remove.closed-remove-active {
+  margin-right: 0;
+
+  .collapse-button {
+    padding-left: 2px;
+    .glyphicon-arrow-right;
+  }
+}

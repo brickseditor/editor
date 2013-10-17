@@ -1,4 +1,5 @@
 @import "../bower_components/bootstrap/less/bootstrap.less";
+@import "directives/collapseButton.less";
 
 // Bootstap variables
 @icon-font-path: "../bower_components/bootstrap/fonts/";
@@ -106,32 +107,10 @@ body {
   padding-top: (@navbar-height + 2px);
   height: 100%;
   width: @sidebar-width;
-
-  .toggle {
-    background-color: @panels-bg;
-    color: @panels-color;
-    border: 0;
-    position: absolute;
-    top: 50%;
-    padding: 0;
-    width: 16px;
-    height: 24px;
-    font-size: 12px;
-    font-family: 'Glyphicons Halflings';
-    -webkit-font-smoothing: antialiased;
-  }
 }
 
 #structure {
   float: left;
-
-  &.closed {
-    margin-left: -@sidebar-width;
-  }
-
-  .toggle {
-    right: -16px;
-  }
 
   .block {
     background-color: #505050;
@@ -158,30 +137,6 @@ body {
   float: right;
   padding: @padding-base-vertical @padding-base-horizontal;
   padding-top: (@navbar-height + @padding-base-vertical);
-
-  &.closed {
-    margin-right: -@sidebar-width;
-  }
-
-  .toggle {
-    left: -16px;
-  }
-}
-
-#structure,
-#details .closed {
-  .toggle {
-    padding-right: 2px;
-    .glyphicon-arrow-left;
-  }
-}
-
-#details,
-#structure .closed {
-  .toggle {
-    padding-left: 2px;
-    .glyphicon-arrow-right;
-  }
 }
 
 #canvas {
