@@ -15,6 +15,10 @@ angular.module('bricksApp', ['ngAnimate', 'ngRoute'])
         templateUrl: 'views/database.html',
         controller: 'DatabaseCtrl'
       })
+      .when('/start', {
+        templateUrl: 'views/start.html',
+        controller: 'StartCtrl'
+      })
       .when('/settings', {
         templateUrl: 'views/settings.html',
         controller: 'SettingsCtrl'
@@ -22,4 +26,9 @@ angular.module('bricksApp', ['ngAnimate', 'ngRoute'])
       .otherwise({
         redirectTo: '/'
       });
+  })
+  .run(function (apps, $location) {
+    if (apps.all().length === 0) {
+      $location.path('/start');
+    }
   });
