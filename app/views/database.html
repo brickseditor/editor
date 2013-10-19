@@ -3,7 +3,7 @@
     <ul class="nav nav-tabs">
       <li ng-repeat="table in app.tables"
         ng-class="{active: table.name === currentTable.name}">
-        <a href="" ng-click="selectTable(table)">{{table.name}}</a>
+        <a href="" ng-click="selectTable($index)">{{table.name}}</a>
       </li>
     </ul>
     <button class="btn btn-link navbar-btn" ng-click="showModal.newTable = true">
@@ -29,9 +29,9 @@
       <ul class="dropdown-menu" role="menu" ng-show="showMenu.actions">
         <li><a href="" ng-click="showImportTableForm()">Import Rows</a></li>
         <li><a href="" ng-click="showExportTableForm()">Export Rows</a></li>
-        <li><a href="" ng-click="showRenameTableForm()">Rename Table</a></li>
+        <li><a href="" ng-click="showModal.changeTable = true">Rename Table</a></li>
         <li><a href="" ng-click="showEmptyTableForm()">Empty Table</a></li>
-        <li><a href="" ng-click="showDeleteTableForm()">Delete Table</a></li>
+        <li><a href="" ng-click="deleteTable(currentTable)">Delete Table</a></li>
       </ul>
     </div>
   </div>
@@ -62,18 +62,32 @@
     </tbody>
   </table>
 
-  <modal title="'New Database Table'" submit="addTable()"
+  <modal title="'New Table'" submit="addTable()"
     close="showModal.newTable = false" closeable="hasTables()"
     open="!hasTables() || showModal.newTable">
-    <form class="form-horizontal action-form" action=""
-      ng-submit="addTable()">
+    <form class="form-horizontal" action="" ng-submit="addTable()">
       <div class="form-group">
-        <label class="col-sm-4 control-label" for="settingsTableName">
+        <label class="col-sm-4 control-label" for="newTableName">
           Table Name
         </label>
         <div class="col-sm-8">
-          <input type="text" class="form-control" id="settingsTableName"
-          ng-model="table.name">
+          <input type="text" class="form-control" id="newTableName"
+          ng-model="newTable.name">
+        </div>
+      </div>
+    </form>
+  </modal>
+
+  <modal title="'Rename Table'" submit="updateTable()"
+    close="showModal.changeTable = false" open="showModal.changeTable">
+    <form class="form-horizontal" action="" ng-submit="updateTable()">
+      <div class="form-group">
+        <label class="col-sm-4 control-label" for="changeTableName">
+          New Table Name
+        </label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="changeTableName"
+          ng-model="changeTable.name">
         </div>
       </div>
     </form>

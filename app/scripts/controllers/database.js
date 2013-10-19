@@ -1,9 +1,8 @@
 'use strict';
 
 angular.module('bricksApp')
-  .controller('DatabaseCtrl', function ($scope, apps) {
+  .controller('DatabaseCtrl', function ($scope, $window, apps) {
     $scope.app = apps.current();
-    $scope.showModal = {newTable: false};
     $scope.showMenu = {actions: false};
     $scope.defaultColumns = [
       {
@@ -19,7 +18,10 @@ angular.module('bricksApp')
         type: 'date'
       }
     ];
-    $scope.table = {};
+    // Properties used in modals
+    $scope.showModal = {newTable: false, changeTable: false};
+    $scope.newTable = {};
+    $scope.changeTable = {};
 
     // Watch for changes to the current app and set the current table.
     $scope.appsService = apps;
@@ -27,7 +29,7 @@ angular.module('bricksApp')
       $scope.app = apps.current();
 
       if ($scope.app.tables) {
-        $scope.currentTable = $scope.app.tables[0];
+        $scope.selectTable(0);
       } else {
         $scope.app.tables = [];
       }
@@ -37,8 +39,10 @@ angular.module('bricksApp')
       return $scope.app.tables && $scope.app.tables.length > 0;
     };
 
-    $scope.selectTable = function (table) {
-      $scope.currentTable = table;
+    $scope.selectTable = function (i) {
+      $scope.currentTable = $scope.app.tables[i];
+      $scope.currentIndex = i;
+      $scope.changeTable = angular.copy($scope.currentTable);
     };
 
     $scope.isDefaultColumn = function (column) {
@@ -54,11 +58,30 @@ angular.module('bricksApp')
     // Set the table default columns, add it to the app tables array,
     // set it as the current table and hide the modal
     $scope.addTable = function () {
-      $scope.table.columns = angular.copy($scope.defaultColumns);
-      $scope.app.tables.push($scope.table);
+      $scope.newTable.columns = angular.copy($scope.defaultColumns);
+      var i = $scope.app.tables.push($scope.newTable) - 1;
+      $scope.selectTable(i);
       apps.update($scope.app);
-      $scope.currentTable = angular.copy($scope.table);
-      $scope.table = {};
+      $scope.newTable = {};
       $scope.showModal.newTable = false;
+    };
+
+    $scope.updateTable = function () {
+      $scope.currentTable.name = $scope.changeTable.name;
+      apps.update($scope.app);
+      $scope.showModal.changeTable = false;
+      $scope.showMenu.actions = false;
+    };
+
+    // Delete a table after confirmation
+    $scope.deleteTable = function (table) {
+      var confirmed = $window.confirm('Are you sure you want to delete the ' +
+                                      'table "' + table.name + '"?');
+      if (confirmed) {
+        $scope.app.tables.splice($scope.currentIndex, 1);
+        apps.update($scope.app);
+        $scope.currentTable = $scope.app.tables[0];
+      }
+      $scope.showMenu.actions = false;
     };
   });
