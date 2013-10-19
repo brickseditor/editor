@@ -5,18 +5,9 @@ angular.module('bricksApp')
     $scope.app = apps.current();
     $scope.showMenu = {actions: false};
     $scope.defaultColumns = [
-      {
-        name: 'id',
-        type: 'text'
-      },
-      {
-        name: 'created_at',
-        type: 'date'
-      },
-      {
-        name: 'updated_at',
-        type: 'date'
-      }
+      {name: 'id'},
+      {name: 'created_at'},
+      {name: 'updated_at'}
     ];
     // Properties used in modals
     $scope.showModal = {newTable: false, newColumn: false};
