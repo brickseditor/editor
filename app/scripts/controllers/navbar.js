@@ -26,12 +26,18 @@ angular.module('bricksApp')
 
     // Add an app and set it as the current one.
     $scope.addApp = function () {
-      $scope.apps.push($scope.app);
-      apps.add($scope.app);
-      apps.current($scope.app);
-      $scope.currentApp = $scope.app;
-      $scope.app = {};
-      $scope.showAppsModal = false;
+      var form = angular.element(document.newAppForm);
+
+      if (form.controller('form').$valid) {
+        $scope.apps.push($scope.app);
+        apps.add($scope.app);
+
+        apps.current($scope.app);
+        $scope.currentApp = $scope.app;
+
+        $scope.app = {};
+        $scope.showAppsModal = false;
+      }
     };
 
     // Set an app as the current one.

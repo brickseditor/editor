@@ -56,13 +56,19 @@ angular.module('bricksApp')
 
     // Set the table default columns, add it to the app tables array,
     // set it as the current table and hide the modal
-    $scope.addTable = function () {
-      $scope.newTable.columns = angular.copy($scope.defaultColumns);
-      var i = $scope.app.tables.push($scope.newTable) - 1;
-      $scope.selectTable(i);
-      apps.update($scope.app);
-      $scope.newTable = {};
-      $scope.showModal.newTable = false;
+    $scope.addTable = function (newTable) {
+      var form = angular.element(document.newTableForm);
+
+      if (form.controller('form').$valid) {
+        $scope.newTable.columns = angular.copy($scope.defaultColumns);
+
+        var i = $scope.app.tables.push(angular.copy($scope.newTable)) - 1;
+        apps.update($scope.app);
+        $scope.selectTable(i);
+
+        $scope.newTable = {};
+        $scope.showModal.newTable = false;
+      }
     };
 
     // Delete a table after confirmation
@@ -72,7 +78,7 @@ angular.module('bricksApp')
       if (confirmed) {
         $scope.app.tables.splice($scope.currentIndex, 1);
         apps.update($scope.app);
-        $scope.currentTable = $scope.app.tables[0];
+        $scope.selectTable(0);
       }
       $scope.showMenu.actions = false;
     };

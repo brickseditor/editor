@@ -37,7 +37,7 @@
 
   <modal title="'New App'" submit="addApp()" close="hideAppsModal()"
     open="showAppsModal">
-    <form class="form-horizontal" role="form"
+    <form class="form-horizontal" role="form" name="newAppForm"
       ng-submit="addApp()">
       <div class="form-group">
         <label for="input-new-app-name" class="col-lg-2 control-label">
@@ -45,7 +45,7 @@
         </label>
         <div class="col-lg-10">
           <input type="text" class="form-control" id="input-new-app-name"
-          ng-model="app.name">
+          ng-model="$parent.app.name" required name="name" validation-class>
         </div>
       </div>
     </form>

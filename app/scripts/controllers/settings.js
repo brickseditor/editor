@@ -9,7 +9,11 @@ angular.module('bricksApp')
     }, true);
 
     $scope.saveSettings = function () {
-      apps.update($scope.app);
+      var form = angular.element(document.settingsForm);
+
+      if (form.controller('form').$valid) {
+        apps.update($scope.app);
+      }
     };
 
     // Delete the app if the user confirms

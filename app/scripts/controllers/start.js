@@ -9,10 +9,14 @@ angular.module('bricksApp')
       $location.path('/').replace();
     }
 
+    $scope.app = {};
+
     // Creates an app, set it as the current one and redirect.
-    $scope.addApp = function (app) {
-      apps.add(app);
-      apps.current(app);
-      $location.path('/').replace();
+    $scope.addApp = function () {
+      if ($scope.newAppForm.$valid) {
+        apps.add($scope.app);
+        apps.current($scope.app);
+        $location.path('/').replace();
+      }
     };
   });

@@ -65,14 +65,22 @@
   <modal title="'New Table'" submit="addTable()"
     close="showModal.newTable = false" closeable="hasTables()"
     open="!hasTables() || showModal.newTable">
-    <form class="form-horizontal" action="" ng-submit="addTable()">
+    <form class="form-horizontal" action="" name="newTableForm"
+      ng-submit="addTable(newTable)">
       <div class="form-group">
         <label class="col-sm-4 control-label" for="newTableName">
           Table Name
         </label>
         <div class="col-sm-8">
-          <input type="text" class="form-control" id="newTableName"
-          ng-model="newTable.name">
+          <input type="text" class="form-control" id="newTableName" required
+          ng-model="$parent.newTable.name" name="name" validation-class
+          ng-pattern="/^[a-zA-Z_][a-zA-Z0-9_]*$/">
+          <span class="help-block">Must begin with a letter or underscore and
+            only contain letters, underscores or digits.</span>
+        </div>
+      </div>
+    </form>
+  </modal>
 
   <modal title="'New Column'" submit="addColumn()"
     close="showModal.newColumn = false" open="showModal.newColumn">

@@ -6,14 +6,14 @@
   anyone to build database-driven web and mobile applications in minutes.</p>
   <p>Get started by creating your first app:</p>
 
-  <form class="form-horizontal" role="form" ng-submit="addApp(app)">
+  <form class="form-horizontal" name="newAppForm" ng-submit="addApp()">
     <div class="form-group">
       <label for="input-new-app-name" class="col-lg-2 control-label">
         Name
       </label>
       <div class="col-lg-4">
         <input type="text" class="form-control" id="input-new-app-name"
-        ng-model="app.name" required>
+        ng-model="$parent.app.name" required name="name" validation-class>
       </div>
     </div>
     <div class="form-group">
