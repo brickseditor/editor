@@ -35,40 +35,19 @@
     </div>
   </div>
 
-  <div class="modal" id="new-app" ng-show="showAppsModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" ng-click="hideAppsModal()">
-            &times;
-          </button>
-          <h4 class="modal-title" id="new-app-header">New App</h4>
-        </div>
-        <div class="modal-body">
-          <form class="form-horizontal" role="form"
-            ng-submit="addApp(app);">
-            <div class="form-group">
-              <label for="input-new-app-name" class="col-lg-2 control-label">
-                Name
-              </label>
-              <div class="col-lg-10">
-                <input type="text" class="form-control" id="input-new-app-name"
-                ng-model="app.name">
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default"
-            ng-click="hideAppsModal()">
-            Close
-          </button>
-          <button type="button" class="btn btn-primary"
-            ng-click="addApp(app);">
-            Save changes
-          </button>
+  <modal title="'New App'" submit="addApp()" close="hideAppsModal()"
+    open="showAppsModal">
+    <form class="form-horizontal" role="form"
+      ng-submit="addApp()">
+      <div class="form-group">
+        <label for="input-new-app-name" class="col-lg-2 control-label">
+          Name
+        </label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="input-new-app-name"
+          ng-model="app.name">
         </div>
       </div>
-    </div>
-  </div>
+    </form>
+  </modal>
 </div>

@@ -5,6 +5,7 @@ angular.module('bricksApp')
     $scope.show = $location.path() !== '/start';
     $scope.showAppsMenu = false;
     $scope.showAppsModal = false;
+    $scope.app = {};
 
     // Watches for apps service for changes by others controllers and
     // updates the apps list and current app.
@@ -24,11 +25,11 @@ angular.module('bricksApp')
     });
 
     // Add an app and set it as the current one.
-    $scope.addApp = function (app) {
-      $scope.apps.push(app);
-      apps.add(app);
-      apps.current(app);
-      $scope.currentApp = app;
+    $scope.addApp = function () {
+      $scope.apps.push($scope.app);
+      apps.add($scope.app);
+      apps.current($scope.app);
+      $scope.currentApp = $scope.app;
       $scope.app = {};
       $scope.showAppsModal = false;
     };

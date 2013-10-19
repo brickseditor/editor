@@ -2,6 +2,7 @@
 
 angular.module('bricksApp')
   .controller('DatabaseCtrl', function ($scope, apps) {
+    $scope.app = apps.current();
     $scope.showModal = {newTable: false};
     $scope.showMenu = {actions: false};
     $scope.defaultColumns = [
@@ -18,6 +19,7 @@ angular.module('bricksApp')
         type: 'date'
       }
     ];
+    $scope.table = {};
 
     // Watch for changes to the current app and set the current table.
     $scope.appsService = apps;
@@ -32,7 +34,7 @@ angular.module('bricksApp')
     }, true);
 
     $scope.hasTables = function () {
-      return $scope.app.tables.length > 0;
+      return $scope.app.tables && $scope.app.tables.length > 0;
     };
 
     $scope.selectTable = function (table) {
@@ -51,11 +53,11 @@ angular.module('bricksApp')
 
     // Set the table default columns, add it to the app tables array,
     // set it as the current table and hide the modal
-    $scope.addTable = function (table) {
-      table.columns = angular.copy($scope.defaultColumns);
-      $scope.app.tables.push(table);
+    $scope.addTable = function () {
+      $scope.table.columns = angular.copy($scope.defaultColumns);
+      $scope.app.tables.push($scope.table);
       apps.update($scope.app);
-      $scope.currentTable = angular.copy(table);
+      $scope.currentTable = angular.copy($scope.table);
       $scope.table = {};
       $scope.showModal.newTable = false;
     };
