@@ -9,7 +9,7 @@ angular.module('bricksApp')
     // Watches for apps service for changes by others controllers and
     // updates the apps list and current app.
     $scope.appsService = apps;
-    $scope.$watch('appsService.all()', function (newVal, oldVal) {
+    $scope.$watch('appsService.all()', function () {
       $scope.apps = apps.all();
       $scope.currentApp = apps.current();
     }, true);

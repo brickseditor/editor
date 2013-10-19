@@ -42,6 +42,15 @@ angular.module('bricksApp')
         $window.localStorage.setItem(keyAll, JSON.stringify(apps));
       },
 
+      update: function (app) {
+        apps.forEach(function (a, i) {
+          if (a.id === app.id) {
+            apps[i] = angular.copy(app);
+            $window.localStorage.setItem(keyAll, JSON.stringify(apps));
+          }
+        });
+      },
+
       // Deletes the app which id was sent as parameter.
       remove: function (id) {
         apps.forEach(function (a, i) {
