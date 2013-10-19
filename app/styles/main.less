@@ -97,6 +97,10 @@ body {
   display: block;
 }
 
+.modal-dialog {
+  padding-top: (@navbar-height * 2);
+}
+
 // Custom styles.
 .sidebar {
   background-color: @panels-bg;
@@ -168,7 +172,7 @@ body {
 #about,
 #start,
 #settings {
-  padding: @navbar-height;
+  padding: @navbar-height 0;
   max-width: @container-tablet;
   margin: 0 auto;
 }
@@ -182,4 +186,10 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+
+.action-form {
+  max-width: 360px;
+  padding-top: @line-height-computed;
+  margin: 0 auto;
 }
