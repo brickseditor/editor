@@ -29,7 +29,6 @@
       <ul class="dropdown-menu" role="menu" ng-show="showMenu.actions">
         <li><a href="" ng-click="showImportTableForm()">Import Rows</a></li>
         <li><a href="" ng-click="showExportTableForm()">Export Rows</a></li>
-        <li><a href="" ng-click="showModal.changeTable = true">Rename Table</a></li>
         <li><a href="" ng-click="showEmptyTableForm()">Empty Table</a></li>
         <li><a href="" ng-click="deleteTable(currentTable)">Delete Table</a></li>
       </ul>
@@ -73,21 +72,6 @@
         <div class="col-sm-8">
           <input type="text" class="form-control" id="newTableName"
           ng-model="newTable.name">
-        </div>
-      </div>
-    </form>
-  </modal>
-
-  <modal title="'Rename Table'" submit="updateTable()"
-    close="showModal.changeTable = false" open="showModal.changeTable">
-    <form class="form-horizontal" action="" ng-submit="updateTable()">
-      <div class="form-group">
-        <label class="col-sm-4 control-label" for="changeTableName">
-          New Table Name
-        </label>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="changeTableName"
-          ng-model="changeTable.name">
         </div>
       </div>
     </form>

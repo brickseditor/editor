@@ -19,9 +19,8 @@ angular.module('bricksApp')
       }
     ];
     // Properties used in modals
-    $scope.showModal = {newTable: false, changeTable: false};
+    $scope.showModal = {newTable: false};
     $scope.newTable = {};
-    $scope.changeTable = {};
 
     // Watch for changes to the current app and set the current table.
     $scope.appsService = apps;
@@ -42,7 +41,6 @@ angular.module('bricksApp')
     $scope.selectTable = function (i) {
       $scope.currentTable = $scope.app.tables[i];
       $scope.currentIndex = i;
-      $scope.changeTable = angular.copy($scope.currentTable);
     };
 
     $scope.isDefaultColumn = function (column) {
@@ -64,13 +62,6 @@ angular.module('bricksApp')
       apps.update($scope.app);
       $scope.newTable = {};
       $scope.showModal.newTable = false;
-    };
-
-    $scope.updateTable = function () {
-      $scope.currentTable.name = $scope.changeTable.name;
-      apps.update($scope.app);
-      $scope.showModal.changeTable = false;
-      $scope.showMenu.actions = false;
     };
 
     // Delete a table after confirmation
