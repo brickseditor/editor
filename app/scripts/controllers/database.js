@@ -19,8 +19,9 @@ angular.module('bricksApp')
       }
     ];
     // Properties used in modals
-    $scope.showModal = {newTable: false};
+    $scope.showModal = {newTable: false, newColumn: false};
     $scope.newTable = {};
+    $scope.newColumn = {};
 
     // Watch for changes to the current app and set the current table.
     $scope.appsService = apps;
@@ -74,5 +75,26 @@ angular.module('bricksApp')
         $scope.currentTable = $scope.app.tables[0];
       }
       $scope.showMenu.actions = false;
+    };
+
+    // Add a column to the current table and hide the modal.
+    $scope.addColumn = function () {
+      var form = angular.element(document.newColumnForm);
+      if (form.controller('form').$valid) {
+        $scope.currentTable.columns.push(angular.copy($scope.newColumn));
+        apps.update($scope.app);
+        $scope.newColumn = {};
+        $scope.showModal.newColumn = false;
+      }
+    };
+
+    // Delete a column after confirmation.
+    $scope.deleteColumn = function (column, i) {
+      var confirmed = $window.confirm('Are you sure you want to delete the ' +
+                                      'column "' + column.name + '"?');
+      if (confirmed) {
+        $scope.currentTable.columns.splice(i, 1);
+        apps.update($scope.app);
+      }
     };
   });
