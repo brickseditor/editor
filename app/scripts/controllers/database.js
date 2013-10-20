@@ -1,23 +1,32 @@
 'use strict';
 
 angular.module('bricksApp')
-  .controller('DatabaseCtrl', function ($scope, $window, apps) {
-    $scope.app = apps.current();
+  .controller('DatabaseCtrl', function ($scope, $window, apps, Storage) {
     $scope.showMenu = {actions: false};
     $scope.defaultColumns = [
       {name: 'id'},
       {name: 'created_at'},
       {name: 'updated_at'}
     ];
+
+    $scope.app = apps.current();
+    $scope.currentTable = $scope.app.tables[0];
+    $scope.currentIndex = 0;
+
+    $scope.storage = new Storage($scope.app.id);
+    $scope.data = $scope.storage.getTable($scope.currentTable.name);
+
     // Properties used in modals
     $scope.showModal = {newTable: false, newColumn: false};
     $scope.newTable = {};
     $scope.newColumn = {};
+    $scope.newRow = {};
 
     // Watch for changes to the current app and set the current table.
     $scope.appsService = apps;
     $scope.$watch('appsService.current().id', function () {
       $scope.app = apps.current();
+      $scope.storage = new Storage($scope.app.id);
 
       if ($scope.app.tables) {
         $scope.selectTable(0);
@@ -33,6 +42,7 @@ angular.module('bricksApp')
     $scope.selectTable = function (i) {
       $scope.currentTable = $scope.app.tables[i];
       $scope.currentIndex = i;
+      $scope.data = $scope.storage.getTable($scope.currentTable.name);
     };
 
     $scope.isDefaultColumn = function (column) {
@@ -63,9 +73,10 @@ angular.module('bricksApp')
     };
 
     // Delete a table after confirmation
-    $scope.deleteTable = function (table) {
+    $scope.deleteTable = function () {
       var confirmed = $window.confirm('Are you sure you want to delete the ' +
-                                      'table "' + table.name + '"?');
+                                      'table "' + $scope.currentTable.name +
+                                      '"?');
       if (confirmed) {
         $scope.app.tables.splice($scope.currentIndex, 1);
         apps.update($scope.app);
@@ -93,5 +104,27 @@ angular.module('bricksApp')
         $scope.currentTable.columns.splice(i, 1);
         apps.update($scope.app);
       }
+    };
+
+    $scope.addRow = function () {
+      $scope.storage.addRow($scope.currentTable.name, $scope.newRow);
+      $scope.data.push($scope.newRow);
+      $scope.showModal.newRow = false;
+    };
+
+    $scope.deleteRow = function (row, i) {
+      $scope.storage.removeRow($scope.currentTable.name, row);
+      $scope.data.splice(i, 1);
+    };
+
+    $scope.emptyTable = function () {
+      var text = 'Are you sure you want to delete all the rows in the table "' +
+        $scope.currentTable.name + '"?';
+
+      if ($window.confirm(text)) {
+        $scope.storage.emptyTable($scope.currentTable.name);
+        $scope.data = [];
+      }
+      $scope.showMenu.actions = false;
     };
   });

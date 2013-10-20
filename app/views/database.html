@@ -13,7 +13,7 @@
   </div>
 
   <div class="actions" ng-if="hasTables()">
-    <button class="btn btn-default" ng-click="showNewRowForm()">
+    <button class="btn btn-default" ng-click="showModal.newRow = true">
       <span class="glyphicon glyphicon-plus"></span>
       Add Row
     </button>
@@ -29,38 +29,45 @@
       <ul class="dropdown-menu" role="menu" ng-show="showMenu.actions">
         <li><a href="" ng-click="showImportTableForm()">Import Rows</a></li>
         <li><a href="" ng-click="showExportTableForm()">Export Rows</a></li>
-        <li><a href="" ng-click="showEmptyTableForm()">Empty Table</a></li>
-        <li><a href="" ng-click="deleteTable(currentTable)">Delete Table</a></li>
+        <li><a href="" ng-click="emptyTable()">Empty Table</a></li>
+        <li><a href="" ng-click="deleteTable()">Delete Table</a></li>
       </ul>
     </div>
   </div>
 
-  <table class="table table-bordered" ng-if="hasTables()">
-    <thead>
-      <tr>
-        <th><input type="checkbox" /></th>
-        <th ng-repeat="column in currentTable.columns">
-          {{column.name}}
-          <a href="" class="text-danger" ng-click="deleteColumn(column, $index)"
-            ng-if="!isDefaultColumn(column)">
+  <div class="rows">
+    <table class="table table-bordered rows" ng-if="hasTables()">
+      <thead>
+        <tr>
+          <th></th>
+          <th ng-repeat="column in currentTable.columns">
+            {{column.name}}
+            <a href="" class="text-danger" ng-click="deleteColumn(column, $index)"
+              ng-if="!isDefaultColumn(column)">
+              <span class="glyphicon glyphicon-remove"></span>
+            </a>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="row in data">
+        <td>
+          <a href="" ng-click="deleteRow(row, $index)" class="text-danger">
             <span class="glyphicon glyphicon-remove"></span>
           </a>
-        </th>
+        </td>
+        <td ng-repeat="column in currentTable.columns">
+          {{row[column.name]}}
+        </td>
       </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="row in data[currentTable.name]">
-      <td>
-        <a href="" ng-click="deleteRow(row)">
-          <span class="glyphicon glyphicon-remove"></span>
-        </a>
-      </td>
-      <td ng-repeat="column in currentTable.columns">
-        {{row.attributes[column]}}
-      </td>
-    </tr>
-    </tbody>
-  </table>
+      <tr ng-show="data.length === 0">
+        <td colspan="{{currentTable.columns.length + 1}}" class="text-center">
+          No data in the selected table.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 
   <modal title="'New Table'" submit="addTable()"
     close="showModal.newTable = false" closeable="hasTables()"
@@ -96,6 +103,21 @@
           name="name" validation-class>
           <span class="help-block">Must begin with a letter or underscore and
             only contain letters, underscores or digits.</span>
+        </div>
+      </div>
+    </form>
+  </modal>
+
+  <modal title="'New Row'" submit="addRow()"
+    close="showModal.newRow = false" open="showModal.newRow">
+    <form class="form-horizontal" action="" ng-submit="addRow()">
+      <div class="form-group" ng-repeat="column in currentTable.columns">
+        <label class="col-sm-4 control-label" for="newRow_{{column.name}}">
+          {{column.name}}
+        </label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="newRow_{{column.name}}"
+          ng-model="newRow[column.name]" ng-disabled="isDefaultColumn(column)">
         </div>
       </div>
     </form>
