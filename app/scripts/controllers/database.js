@@ -10,11 +10,13 @@ angular.module('bricksApp')
     ];
 
     $scope.app = apps.current();
-    $scope.currentTable = $scope.app.tables[0];
-    $scope.currentIndex = 0;
-
     $scope.storage = new Storage($scope.app.id);
-    $scope.data = $scope.storage.getTable($scope.currentTable.name);
+
+    if ($scope.app.tables) {
+      $scope.currentIndex = 0;
+      $scope.currentTable = $scope.app.tables[0];
+      $scope.data = $scope.storage.getTable($scope.currentTable.name);
+    }
 
     // Properties used in modals
     $scope.showModal = {newTable: false, newColumn: false};
