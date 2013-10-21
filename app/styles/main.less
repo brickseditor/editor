@@ -114,7 +114,7 @@ body {
 #structure {
   float: left;
 
-  .block {
+  .component {
     background-color: #505050;
     float: left;
     padding: @padding-large-vertical 0;
@@ -131,6 +131,10 @@ body {
     }
     .title {
       margin-top: (@line-height-computed / 3);
+    }
+    .icon {
+      width: 32px;
+      height: 32px;
     }
   }
 }
@@ -151,6 +155,12 @@ body {
     height: 100%;
     border: 0;
   }
+}
+body.collapsed-right #canvas {
+  padding-left: 0;
+}
+body.collapsed-left #canvas {
+  padding-right: 0;
 }
 
 #database {
@@ -189,4 +199,11 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+
+.overlay {
+  display:block;
+  position:absolute;
+  box-shadow: inset 0 0 0 2px @brand-info;
+  pointer-events:none;
 }

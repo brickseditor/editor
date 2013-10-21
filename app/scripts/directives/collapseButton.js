@@ -7,6 +7,8 @@ angular.module('bricksApp')
       restrict: 'E',
       template: '<button class="collapse-button"></button>',
       link: function (scope, element, attrs) {
+        var body = angular.element('body');
+        var bodyClass = 'collapsed-' + attrs.position;
         var parentClasses = 'collapse-button-parent' + ' ' + attrs.position;
         var parent = element.parent().addClass(parentClasses);
         var open = true;
@@ -14,9 +16,13 @@ angular.module('bricksApp')
         element.bind('click', function () {
           open = !open;
           if (open) {
-            $animate.removeClass(parent, 'closed');
+            $animate.removeClass(parent, 'closed', function () {
+              body.removeClass(bodyClass);
+            });
           } else {
-            $animate.addClass(parent, 'closed');
+            $animate.addClass(parent, 'closed', function () {
+              body.addClass(bodyClass);
+            });
           }
         });
       }
