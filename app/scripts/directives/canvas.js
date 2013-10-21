@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('bricksApp')
-  .directive('canvas', function ($http) {
+  .directive('canvas', function () {
     return {
       replace: true,
       restrict: 'E',
+      scope: {template: '='},
       template: '<div id="canvas"><iframe src="about:blank"></iframe>' +
         '<overlay iframe="#canvas iframe"></overlay></div>',
-      link: function (scope, element) {
+      link: function (scope, element, attrs) {
         var hadDraggable, dragging;
         var page = element.find('iframe').contents();
 
@@ -73,7 +74,8 @@ angular.module('bricksApp')
           highlight.remove();
         };
 
-        // Insert element being dragged or component html.
+        // Insert element being dragged or component html and update
+        // template property of the scope.
         var drop = function (e) {
           var html;
 
@@ -87,14 +89,14 @@ angular.module('bricksApp')
           }
 
           highlight.remove();
-
           insert(html, e.target);
+          scope.template = '<!DOCTYPE html>' + page[0].documentElement.outerHTML;
 
           return false;
         };
 
         // Writes HTML code in the iframe and bind drop events.
-        var loadHTML = function (html) {
+        var displayHTML = function (html) {
           page[0].open();
           page[0].write(html);
           page[0].close();
@@ -108,11 +110,12 @@ angular.module('bricksApp')
           page.on('mouseout', destroyDraggable);
         };
 
-        // Load the default template.
-        $http.get('views/default-template.html', {cache: true})
-          .then(function (response) {
-            loadHTML(response.data);
-          });
+        // Display the template HTML code.
+        scope.$watch('template', function (template) {
+          if (template) {
+            displayHTML(template);
+          }
+        });
       }
     };
   });

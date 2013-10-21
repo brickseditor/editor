@@ -1,19 +1,23 @@
-<div id="structure" class="sidebar">
+<div id="structure" class="sidebar" ng-init="panel = 'components'">
   <ul class="nav nav-tabs nav-justified">
-    <li class="active"><a href>Components</a></li>
-    <li><a href>Pages</a></li>
+    <li ng-class="{active: panel === 'components'}">
+      <a href ng-click="loadPanel('components')">Components</a>
+    </li>
+    <li ng-class="{active: panel === 'pages'}">
+      <a href ng-click="loadPanel('pages')">Pages</a>
+    </li>
   </ul>
 
   <div class="tab-content">
-    <div class="tab-pane fade in active" id="components">
+    <div class="tab-pane" id="components" ng-class="{active: panel === 'components'}">
       <div class="component" ng-repeat="component in components"
-        draggable="true" html="component.html">
+        draggable="true" html="component.template">
         <img class="icon" ng-src="{{component.thumbnail}}" alt="">
         <span class="title">{{component.name}}</span>
       </div>
     </div>
 
-    <div class="tab-pane fade" id="pages">
+    <div class="tab-pane" id="pages" ng-class="{active: panel === 'pages'}">
       <ul class="nav nav-pills nav-stacked">
         <li class="active"><a href="#">/</a></li>
         <li><a href="#">/products</a></li>
@@ -35,4 +39,4 @@
   <collapse-button position="left">
 </div>
 
-<canvas></canvas>
+<canvas template="currentPage.template"></canvas>
