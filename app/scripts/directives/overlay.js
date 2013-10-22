@@ -10,15 +10,16 @@ angular.module('bricksApp')
       link: function (scope, element, attrs) {
         var iframe = angular.element(attrs.iframe);
         var page = iframe.contents();
-        var top = iframe[0].offsetTop;
-        var left = iframe[0].offsetLeft;
         var deleteButton = element.find('.delete');
         var target;
 
         // Set the overlay position and dimensions according to the
         // target element and the iframe.
         var show = function (target) {
+          var top = iframe[0].offsetTop;
+          var left = iframe[0].offsetLeft;
           var offset = angular.element(target).offset();
+
           element.css('display', 'block')
             .css('width', target.clientWidth + 'px')
             .css('height', target.clientHeight + 'px')

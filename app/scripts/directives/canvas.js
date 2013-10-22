@@ -85,7 +85,8 @@ angular.module('bricksApp')
 
           element.removeClass('bricks-empty');
 
-          if (parent && parent.text().trim() === '') {
+          if (parent && parent.text().trim() === '' &&
+             parent[0].nodeName !== 'BODY') {
             parent.addClass('bricks-empty');
           }
 
