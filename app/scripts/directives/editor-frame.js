@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bricksApp')
-  .directive('canvas', function () {
+  .directive('editorFrame', function () {
     return {
       replace: true,
       restrict: 'E',
