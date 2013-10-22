@@ -2,7 +2,7 @@
 
 // Apps management. Gets from localStorage and memoize.
 angular.module('bricksApp')
-  .factory('apps', function ($window) {
+  .service('apps', function ($window) {
     var keyAll = 'bricks_apps';
     var keyCurrent = 'bricks_current';
     var apps = $window.localStorage.getItem(keyAll);
