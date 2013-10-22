@@ -8,9 +8,10 @@ angular.module('bricksApp')
       scope: {template: '='},
       template: '<div id="canvas"><iframe src="about:blank"></iframe>' +
         '<overlay iframe="#canvas iframe"></overlay></div>',
-      link: function (scope, element, attrs) {
+      link: function (scope, element) {
         var hadDraggable, dragging;
         var page = element.find('iframe').contents();
+        var body;
 
         // Element inserted in the page for highlighting the place where
         // the dragged element will be inserted.
@@ -18,6 +19,11 @@ angular.module('bricksApp')
         // the element they are dragged over.
         var highlight = angular.element('<div style="width: 100%; height: 3px;' +
                                         'background:#428bca;">');
+
+        // CSS code inserted in the page to highlight empty elements
+        var style = angular.element('<style>');
+        style.append('.bricks-empty {min-height: 50px; min-width: 50px; ' +
+                     'border: 4px dashed #f0ad4e;}');
 
         // Makes an element on the page draggable, saves previous
         // draggable status and the element being dragged.
@@ -45,18 +51,46 @@ angular.module('bricksApp')
           }
         };
 
-        // Insert a node or HTML code into the body or after an element.
-        var insert = function (node, element) {
-          if ('HTML' === element.nodeName) {
-            element = page.find('body');
-          } else {
-            element = angular.element(element);
+        // Insert a node or HTML code after an element, into the body
+        // element or an empty one.
+        var insertNode = function (node, element) {
+          element = angular.element(element);
+
+          if ('HTML' === element[0].nodeName) {
+            element = body;
           }
 
-          if ('BODY' === element[0].nodeName) {
+          if ('BODY' === element[0].nodeName || element.is(':empty')) {
             element.append(node);
           } else {
             element.after(node);
+          }
+        };
+
+        // Inserts a component into the page.
+        // Adds empty class to the component or previous parent if necessary.
+        // Removes empty class from destination.
+        var insertComponent = function (node, element) {
+          var parent;
+
+          element = angular.element(element);
+
+          if (angular.isElement(node)) {
+            parent = node.parent();
+          } else {
+            node = angular.element(node);
+          }
+
+          insertNode(node, element);
+
+          element.removeClass('bricks-empty');
+
+          if (parent && parent.text().trim() === '') {
+            parent.addClass('bricks-empty');
+          }
+
+          if (node.text().trim() === '') {
+            node.addClass('bricks-empty');
           }
         };
 
@@ -64,7 +98,7 @@ angular.module('bricksApp')
         var dragover = function (e) {
           e.preventDefault();
           e.originalEvent.dataTransfer.dropEffect = 'move';
-          insert(highlight, e.target);
+          insertNode(highlight, e.target);
         };
 
         var dragleave = function () {
@@ -86,7 +120,7 @@ angular.module('bricksApp')
           }
 
           highlight.remove();
-          insert(html, e.target);
+          insertComponent(html, e.target);
           scope.template = '<!DOCTYPE html>' + page[0].documentElement.outerHTML;
 
           return false;
@@ -97,6 +131,10 @@ angular.module('bricksApp')
           page[0].open();
           page[0].write(html);
           page[0].close();
+
+          body = page.find('body');
+
+          page.find('head').append(style);
 
           page.on('dragover', dragover);
           page.on('dragleave', dragleave);
