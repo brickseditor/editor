@@ -60,14 +60,11 @@ angular.module('bricksApp')
           }
         };
 
-        var dragenter = function (e) {
-          insert(highlight, e.target);
-        };
-
         // This enable drop behaviour.
         var dragover = function (e) {
           e.preventDefault();
           e.originalEvent.dataTransfer.dropEffect = 'move';
+          insert(highlight, e.target);
         };
 
         var dragleave = function () {
@@ -101,7 +98,6 @@ angular.module('bricksApp')
           page[0].write(html);
           page[0].close();
 
-          page.on('dragenter', dragenter);
           page.on('dragover', dragover);
           page.on('dragleave', dragleave);
           page.on('drop', drop);
