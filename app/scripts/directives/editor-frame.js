@@ -10,8 +10,9 @@ angular.module('bricksApp')
         '<overlay iframe="#canvas iframe"></overlay></div>',
       link: function (scope, element) {
         var hadDraggable, dragging;
-        var page = element.find('iframe').contents();
-        var body;
+        var iframe = element.find('iframe');
+        var page = iframe.contents();
+        var body, template, selection;
 
         // Element inserted in the page for highlighting the place where
         // the dragged element will be inserted.
@@ -122,9 +123,25 @@ angular.module('bricksApp')
 
           highlight.remove();
           insertComponent(html, e.target);
-          scope.template = '<!DOCTYPE html>' + page[0].documentElement.outerHTML;
+
+          template = '<!DOCTYPE html>' + page[0].documentElement.outerHTML;
+          scope.template = template;
+          scope.$apply();
 
           return false;
+        };
+
+        var selectElement = function (e) {
+          if (['HTML', 'BODY'].indexOf(e.target.nodeName) > -1) {
+            return;
+          }
+
+          if (selection) {
+            selection.removeClass('bricks-selected');
+          }
+          selection = angular.element(e.target).addClass('bricks-selected');
+
+          scope.$emit('select', '#canvas iframe');
         };
 
         // Writes HTML code in the iframe and bind drop events.
@@ -136,6 +153,17 @@ angular.module('bricksApp')
           body = page.find('body');
 
           page.find('head').append(style);
+        };
+
+        // Display the template HTML code.
+        scope.$watch('template', function (val) {
+          if (val && val !== template) {
+            displayHTML(val);
+          }
+        });
+
+        iframe.on('load', function () {
+          page.on('click', selectElement);
 
           page.on('dragover', dragover);
           page.on('dragleave', dragleave);
@@ -143,13 +171,6 @@ angular.module('bricksApp')
 
           page.on('mouseover', makeDraggable);
           page.on('mouseout', destroyDraggable);
-        };
-
-        // Display the template HTML code.
-        scope.$watch('template', function (template) {
-          if (template) {
-            displayHTML(template);
-          }
         });
       }
     };

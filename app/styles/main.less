@@ -201,23 +201,24 @@ body.collapsed-left #canvas {
   }
 }
 
-.overlay {
+.overlay-highlight,
+.overlay-select {
   display:none;
   position:absolute;
   box-shadow: inset 0 0 0 2px @brand-info;
   pointer-events:none;
+}
 
-  .delete {
-    background-color: @brand-info;
-    color: #fff;
-    position: absolute;
-    top: auto;
-    right: 0;
-    bottom: -16px;
-    width: 20px;
-    height: 16px;
-    font-size: 10px;
-    text-align: center;
-    pointer-events: auto;
-  }
+.overlay-select .delete {
+  background-color: @brand-info;
+  color: #fff;
+  position: absolute;
+  top: auto;
+  right: 0;
+  bottom: -16px;
+  width: 20px;
+  height: 16px;
+  font-size: 10px;
+  text-align: center;
+  pointer-events: auto;
 }

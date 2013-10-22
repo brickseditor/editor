@@ -1,17 +1,206 @@
 <components>
   <component>
-    <name>test 1</name>
-    <thumbnail>http://placehold.it/32x32</thumbnail>
+    <name>container</name>
+    <thumbnail></thumbnail>
     <template>
-      <div>test 1</div>
+      <div class="container"></div>
     </template>
   </component>
 
   <component>
-    <name>test 2</name>
-    <thumbnail>http://placehold.it/32x32</thumbnail>
+    <name>grid row</name>
+    <thumbnail></thumbnail>
     <template>
-      <div>test 2</div>
+      <div class="row">
+        <div class="col-sm-8">
+          <h4>This is a heading.</h4>
+          <p>This is a paragraph.</p>
+        </div>
+        <div class="col-sm-4">
+          <h4>This is a heading.</h4>
+          <p>This is a paragraph.</p>
+        </div>
+      </div>
+    </template>
+  </component>
+
+  <component>
+    <name>grid column</name>
+    <thumbnail></thumbnail>
+    <template>
+      <div class="col-sm-4">
+        <h4>This is a heading.</h4>
+        <p>This is a paragraph.</p>
+      </div>
+    </template>
+  </component>
+
+  <component>
+    <name>heading</name>
+    <thumbnail></thumbnail>
+    <template>
+      <h1>This is a heading.</h1>
+    </template>
+  </component>
+
+  <component>
+    <name>paragraph</name>
+    <thumbnail></thumbnail>
+    <template>
+      <p>This is a paragraph.</p>
+    </template>
+  </component>
+
+  <component>
+    <name>address</name>
+    <thumbnail></thumbnail>
+    <template>
+      <address>
+        <strong>Full Name</strong><br>
+        000 Fake Ave, Suite 000<br>
+        San Francisco, CA 00000<br>
+        USA
+        <abbr title="Phone">P:</abbr> (123) 456-7890<br>
+        <a href="mailto:#">first.last@example.com</a>
+      </address>
+    </template>
+  </component>
+
+  <component>
+    <name>blockquote</name>
+    <thumbnail></thumbnail>
+    <template>
+      <blockquote>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+        <small>Someone famous in <cite title="Source Title">Source Title</cite></small>
+      </blockquote>
+    </template>
+  </component>
+
+  <component>
+    <name>list</name>
+    <thumbnail></thumbnail>
+    <template>
+      <ul>
+        <li>List item 1.</li>
+        <li>List item 2.</li>
+        <li>List item 3.</li>
+      </ul>
+    </template>
+  </component>
+
+  <component>
+    <name>description</name>
+    <thumbnail></thumbnail>
+    <template>
+    <dl>
+      <dt>Defined Term 1</dt>
+      <dd>This is the definition of Term 1.</dd>
+      <dt>Defined Term 2</dt>
+      <dd>This is the definition of Term 2.</dd>
+    </dl>
+    </template>
+  </component>
+
+  <component>
+    <name>table</name>
+    <thumbnail></thumbnail>
+    <template>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>1</td>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@mdo</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Jacob</td>
+          <td>Thornton</td>
+          <td>@fat</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Larry</td>
+          <td>the Bird</td>
+          <td>@twitter</td>
+        </tr>
+        </tbody>
+      </table>
+    </template>
+  </component>
+
+  <component>
+    <name>form</name>
+    <thumbnail></thumbnail>
+    <template>
+      <form role="form">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Input label</label>
+          <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter text">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+    </template>
+  </component>
+
+  <component>
+    <name>text input</name>
+    <thumbnail></thumbnail>
+    <template>
+    </template>
+  </component>
+
+  <component>
+    <name>textarea</name>
+    <thumbnail></thumbnail>
+    <template>
+    </template>
+  </component>
+
+  <component>
+    <name>checkbox</name>
+    <thumbnail></thumbnail>
+    <template>
+    </template>
+  </component>
+
+  <component>
+    <name>radio</name>
+    <thumbnail></thumbnail>
+    <template>
+    </template>
+  </component>
+
+  <component>
+    <name>select</name>
+    <thumbnail></thumbnail>
+    <template>
+    </template>
+  </component>
+
+  <component>
+    <name>button</name>
+    <thumbnail></thumbnail>
+    <template>
+      <button type="button" class="btn btn-default">Button</button>
+    </template>
+  </component>
+
+  <component>
+    <name>image</name>
+    <thumbnail></thumbnail>
+    <template>
+      <img src="http://placehold.it/100x100" alt="">
     </template>
   </component>
 </components>
