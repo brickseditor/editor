@@ -16,12 +16,18 @@
     </div>
 
     <div class="tab-pane" id="pages" ng-class="{active: panel === 'pages'}">
-      <ul class="nav nav-pills nav-stacked">
-        <li class="active"><a href="#">/</a></li>
-        <li><a href="#">/products</a></li>
-        <li><a href="#">/products/:id</a></li>
+      <ul class="list-group">
+        <li class="list-group-item" ng-repeat="page in app.pages"
+          ng-class="{active: page.url === currentPage.url}">
+          <a href ng-click="selectPage(page)">{{page.url}}</a>
+          <a href class="delete" ng-click="deletePage(page)"
+            ng-if="page.url !== '/'">
+            <span class="glyphicon glyphicon-remove"></span>
+          </a>
+        </li>
       </ul>
-      <button class="btn btn-default btn-block">
+      <button class="btn btn-default btn-block"
+        ng-click="showNewPageModal = !showNewPageModal">
         <span class="glyphicon glyphicon-plus"></span>
         New Page
       </button>
@@ -51,3 +57,20 @@
 </div>
 
 <editor-frame template="currentPage.template"></editor-frame>
+
+<modal title="'New Page'" submit="addPage()"
+  close="showNewPageModal = false" open="showNewPageModal">
+  <form class="form-horizontal" action="" ng-submit="addPage()">
+    <div class="form-group">
+      <label class="col-sm-4 control-label" for="newPageURL">
+        URL
+      </label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control" id="newPageURL" required
+          ng-model="$parent.newPage.url" ng-pattern="/^\/[a-zA-Z0-9_]*$/"
+          name="name" validation-class>
+        <span class="help-block">Example '/products', '/users'</span>
+      </div>
+    </div>
+  </form>
+</modal>

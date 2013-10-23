@@ -128,6 +128,30 @@ body {
   }
 }
 
+.list-group-item {
+  background-color: transparent;
+  border: 0;
+
+  > a {
+    display: block;
+  }
+
+  > .delete {
+    display: none;
+  }
+
+  &.active {
+    > a {
+      color: #fff;
+      display: inline-block;
+      width: 90%;
+    }
+    > .delete {
+      width: 6%;
+    }
+  }
+}
+
 // Custom styles.
 .sidebar {
   background-color: @panels-bg;
