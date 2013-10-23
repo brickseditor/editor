@@ -143,26 +143,10 @@ body {
 
   .component {
     background-color: #505050;
-    float: left;
-    padding: @padding-large-vertical 0;
+    padding: @padding-base-vertical @padding-base-horizontal;
     margin: 2px;
-    width: 72px;
-    text-align: center;
     cursor: move;
-
-    .icon,
-    .title {
-      display: block;
-      margin: 0 auto;
-      font-size: @font-size-small;
-    }
-    .title {
-      margin-top: (@line-height-computed / 3);
-    }
-    .icon {
-      width: 32px;
-      height: 32px;
-    }
+    .box-shadow(0 1px 1px #b0b0b0);
   }
 }
 

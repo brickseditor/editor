@@ -9,12 +9,10 @@
   </ul>
 
   <div class="tab-content">
-    <div class="tab-pane" id="components" ng-class="{active: panel === 'components'}">
+    <div class="tab-pane" id="components"
+      ng-class="{active: panel === 'components'}">
       <div class="component" ng-repeat="component in components"
-        draggable="true" html="component.template">
-        <img class="icon" ng-src="{{component.thumbnail}}" alt="">
-        <span class="title">{{component.name}}</span>
-      </div>
+        draggable="true" html="component.template">{{component.name}}</div>
     </div>
 
     <div class="tab-pane" id="pages" ng-class="{active: panel === 'pages'}">
