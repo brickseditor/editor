@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bricksApp')
-  .directive('editorFrame', function () {
+  .directive('editorFrame', function ($http) {
     return {
       replace: true,
       restrict: 'E',
@@ -12,7 +12,7 @@ angular.module('bricksApp')
         var hadDraggable, dragging;
         var iframe = element.find('iframe');
         var page = iframe.contents();
-        var body, head, selection, template;
+        var selection, template, view;
 
         // Element inserted in the page for highlighting the place where
         // the dragged element will be inserted.
@@ -33,10 +33,10 @@ angular.module('bricksApp')
             selection.removeClass('bricks-selected');
           }
 
-          template = '<!DOCTYPE html>' + page[0].documentElement.outerHTML;
+          template = view.html();
           scope.template = template;
 
-          head.append(style);
+          page.find('head').append(style);
         };
 
         // Makes an element on the page draggable, saves previous
@@ -44,19 +44,17 @@ angular.module('bricksApp')
         // Used to restore draggable attribute of an element if
         // necessary.
         var makeDraggable = function (e) {
-          if (['HTML', 'BODY'].indexOf(e.target.nodeName) > -1) {
-            return;
-          }
-
           var element = angular.element(e.target);
 
-          hadDraggable = e.target.draggable;
-          e.target.draggable = true;
+          if (!element.is('html, body, div[ng-view]')) {
+            hadDraggable = e.target.draggable;
+            e.target.draggable = true;
 
-          element.on('dragstart', function (e) {
-            e.originalEvent.dataTransfer.effectAllowed = 'move';
-            dragging = element;
-          });
+            element.on('dragstart', function (e) {
+              e.originalEvent.dataTransfer.effectAllowed = 'move';
+              dragging = element;
+            });
+          }
         };
 
         var destroyDraggable = function (e) {
@@ -70,11 +68,11 @@ angular.module('bricksApp')
         var insertNode = function (node, element) {
           element = angular.element(element);
 
-          if ('HTML' === element[0].nodeName) {
-            element = body;
+          if (element.is('html, body')) {
+            element = view;
           }
 
-          if ('BODY' === element[0].nodeName || element.is(':empty')) {
+          if (element.is('div[ng-view], :empty')) {
             element.append(node);
           } else {
             element.after(node);
@@ -100,7 +98,7 @@ angular.module('bricksApp')
           element.removeClass('bricks-empty');
 
           if (parent && parent.text().trim() === '' &&
-             parent[0].nodeName !== 'BODY') {
+             !parent[0].hasAttribute('ng-view')) {
             parent.addClass('bricks-empty');
           }
 
@@ -143,31 +141,29 @@ angular.module('bricksApp')
         };
 
         var selectElement = function (e) {
-          if (['HTML', 'BODY'].indexOf(e.target.nodeName) > -1) {
-            return;
-          }
+          var element = angular.element(e.target);
 
-          if (selection) {
-            selection.removeClass('bricks-selected');
-          }
-          selection = angular.element(e.target).addClass('bricks-selected');
+          if (!element.is('html, body, [ng-view]')) {
+            if (selection) {
+              selection.removeClass('bricks-selected');
+            }
+            selection = element.addClass('bricks-selected');
 
-          scope.$emit('select', '#canvas iframe');
+            scope.$emit('select', '#canvas iframe');
+          }
         };
 
         // Display the template HTML code.
         scope.$watch('template', function (html) {
-          if (html && html !== template) {
-            page[0].open();
-            page[0].write(html);
-            page[0].close();
-
-            body = page.find('body');
-            head = page.find('head');
+          if (view && html && html !== template) {
+            view.html(template);
           }
         });
 
         iframe.on('load', function () {
+          view = page.find('div[ng-view]');
+          view.html(scope.template);
+
           page.on('click', selectElement);
 
           page.on('dragover', dragover);
@@ -182,6 +178,13 @@ angular.module('bricksApp')
         scope.$on('changed', function () {
           setTemplate();
         });
+
+        $http.get('views/layout.html', {cache: true})
+          .success(function (response) {
+            page[0].open();
+            page[0].write(response);
+            page[0].close();
+          });
       }
     };
   });

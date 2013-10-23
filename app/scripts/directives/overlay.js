@@ -12,7 +12,6 @@ angular.module('bricksApp')
         var iframe = angular.element(attrs.iframe);
         var select = element.find('.overlay-select');
         var highlight = element.find('.overlay-highlight');
-        var page = iframe.contents();
         var deleteButton = element.find('.delete');
         var selected;
 
@@ -21,37 +20,51 @@ angular.module('bricksApp')
         var showElement = function (overlay, target) {
           var top = iframe[0].offsetTop;
           var left = iframe[0].offsetLeft;
-          var offset = angular.element(target).offset();
+          var offset = target.offset();
 
           overlay.css('display', 'block')
-            .css('width', target.clientWidth + 'px')
-            .css('height', target.clientHeight + 'px')
+            .css('width', target[0].clientWidth + 'px')
+            .css('height', target[0].clientHeight + 'px')
             .css('top', (top + offset.top) + 'px')
             .css('left', (left + offset.left) + 'px');
         };
 
         var showHighlight = function (e) {
-          if (['HTML', 'BODY'].indexOf(e.target.nodeName) === -1) {
-            showElement(highlight, e.target);
+          var target = angular.element(e.target);
+
+          if (!target.is('html, body, div[ng-view]')) {
+            showElement(highlight, target);
           }
         };
 
         var showSelect = function (e) {
-          if (['HTML', 'BODY'].indexOf(e.target.nodeName) === -1) {
-            selected = angular.element(e.target);
-            showElement(select, e.target);
+          var target = angular.element(e.target);
+
+          if (!target.is('html, body, div[ng-view]')) {
+            selected = target;
+            showElement(select, target);
             highlight.detach();
           }
         };
 
         iframe.on('load', function () {
+          var page = iframe.contents();
           page.on('mouseover', showHighlight);
           page.on('click', showSelect);
         });
 
         deleteButton.on('click', function (e) {
+          var parent = selected.parent();
+
           e.preventDefault();
+
           selected.remove();
+
+          if (parent && parent.text().trim() === '' &&
+             !parent[0].hasAttribute('ng-view')) {
+            parent.addClass('bricks-empty');
+          }
+
           select.css('display', 'none');
         });
 
@@ -60,7 +73,7 @@ angular.module('bricksApp')
           return selected && selected.prop('outerHTML');
         }, function () {
           if (selected) {
-            showElement(select, selected[0]);
+            showElement(select, selected);
           }
         });
       }
