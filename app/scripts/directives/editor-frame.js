@@ -12,7 +12,7 @@ angular.module('bricksApp')
         var hadDraggable, dragging;
         var iframe = element.find('iframe');
         var page = iframe.contents();
-        var body, template, selection;
+        var body, head, selection, template;
 
         // Element inserted in the page for highlighting the place where
         // the dragged element will be inserted.
@@ -25,6 +25,19 @@ angular.module('bricksApp')
         var style = angular.element('<style>');
         style.append('.bricks-empty {min-height: 50px; min-width: 50px; ' +
                      'border: 4px dashed #f0ad4e;}');
+
+        // Changes the scope template attribute.
+        var setTemplate = function () {
+          style.detach();
+          if (selection) {
+            selection.removeClass('bricks-selected');
+          }
+
+          template = '<!DOCTYPE html>' + page[0].documentElement.outerHTML;
+          scope.template = template;
+
+          head.append(style);
+        };
 
         // Makes an element on the page draggable, saves previous
         // draggable status and the element being dragged.
@@ -123,9 +136,7 @@ angular.module('bricksApp')
 
           highlight.remove();
           insertComponent(html, e.target);
-
-          template = '<!DOCTYPE html>' + page[0].documentElement.outerHTML;
-          scope.template = template;
+          setTemplate();
           scope.$apply();
 
           return false;
@@ -144,21 +155,15 @@ angular.module('bricksApp')
           scope.$emit('select', '#canvas iframe');
         };
 
-        // Writes HTML code in the iframe and bind drop events.
-        var displayHTML = function (html) {
-          page[0].open();
-          page[0].write(html);
-          page[0].close();
-
-          body = page.find('body');
-
-          page.find('head').append(style);
-        };
-
         // Display the template HTML code.
-        scope.$watch('template', function (val) {
-          if (val && val !== template) {
-            displayHTML(val);
+        scope.$watch('template', function (html) {
+          if (html && html !== template) {
+            page[0].open();
+            page[0].write(html);
+            page[0].close();
+
+            body = page.find('body');
+            head = page.find('head');
           }
         });
 
@@ -171,6 +176,11 @@ angular.module('bricksApp')
 
           page.on('mouseover', makeDraggable);
           page.on('mouseout', destroyDraggable);
+        });
+
+        // Receive external change events to update the template.
+        scope.$on('changed', function () {
+          setTemplate();
         });
       }
     };

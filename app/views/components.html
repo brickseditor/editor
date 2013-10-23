@@ -5,6 +5,7 @@
     <template>
       <div class="container"></div>
     </template>
+    <selector>.container</selector>
   </component>
 
   <component>
@@ -22,6 +23,7 @@
         </div>
       </div>
     </template>
+    <selector>.row</selector>
   </component>
 
   <component>
@@ -33,6 +35,69 @@
         <p>This is a paragraph.</p>
       </div>
     </template>
+    <selector>[class*='col-']</selector>
+    <admin>
+      <form role="form">
+        <div class="form-group">
+          <label for="optionsGridColumnWidth">Column width</label>
+          <select class="form-control input-sm" id="optionsGridColumnWidth"
+            ng-model="options.width" required ng-change="change()" ng-options="k for k in options.widths">
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="optionsGridColumnDevices">Collapse on</label>
+          <select class="form-control input-sm" id="optionsGridColumnDevices"
+            ng-model="options.devices" required ng-change="change()">
+            <option value="lg">all small and medium screens</option>
+            <option value="md">tablets and phones</option>
+            <option value="sm">phones only</option>
+            <option value="xs">neither</option>
+          </select>
+        </div>
+      </form>
+    </admin>
+    <admin-script>
+      var classes = [];
+      var currentDeviceWidthClass = '';
+
+      scope.options.widths = Array.apply(0, Array(12)).map(function (x, i) {
+        return i + '';
+      });
+
+      // Gets all the column classes of the element.
+      scope.selection.attr('class').split(' ').forEach(function (c) {
+        if (c.indexOf('col-') === 0) {
+          c = c.split('-');
+          classes.push({
+            devices: c[1],
+            width: c[2]
+          });
+        }
+      });
+
+      // Gets the width and column type of the current element.
+      ['xs', 'sm', 'md', 'lg'].some(function (t) {
+        classes.some(function (c) {
+          if (c.devices === t) {
+            scope.options.devices = c.devices;
+            scope.options.width = c.width;
+            currentDeviceWidthClass = 'col-' + c.devices + '-' + c.width;
+            return true;
+          }
+        });
+      });
+
+      // Updates the selection classes.
+      scope.updateSelection = function () {
+        var newDeviceWidthClass = 'col-' + scope.options.devices + '-' +
+                                  scope.options.width;
+
+        scope.selection.removeClass(currentDeviceWidthClass)
+          .addClass(newDeviceWidthClass);
+
+        currentDeviceWidthClass = newDeviceWidthClass;
+      };
+    </admin-script>
   </component>
 
   <component>
@@ -41,6 +106,7 @@
     <template>
       <h1>This is a heading.</h1>
     </template>
+    <selector>h1, h2, h3, h4, h5, h6</selector>
   </component>
 
   <component>
@@ -49,6 +115,7 @@
     <template>
       <p>This is a paragraph.</p>
     </template>
+    <selector>p</selector>
   </component>
 
   <component>
@@ -64,6 +131,7 @@
         <a href="mailto:#">first.last@example.com</a>
       </address>
     </template>
+    <selector>address</selector>
   </component>
 
   <component>
@@ -75,6 +143,7 @@
         <small>Someone famous in <cite title="Source Title">Source Title</cite></small>
       </blockquote>
     </template>
+    <selector>blockquote</selector>
   </component>
 
   <component>
@@ -87,6 +156,7 @@
         <li>List item 3.</li>
       </ul>
     </template>
+    <selector>ul</selector>
   </component>
 
   <component>
@@ -100,6 +170,7 @@
       <dd>This is the definition of Term 2.</dd>
     </dl>
     </template>
+    <selector>dl</selector>
   </component>
 
   <component>
@@ -137,6 +208,7 @@
         </tbody>
       </table>
     </template>
+    <selector>table</selector>
   </component>
 
   <component>
@@ -151,6 +223,7 @@
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
     </template>
+    <selector>form</selector>
   </component>
 
   <component>
@@ -158,6 +231,8 @@
     <thumbnail></thumbnail>
     <template>
     </template>
+    <condition>
+    </condition>
   </component>
 
   <component>
@@ -165,6 +240,8 @@
     <thumbnail></thumbnail>
     <template>
     </template>
+    <condition>
+    </condition>
   </component>
 
   <component>
@@ -172,6 +249,8 @@
     <thumbnail></thumbnail>
     <template>
     </template>
+    <condition>
+    </condition>
   </component>
 
   <component>
@@ -179,6 +258,8 @@
     <thumbnail></thumbnail>
     <template>
     </template>
+    <condition>
+    </condition>
   </component>
 
   <component>
@@ -186,6 +267,8 @@
     <thumbnail></thumbnail>
     <template>
     </template>
+    <condition>
+    </condition>
   </component>
 
   <component>
@@ -194,6 +277,8 @@
     <template>
       <button type="button" class="btn btn-default">Button</button>
     </template>
+    <condition>
+    </condition>
   </component>
 
   <component>
@@ -202,5 +287,7 @@
     <template>
       <img src="http://placehold.it/100x100" alt="">
     </template>
+    <condition>
+    </condition>
   </component>
 </components>

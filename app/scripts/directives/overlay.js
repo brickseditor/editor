@@ -38,8 +38,9 @@ angular.module('bricksApp')
 
         var showSelect = function (e) {
           if (['HTML', 'BODY'].indexOf(e.target.nodeName) === -1) {
-            selected = e.target;
-            showElement(select, selected);
+            selected = angular.element(e.target);
+            showElement(select, e.target);
+            highlight.detach();
           }
         };
 
@@ -50,8 +51,17 @@ angular.module('bricksApp')
 
         deleteButton.on('click', function (e) {
           e.preventDefault();
-          angular.element(selected).remove();
+          selected.remove();
           select.css('display', 'none');
+        });
+
+        // Redraws selected element overlay when the element changes.
+        scope.$watch(function () {
+          return selected && selected.prop('outerHTML');
+        }, function () {
+          if (selected) {
+            showElement(select, selected[0]);
+          }
         });
       }
     };
