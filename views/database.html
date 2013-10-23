@@ -1,62 +1,111 @@
 <div id="database">
-  <div class="tables">
+  <div class="tables" ng-if="hasTables()">
     <ul class="nav nav-tabs">
-      <li class="active"><a href="#">Table 1</a></li>
-      <li><a href="#">Table 2</a></li>
+      <li ng-repeat="table in app.tables" ng-class="{active: table.name === currentTable.name}">
+        <a href="" ng-click="selectTable($index)">{{table.name}}</a>
+      </li>
     </ul>
-    <button class="btn btn-link navbar-btn">
+    <button class="btn btn-link navbar-btn" ng-click="showModal.newTable = true">
       <span class="glyphicon glyphicon-plus"></span>
       New Table
     </button>
   </div>
 
-  <div class="actions">
-    <button class="btn btn-default">
+  <div class="actions" ng-if="hasTables()">
+    <button class="btn btn-default" ng-click="showModal.newRow = true">
       <span class="glyphicon glyphicon-plus"></span>
-      Row
+      Add Row
     </button>
-    <button class="btn btn-default">
-      <span class="glyphicon glyphicon-minus"></span>
-      Row
-    </button>
-    <button class="btn btn-default">
-      <span class="glyphicon glyphicon-minus"></span>
-      All Rows
-    </button>
-    <button class="btn btn-default">
+    <button class="btn btn-default" ng-click="showModal.newColumn = true">
       <span class="glyphicon glyphicon-plus"></span>
-      Column
+      Add Column
     </button>
-    <button class="btn btn-default">
-      <span class="glyphicon glyphicon-minus"></span>
-      Column
-    </button>
-    <button class="btn btn-default">
-      <span class="glyphicon glyphicon-circle-arrow-up"></span>
-      Import
-    </button>
-    <button class="btn btn-default">
-      <span class="glyphicon glyphicon-circle-arrow-down"></span>
-      Export
-    </button>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle" ng-click="showMenu.actions = !showMenu.actions">
+        More <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" ng-show="showMenu.actions">
+        <li><a href="" ng-click="showImportTableForm()">Import Rows</a></li>
+        <li><a href="" ng-click="showExportTableForm()">Export Rows</a></li>
+        <li><a href="" ng-click="emptyTable()">Empty Table</a></li>
+        <li><a href="" ng-click="deleteTable()">Delete Table</a></li>
+      </ul>
+    </div>
   </div>
 
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th><input type="checkbox"></th>
-        <th>id</th>
-        <th>created_at</th>
-        <th>updated_at</th>
+  <div class="rows">
+    <table class="table table-bordered rows" ng-if="hasTables()">
+      <thead>
+        <tr>
+          <th></th>
+          <th ng-repeat="column in currentTable.columns">
+            {{column.name}}
+            <a href="" class="text-danger" ng-click="deleteColumn(column, $index)" ng-if="!isDefaultColumn(column)">
+              <span class="glyphicon glyphicon-remove"></span>
+            </a>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="row in data">
+        <td>
+          <a href="" ng-click="deleteRow(row, $index)" class="text-danger">
+            <span class="glyphicon glyphicon-remove"></span>
+          </a>
+        </td>
+        <td ng-repeat="column in currentTable.columns">
+          {{row[column.name]}}
+        </td>
       </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    </tbody>
-  </table>
+      <tr ng-show="data.length === 0">
+        <td colspan="{{currentTable.columns.length + 1}}" class="text-center">
+          No data in the selected table.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <modal title="'New Table'" submit="addTable()" close="showModal.newTable = false" closeable="hasTables()" open="!hasTables() || showModal.newTable">
+    <form class="form-horizontal" action="" name="newTableForm" ng-submit="addTable(newTable)">
+      <div class="form-group">
+        <label class="col-sm-4 control-label" for="newTableName">
+          Table Name
+        </label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="newTableName" required="" ng-model="$parent.newTable.name" name="name" validation-class="" ng-pattern="/^[a-zA-Z_][a-zA-Z0-9_]*$/">
+          <span class="help-block">Must begin with a letter or underscore and
+            only contain letters, underscores or digits.</span>
+        </div>
+      </div>
+    </form>
+  </modal>
+
+  <modal title="'New Column'" submit="addColumn()" close="showModal.newColumn = false" open="showModal.newColumn">
+    <form class="form-horizontal" action="" name="newColumnForm" ng-submit="addColumn()">
+      <div class="form-group">
+        <label class="col-sm-4 control-label" for="newColumnName">
+          Name
+        </label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="newColumnName" required="" ng-model="$parent.newColumn.name" ng-pattern="/^[a-zA-Z_][a-zA-Z0-9_]*$/" name="name" validation-class="">
+          <span class="help-block">Must begin with a letter or underscore and
+            only contain letters, underscores or digits.</span>
+        </div>
+      </div>
+    </form>
+  </modal>
+
+  <modal title="'New Row'" submit="addRow()" close="showModal.newRow = false" open="showModal.newRow">
+    <form class="form-horizontal" action="" ng-submit="addRow()">
+      <div class="form-group" ng-repeat="column in currentTable.columns">
+        <label class="col-sm-4 control-label" for="newRow_{{column.name}}">
+          {{column.name}}
+        </label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="newRow_{{column.name}}" ng-model="newRow[column.name]" ng-disabled="isDefaultColumn(column)">
+        </div>
+      </div>
+    </form>
+  </modal>
 </div>

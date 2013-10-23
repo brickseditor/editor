@@ -1,0 +1,21 @@
+<div class="modal" id="new-app" ng-show="open()">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="close()" ng-if="closeable">
+          &times;
+        </button>
+        <h4 class="modal-title" id="new-app-header">{{title}}</h4>
+      </div>
+      <div class="modal-body" ng-transclude=""></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="close()" ng-if="closeable">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" ng-click="submit()">
+          Save changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

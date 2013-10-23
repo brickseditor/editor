@@ -1,7 +1,7 @@
 {
-  "name": "angular-cookies",
+  "name": "angular-animate",
   "version": "1.2.0-rc.3",
-  "main": "./angular-cookies.js",
+  "main": "./angular-animate.js",
   "dependencies": {
     "angular": "1.2.0-rc.3"
   }
