@@ -1,0 +1,13 @@
+<div class="btn-group">
+  <button type="button" class="btn btn-link"
+    ng-click="showDevicesMenu = !showDevicesMenu">
+    <span class="fa fa-{{currentDevice}}"></span>
+  </button>
+  <ul class="devices" role="menu" ng-show="showDevicesMenu">
+    <li ng-repeat="device in devices">
+    <a href title="{{device}}" ng-click="$parent.currentDevice = device">
+        <span class="fa fa-{{device}}"></span>
+      </a>
+    </li>
+  </ul>
+</div>
