@@ -43,7 +43,7 @@ angular.module('bricksApp')
           if (!target.is('html, body, div[ng-view]')) {
             selected = target;
             showElement(select, target);
-            highlight.detach();
+            highlight.hide();
           }
         };
 
