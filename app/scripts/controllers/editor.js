@@ -5,7 +5,7 @@ angular.module('bricksApp')
     $scope.components = components.all();
     $scope.app = apps.current();
     $scope.newPage = {template: ''};
-    $scope.savePageText = "Save Page";
+    $scope.savePageText = 'Save Page';
 
     if (!$scope.app.pages || $scope.app.pages.length === 0) {
       $scope.app.pages = [{url: '/', template: ''}];
