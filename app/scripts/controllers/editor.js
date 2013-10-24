@@ -50,4 +50,9 @@ angular.module('bricksApp')
       apps.update($scope.app);
       $scope.currentPage = $scope.app.pages[0];
     };
+
+    // Saves the current page.
+    $scope.savePage = function () {
+      apps.update($scope.app);
+    };
   });

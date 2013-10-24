@@ -6,11 +6,10 @@ angular.module('bricksApp')
       replace: true,
       restrict: 'E',
       scope: {template: '='},
-      template: '<div id="canvas"><iframe src="about:blank"></iframe>' +
-        '<overlay iframe="#canvas iframe"></overlay></div>',
+      template: '<iframe src="about:blank"></iframe>',
       link: function (scope, element) {
         var hadDraggable, dragging;
-        var iframe = element.find('iframe');
+        var iframe = element;
         var page = iframe.contents();
         var selection, template, view;
 
@@ -177,6 +176,7 @@ angular.module('bricksApp')
         // Receive external change events to update the template.
         scope.$on('changed', function () {
           setTemplate();
+          scope.$apply();
         });
 
         $http.get('views/layout.html', {cache: true})

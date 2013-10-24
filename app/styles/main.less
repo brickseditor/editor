@@ -190,8 +190,23 @@ body {
   }
 }
 
+#toolbar {
+  background-color: #505050;
+  height: 30px;
+  margin-top: -30px;
+
+  .save {
+    .btn;
+    .btn-sm;
+    .btn-primary;
+    float: right;
+    padding: 2px 5px;
+    margin: 4px 3px;
+  }
+}
+
 #canvas {
-  padding: (@navbar-height + 2px) @sidebar-width 0 @sidebar-width;
+  padding: (@navbar-height + 30px) @sidebar-width 0 @sidebar-width;
   width: 100%;
   height: 100%;
 

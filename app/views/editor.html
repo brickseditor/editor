@@ -56,7 +56,15 @@
   <collapse-button position="left"></collapse-button>
 </div>
 
-<editor-frame template="currentPage.template"></editor-frame>
+<div id="canvas">
+  <div id="toolbar">
+    <button class="save" ng-click="savePage()">Save Page</button>
+  </div>
+
+  <editor-frame template="currentPage.template"></editor-frame>
+
+  <overlay iframe="#canvas iframe"></overlay>
+</div>
 
 <modal title="'New Page'" submit="addPage()"
   close="showNewPageModal = false" open="showNewPageModal">
