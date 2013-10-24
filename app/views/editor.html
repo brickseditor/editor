@@ -58,7 +58,9 @@
 
 <div id="canvas" ng-class="{'inspector-visible': showInspector}">
   <div id="toolbar">
-    <button class="btn btn-link" ng-click="showInspector = !showInspector">Code</button>
+    <button class="btn btn-link" ng-click="showInspector = !showInspector">
+      <span class="fa fa-code"></span>
+    </button>
     <button class="save" ng-click="savePage()">{{savePageText}}</button>
   </div>
 
