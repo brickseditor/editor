@@ -1,93 +1,95 @@
-<div id="structure" class="sidebar" ng-init="panel = 'components'">
-  <ul class="nav nav-tabs nav-justified">
-    <li ng-class="{active: panel === 'components'}">
-      <a href ng-click="loadPanel('components')">Components</a>
-    </li>
-    <li ng-class="{active: panel === 'pages'}">
-      <a href ng-click="loadPanel('pages')">Pages</a>
-    </li>
-  </ul>
+<div id="editor" editor>
+  <div id="structure" class="sidebar" ng-init="panel = 'components'">
+    <ul class="nav nav-tabs nav-justified">
+      <li ng-class="{active: panel === 'components'}">
+        <a href ng-click="panel = 'components'">Components</a>
+      </li>
+      <li ng-class="{active: panel === 'pages'}">
+        <a href ng-click="panel = 'pages'">Pages</a>
+      </li>
+    </ul>
 
-  <div class="tab-content">
-    <div class="tab-pane" id="components"
-      ng-class="{active: panel === 'components'}">
-      <div class="component" ng-repeat="component in components"
-        draggable="true" html="component.template">{{component.name}}</div>
+    <div class="tab-content">
+      <div class="tab-pane" id="components"
+        ng-class="{active: panel === 'components'}">
+        <div class="component" ng-repeat="component in components"
+          draggable="true" html="component.template">{{component.name}}</div>
+      </div>
+
+      <div class="tab-pane" id="pages" ng-class="{active: panel === 'pages'}">
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="page in app.pages"
+            ng-class="{active: page.url === currentPage.url}">
+            <a href ng-click="$parent.currentPage = page">{{page.url}}</a>
+            <a href class="delete" ng-click="deletePage(page)"
+              ng-if="page.url !== '/'">
+              <span class="glyphicon glyphicon-remove"></span>
+            </a>
+          </li>
+        </ul>
+        <button class="btn btn-default btn-block"
+          ng-click="showNewPageModal = !showNewPageModal">
+          <span class="glyphicon glyphicon-plus"></span>
+          New Page
+        </button>
+      </div>
     </div>
 
-    <div class="tab-pane" id="pages" ng-class="{active: panel === 'pages'}">
-      <ul class="list-group">
-        <li class="list-group-item" ng-repeat="page in app.pages"
-          ng-class="{active: page.url === currentPage.url}">
-          <a href ng-click="selectPage(page)">{{page.url}}</a>
-          <a href class="delete" ng-click="deletePage(page)"
-            ng-if="page.url !== '/'">
-            <span class="glyphicon glyphicon-remove"></span>
-          </a>
-        </li>
-      </ul>
-      <button class="btn btn-default btn-block"
-        ng-click="showNewPageModal = !showNewPageModal">
-        <span class="glyphicon glyphicon-plus"></span>
-        New Page
-      </button>
-    </div>
+    <collapse-button position="right"></collapse-button>
   </div>
 
-  <collapse-button position="right"></collapse-button>
-</div>
-
-<div id="details" class="sidebar">
-  <div class="panel-group">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a class="accordion-toggle" href>Style</a>
-        </h4>
-      </div>
-      <div class="panel-collapse">
-        <div class="panel-body">
-          <component-options></component-options>
+  <div id="details" class="sidebar">
+    <div class="panel-group">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a class="accordion-toggle" href>Style</a>
+          </h4>
+        </div>
+        <div class="panel-collapse">
+          <div class="panel-body">
+            <component-options></component-options>
+          </div>
         </div>
       </div>
     </div>
+
+    <collapse-button position="left"></collapse-button>
   </div>
 
-  <collapse-button position="left"></collapse-button>
-</div>
-
-<div id="canvas" ng-class="{'inspector-visible': showInspector}">
-  <div id="toolbar">
-    <device-switch iframe="#canvas iframe"></device-switch>
-    <button class="btn btn-link" ng-click="showInspector = !showInspector">
-      <span class="fa fa-code"></span>
-    </button>
-    <button class="save" ng-click="savePage()">{{savePageText}}</button>
-  </div>
-
-  <editor-frame template="currentPage.template"></editor-frame>
-
-  <overlay iframe="#canvas iframe"></overlay>
-
-  <div id="inspector" ng-show="showInspector">
-    <textarea ui-codemirror="codemirrorOptions" ui-refresh="showInspector"
-      ng-model="currentPage.template"></textarea>
-  </div>
-</div>
-
-<modal title="'New Page'" submit="addPage()"
-  close="showNewPageModal = false" open="showNewPageModal">
-  <form class="form-horizontal" action="" ng-submit="addPage()">
-    <div class="form-group">
-      <label class="col-sm-4 control-label" for="newPageURL">
-        URL
-      </label>
-      <div class="col-sm-6">
-        <input type="text" class="form-control" id="newPageURL" required
-          ng-model="$parent.newPage.url" ng-pattern="/^\/[a-zA-Z0-9_]*$/"
-          name="name" validation-class>
-        <span class="help-block">Example '/products', '/users'</span>
-      </div>
+  <div id="canvas" ng-class="{'inspector-visible': showInspector}">
+    <div id="toolbar">
+      <device-switch iframe="#canvas iframe"></device-switch>
+      <button class="btn btn-link" ng-click="showInspector = !showInspector">
+        <span class="fa fa-code"></span>
+      </button>
+      <button class="save" ng-click="savePage()">{{savePageText}}</button>
     </div>
-  </form>
-</modal>
+
+    <editor-frame></editor-frame>
+
+    <overlay iframe="#canvas iframe"></overlay>
+
+    <div id="inspector" ng-show="showInspector">
+      <textarea ui-codemirror="codemirrorOptions" ui-refresh="showInspector"
+        ng-model="currentPage.template"></textarea>
+    </div>
+  </div>
+
+  <modal title="'New Page'" submit="addPage()"
+    close="showNewPageModal = false" open="showNewPageModal">
+    <form class="form-horizontal" action="" ng-submit="addPage()">
+      <div class="form-group">
+        <label class="col-sm-4 control-label" for="newPageURL">
+          URL
+        </label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="newPageURL" required
+            ng-model="$parent.newPage.url" ng-pattern="/^\/[a-zA-Z0-9_]*$/"
+            name="name" validation-class>
+          <span class="help-block">Example '/products', '/users'</span>
+        </div>
+      </div>
+    </form>
+  </modal>
+</div>

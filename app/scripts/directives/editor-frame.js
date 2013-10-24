@@ -1,30 +1,17 @@
 'use strict';
 
 angular.module('bricksApp')
-  .directive('editorFrame', function ($http, $timeout) {
+  .directive('editorFrame', function ($http) {
     return {
       replace: true,
+      require: '^editor',
       restrict: 'E',
-      scope: {template: '='},
       template: '<iframe src="about:blank" seamless></iframe>',
-      link: function (scope, element) {
+      link: function (scope, element, attrs, editorCtrl) {
         var hadDraggable, dragging;
         var iframe = element;
         var page = iframe.contents();
-        var dropTarget, selection, template, view;
-
-        // Changes the scope template attribute.
-        var setTemplate = function () {
-          if (selection) {
-            selection.removeClass('bricks-selected');
-          }
-
-          template = view.html();
-          scope.template = template;
-          $timeout(function () {
-            scope.$apply();
-          });
-        };
+        var dropTarget, view;
 
         // Makes an element on the page draggable, saves previous
         // draggable status and the element being dragged.
@@ -117,34 +104,29 @@ angular.module('bricksApp')
 
           dropTarget.removeClass('bricks-dragover');
           insertComponent(html, e.target);
-          setTemplate();
+          editorCtrl.updateTemplate();
+          scope.$apply();
 
           return false;
         };
 
         var selectElement = function (e) {
           var element = angular.element(e.target);
-
-          if (!element.is('html, body, [ng-view]')) {
-            if (selection) {
-              selection.removeClass('bricks-selected');
-            }
-            selection = element.addClass('bricks-selected');
-
-            scope.$emit('select', '#canvas iframe');
-          }
+          editorCtrl.selectElement(element);
         };
 
         // Display the template HTML code.
-        scope.$watch('template', function (html) {
-          if (view && html && html !== template) {
-            view.html(scope.template);
+        scope.$watch(function () {
+          return editorCtrl.page().template;
+        }, function (newValue, oldValue) {
+          if (view && newValue !== oldValue) {
+            view.html(newValue);
           }
         });
 
         iframe.on('load', function () {
           view = page.find('div[ng-view]');
-          view.html(scope.template);
+          view.html(editorCtrl.page().template);
 
           page.on('click', selectElement);
 
@@ -154,11 +136,6 @@ angular.module('bricksApp')
 
           page.on('mouseover', makeDraggable);
           page.on('mouseout', destroyDraggable);
-        });
-
-        // Receive external change events to update the template.
-        scope.$on('changed', function () {
-          setTemplate();
         });
 
         $http.get('views/layout.html', {cache: true})

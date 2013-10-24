@@ -3,14 +3,14 @@
 angular.module('bricksApp')
   .directive('componentOptions', function ($compile, components) {
     return {
-      restrict: 'E',
       replace: true,
+      require: '^editor',
+      restrict: 'E',
       scope: {},
       template: '<div></div>',
-      link: function (scope, element) {
+      link: function (scope, element, attrs, editorCtrl) {
         var allComponents = components.all();
         scope.component = {};
-        scope.selection = {};
         scope.options = {};
         scope.updateSelection = function () {};
 
@@ -18,19 +18,17 @@ angular.module('bricksApp')
         // received by the iframe.
         scope.change = function () {
           scope.updateSelection();
-          scope.$emit('change');
+          editorCtrl.updateTemplate();
         };
 
         // Sets the selected element and its corresponding component, appends
         // the component admin template to the directive element and executes
         // the compoent admin scripts.
-        scope.$on('selected', function (e, iframe) {
-          var page = angular.element(iframe).contents();
-
-          scope.selection = page.find('.bricks-selected');
-
+        scope.$on('selection', function () {
           allComponents.some(function (component) {
-            var condition = scope.selection.is(component.selector);
+            var condition;
+            scope.selection = editorCtrl.selection();
+            condition = scope.selection.is(component.selector);
             if (condition) {
               scope.component = component;
             }
@@ -39,7 +37,6 @@ angular.module('bricksApp')
 
           eval(scope.component['admin-script']);
           element.empty().append($compile(scope.component.admin)(scope));
-          scope.$apply();
         });
       }
     };
