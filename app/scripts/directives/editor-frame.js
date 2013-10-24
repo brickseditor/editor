@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bricksApp')
-  .directive('editorFrame', function ($http) {
+  .directive('editorFrame', function ($http, $timeout) {
     return {
       replace: true,
       restrict: 'E',
@@ -21,6 +21,9 @@ angular.module('bricksApp')
 
           template = view.html();
           scope.template = template;
+          $timeout(function () {
+            scope.$apply();
+          });
         };
 
         // Makes an element on the page draggable, saves previous
@@ -115,7 +118,6 @@ angular.module('bricksApp')
           dropTarget.removeClass('bricks-dragover');
           insertComponent(html, e.target);
           setTemplate();
-          scope.$apply();
 
           return false;
         };
@@ -157,7 +159,6 @@ angular.module('bricksApp')
         // Receive external change events to update the template.
         scope.$on('changed', function () {
           setTemplate();
-          scope.$apply();
         });
 
         $http.get('views/layout.html', {cache: true})
