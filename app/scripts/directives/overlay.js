@@ -60,12 +60,11 @@ angular.module('bricksApp')
 
           selected.remove();
 
-          if (parent && parent.text().trim() === '' &&
-             !parent[0].hasAttribute('ng-view')) {
-            parent.addClass('bricks-empty');
+          if (parent) {
+            parent.html(parent.html().trim());
           }
 
-          select.css('display', 'none');
+          select.hide();
         });
 
         // Redraws selected element overlay when the element changes.

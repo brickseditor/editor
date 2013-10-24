@@ -11,31 +11,16 @@ angular.module('bricksApp')
         var hadDraggable, dragging;
         var iframe = element;
         var page = iframe.contents();
-        var selection, template, view;
-
-        // Element inserted in the page for highlighting the place where
-        // the dragged element will be inserted.
-        // Dragged elements are inserted in the body element or after
-        // the element they are dragged over.
-        var highlight = angular.element('<div style="width: 100%; height: 3px;' +
-                                        'background:#428bca;">');
-
-        // CSS code inserted in the page to highlight empty elements
-        var style = angular.element('<style>');
-        style.append('.bricks-empty {min-height: 50px; min-width: 50px; ' +
-                     'border: 4px dashed #f0ad4e;}');
+        var dropTarget, selection, template, view;
 
         // Changes the scope template attribute.
         var setTemplate = function () {
-          style.detach();
           if (selection) {
             selection.removeClass('bricks-selected');
           }
 
           template = view.html();
           scope.template = template;
-
-          page.find('head').append(style);
         };
 
         // Makes an element on the page draggable, saves previous
@@ -51,7 +36,7 @@ angular.module('bricksApp')
 
             element.on('dragstart', function (e) {
               e.originalEvent.dataTransfer.effectAllowed = 'move';
-              dragging = element;
+              dragging = angular.element(e.target);
             });
           }
         };
@@ -94,15 +79,8 @@ angular.module('bricksApp')
 
           insertNode(node, element);
 
-          element.removeClass('bricks-empty');
-
-          if (parent && parent.text().trim() === '' &&
-             !parent[0].hasAttribute('ng-view')) {
-            parent.addClass('bricks-empty');
-          }
-
-          if (node.text().trim() === '') {
-            node.addClass('bricks-empty');
+          if (parent) {
+            parent.html(parent.html().trim());
           }
         };
 
@@ -110,11 +88,13 @@ angular.module('bricksApp')
         var dragover = function (e) {
           e.preventDefault();
           e.originalEvent.dataTransfer.dropEffect = 'move';
-          insertNode(highlight, e.target);
+
+          dropTarget = angular.element(e.target);
+          dropTarget.addClass('bricks-dragover');
         };
 
         var dragleave = function () {
-          highlight.remove();
+          dropTarget.removeClass('bricks-dragover');
         };
 
         // Insert element being dragged or component html and update
@@ -125,13 +105,14 @@ angular.module('bricksApp')
           e.stopPropagation();
 
           if (dragging) {
+            dragging[0].removeAttribute('draggable');
             html = dragging;
             dragging = null;
           } else {
             html = e.originalEvent.dataTransfer.getData('text/plain');
           }
 
-          highlight.remove();
+          dropTarget.removeClass('bricks-dragover');
           insertComponent(html, e.target);
           setTemplate();
           scope.$apply();
