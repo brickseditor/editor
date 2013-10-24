@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('bricksApp')
-  .controller('EditorCtrl', function ($scope, components, apps) {
+  .controller('EditorCtrl', function ($scope, $timeout, components, apps) {
     $scope.components = components.all();
     $scope.app = apps.current();
     $scope.newPage = {template: ''};
+    $scope.savePageText = "Save Page";
 
     if (!$scope.app.pages || $scope.app.pages.length === 0) {
       $scope.app.pages = [{url: '/', template: ''}];
@@ -54,5 +55,10 @@ angular.module('bricksApp')
     // Saves the current page.
     $scope.savePage = function () {
       apps.update($scope.app);
+
+      $scope.savePageText = "Saving...";
+      $timeout(function () {
+        $scope.savePageText = "Save Page";
+      }, 1000);
     };
   });
