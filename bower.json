@@ -12,10 +12,14 @@
     "angular-cookies": "~1.2.0-rc.3",
     "angular-sanitize": "~1.2.0-rc.3",
     "angular-animate": "~1.2.0-rc.3",
-    "node-uuid": "~1.4.1"
+    "node-uuid": "~1.4.1",
+    "angular-ui-codemirror": "~0.0.5"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0-rc.3",
     "angular-scenario": "~1.2.0-rc.3"
+  },
+  "resolutions": {
+    "angular": "~1.2.0-rc.3"
   }
 }

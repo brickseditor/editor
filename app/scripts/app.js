@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('bricksApp', ['ngAnimate', 'ngRoute'])
+angular.module('bricksApp', ['ngAnimate', 'ngRoute', 'ui.codemirror'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {

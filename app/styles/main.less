@@ -160,6 +160,7 @@ body {
   padding-top: (@navbar-height + 2px);
   height: 100%;
   width: @sidebar-width;
+  z-index: 10;
 
   .tab-content {
     height: -webkit-calc(~"100% -" @navbar-height);
@@ -194,15 +195,19 @@ body {
   background-color: #505050;
   height: 30px;
   margin-top: -30px;
+  text-align: right;
 
   .save {
     .btn;
     .btn-sm;
     .btn-primary;
-    float: right;
     padding: 2px 5px;
     margin: 4px 3px;
   }
+}
+
+#inspector {
+  height: 300px;
 }
 
 #canvas {
@@ -215,10 +220,17 @@ body {
     height: 100%;
     border: 0;
   }
+
+  &.inspector-visible iframe {
+    height: -webkit-calc(~"100% -" 300px);
+    height: calc(~"100% -" 300px);
+  }
 }
+
 body.collapsed-right #canvas {
   padding-left: 0;
 }
+
 body.collapsed-left #canvas {
   padding-right: 0;
 }

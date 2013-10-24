@@ -7,6 +7,16 @@ angular.module('bricksApp')
     $scope.newPage = {template: ''};
     $scope.savePageText = 'Save Page';
 
+    $scope.codemirrorOptions = {
+      lineWrapping : true,
+      lineNumbers: true,
+      mode: {
+        name: 'xml',
+        htmlMode: true
+      },
+      theme: 'base16-dark'
+    };
+
     if (!$scope.app.pages || $scope.app.pages.length === 0) {
       $scope.app.pages = [{url: '/', template: ''}];
     }

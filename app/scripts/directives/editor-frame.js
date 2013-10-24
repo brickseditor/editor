@@ -6,7 +6,7 @@ angular.module('bricksApp')
       replace: true,
       restrict: 'E',
       scope: {template: '='},
-      template: '<iframe src="about:blank"></iframe>',
+      template: '<iframe src="about:blank" seamless></iframe>',
       link: function (scope, element) {
         var hadDraggable, dragging;
         var iframe = element;
@@ -138,7 +138,7 @@ angular.module('bricksApp')
         // Display the template HTML code.
         scope.$watch('template', function (html) {
           if (view && html && html !== template) {
-            view.html(template);
+            view.html(scope.template);
           }
         });
 
