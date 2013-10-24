@@ -66,9 +66,9 @@ angular.module('bricksApp')
     $scope.savePage = function () {
       apps.update($scope.app);
 
-      $scope.savePageText = "Saving...";
+      $scope.savePageText = 'Saving...';
       $timeout(function () {
-        $scope.savePageText = "Save Page";
+        $scope.savePageText = 'Save Page';
       }, 1000);
     };
   });

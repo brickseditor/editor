@@ -14,7 +14,7 @@ angular.module('bricksApp')
       },
       templateUrl: 'views/modal.html',
       transclude: true,
-      link: function(scope, element, attrs) {
+      link: function(scope) {
         // Modal can be closed by default.
         scope.closeable = scope.closeable();
         if (scope.closeable === void 0) {

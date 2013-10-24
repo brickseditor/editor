@@ -4,7 +4,7 @@ angular.module('bricksApp')
   .directive('activelink', function ($location) {
     return {
       restrict: 'A',
-      link: function (scope, element, attrs, controller) {
+      link: function (scope, element, attrs) {
         var className = attrs.activelink,
         path = element.find('a')[0].hash.substring(1);
 

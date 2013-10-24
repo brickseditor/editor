@@ -59,7 +59,7 @@ angular.module('bricksApp')
 
     // Set the table default columns, add it to the app tables array,
     // set it as the current table and hide the modal
-    $scope.addTable = function (newTable) {
+    $scope.addTable = function () {
       var form = angular.element(document.newTableForm);
 
       if (form.controller('form').$valid) {

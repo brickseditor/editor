@@ -1,5 +1,4 @@
 'use strict';
 
 angular.module('bricksApp')
-  .controller('AboutCtrl', function ($scope) {
-  });
+  .controller('AboutCtrl', function () {});
