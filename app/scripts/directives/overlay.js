@@ -64,6 +64,8 @@ angular.module('bricksApp')
             parent.html(parent.html().trim());
           }
 
+          scope.$emit('change');
+
           select.hide();
         });
 
