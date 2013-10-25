@@ -109,10 +109,7 @@ body {
 
 .panel {
   border: none;
-}
-
-.panel-heading {
-  padding: 0;
+  box-shadow: none;
 }
 
 .panel-title {
@@ -127,6 +124,16 @@ body {
     &:hover {
       text-decoration: none;
     }
+  }
+}
+
+.panel-group .panel-heading {
+  padding: 0;
+  border-top: 1px solid @panel-inner-border;
+  border-bottom: 1px solid @panel-inner-border;
+
+  + .panel-collapse .panel-body {
+    border-top: none;
   }
 }
 

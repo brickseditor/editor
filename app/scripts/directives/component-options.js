@@ -6,7 +6,6 @@ angular.module('bricksApp')
       replace: true,
       require: '^editor',
       restrict: 'E',
-      scope: {},
       template: '<div></div>',
       link: function (scope, element, attrs, editorCtrl) {
         var allComponents = components.all();
