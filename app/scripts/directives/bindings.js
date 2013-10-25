@@ -9,8 +9,7 @@ angular.module('bricksApp')
       scope: {},
       templateUrl: 'views/bindings.html',
       link: function (scope, element, attrs, editorCtrl) {
-        var selection;
-
+        scope.selection;
         scope.tables = apps.current().tables;
         scope.bindings = {};
 
@@ -72,28 +71,28 @@ angular.module('bricksApp')
 
         // Changes element attributes according to selected bindings.
         scope.$watch('bindings', function (bindings) {
-          if (!selection) {
+          if (!scope.selection) {
             return;
           }
 
-          var nodeName = selection.prop('nodeName');
+          var nodeName = scope.selection.prop('nodeName');
           var isInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(nodeName) > -1;
           var attr, repeat;
 
           if (bindings.repeat === 'yes') {
             if (bindings.table) {
               repeat = bindings.table + ' in data[\'' + bindings.table + '\']';
-              selection.attr('ng-repeat', repeat);
+              scope.selection.attr('ng-repeat', repeat);
             }
           } else {
-            selection.removeAttr('ng-repeat');
+            scope.selection.removeAttr('ng-repeat');
           }
 
           if (bindings.table && bindings.column) {
             attr = isInput ? 'ng-model' : 'ng-bind';
-            selection.attr(attr, bindings.table + '.' + bindings.column);
+            scope.selection.attr(attr, bindings.table + '.' + bindings.column);
           } else {
-            selection.removeAttr('ng-bind').removeAttr('ng-model');
+            scope.selection.removeAttr('ng-bind').removeAttr('ng-model');
           }
 
           editorCtrl.updateTemplate();
@@ -101,11 +100,11 @@ angular.module('bricksApp')
 
         // Parses element attributes to set bindings values.
         scope.$on('selection', function () {
-          selection = editorCtrl.selection();
+          scope.selection = editorCtrl.selection();
 
           resetBindings();
-          parseModel(selection);
-          parseRepeat(selection);
+          parseModel(scope.selection);
+          parseRepeat(scope.selection);
 
           scope.$apply();
         });

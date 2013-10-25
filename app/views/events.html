@@ -10,7 +10,7 @@
         <div class="form-group">
           <label class="control-label" for="eventsEvent">Event</label>
           <select class="form-control input-sm" id="eventsType"
-            ng-model="events.type">
+            ng-model="events.type" ng-disabled="!selection">
             <option value=""></option>
             <option value="click">click</option>
           </select>
@@ -19,7 +19,7 @@
         <div class="form-group">
           <label class="control-label" for="eventsAction">Action</label>
           <select class="form-control input-sm" id="eventsAction"
-            ng-model="events.action">
+            ng-model="events.action" ng-disabled="!selection">
             <option value=""></option>
             <option value="save">save</option>
             <option value="delete">delete</option>
@@ -29,7 +29,7 @@
         <div class="form-group">
           <label class="control-label" for="eventsObject">Object</label>
           <select class="form-control input-sm" id="eventsObject"
-            ng-model="events.object"
+            ng-model="events.object" ng-disabled="!selection"
             ng-options="table.name as table.name for table in tables">
             <option value=""></option>
           </select>

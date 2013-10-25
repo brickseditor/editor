@@ -9,7 +9,7 @@ angular.module('bricksApp')
       scope: {},
       templateUrl: 'views/events.html',
       link: function (scope, element, attrs, editorCtrl) {
-        var selection;
+        scope.selection;
 
         scope.tables = apps.current().tables;
         scope.events = {};
@@ -29,21 +29,21 @@ angular.module('bricksApp')
         };
 
         scope.$on('selection', function () {
-          selection = editorCtrl.selection();
-          parseEvent(selection, 'click');
+          scope.selection = editorCtrl.selection();
+          parseEvent(scope.selection, 'click');
           scope.$apply();
         });
 
         scope.$watch('events', function (events) {
           var attrValue;
 
-          if (!selection) {
+          if (!scope.selection) {
             return;
           }
 
           if (events.type && events.action && events.object) {
             attrValue = events.action + '(\'' + events.object + '\')';
-            selection.attr('ng-' + events.type, attrValue);
+            scope.selection.attr('ng-' + events.type, attrValue);
           }
 
           editorCtrl.updateTemplate();

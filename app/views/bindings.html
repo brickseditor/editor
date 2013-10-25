@@ -10,7 +10,8 @@
         <div class="form-group">
           <label class="control-label" for="bindingsTable">Database Table</label>
           <select class="form-control input-sm" id="bindingsTable"
-            ng-model="bindings.table" ng-options="table.name as table.name for table in tables">
+            ng-model="bindings.table" ng-disabled="!selection"
+            ng-options="table.name as table.name for table in tables">
             <option value=""></option>
           </select>
         </div>
@@ -18,7 +19,8 @@
         <div class="form-group">
           <label class="control-label" for="bindingsColumn">Database Column</label>
           <select class="form-control input-sm" id="bindingsColumn"
-            ng-model="bindings.column" ng-options="column.name as column.name for column in columns">
+            ng-model="bindings.column" ng-disabled="!selection"
+            ng-options="column.name as column.name for column in columns">
             <option value=""></option>
           </select>
         </div>
@@ -26,7 +28,7 @@
         <div class="form-group">
           <label class="control-label" for="bindingsRepeat">Repeat Element</label>
           <select class="form-control input-sm" id="bindingsRepeat"
-            ng-model="bindings.repeat">
+            ng-model="bindings.repeat" ng-disabled="!selection">
             <option value="no">no</option>
             <option value="yes">yes</option>
           </select>
