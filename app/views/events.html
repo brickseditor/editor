@@ -1,0 +1,40 @@
+<div class="panel panel-default" ng-init="open = true">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a class="accordion-toggle" href ng-click="open = !open">Events</a>
+    </h4>
+  </div>
+  <div class="panel-collapse" ng-show="open">
+    <div class="panel-body">
+      <form>
+        <div class="form-group">
+          <label class="control-label" for="eventsEvent">Event</label>
+          <select class="form-control input-sm" id="eventsType"
+            ng-model="events.type">
+            <option value=""></option>
+            <option value="click">click</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label" for="eventsAction">Action</label>
+          <select class="form-control input-sm" id="eventsAction"
+            ng-model="events.action">
+            <option value=""></option>
+            <option value="save">save</option>
+            <option value="delete">delete</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label" for="eventsObject">Object</label>
+          <select class="form-control input-sm" id="eventsObject"
+            ng-model="events.object"
+            ng-options="table.name as table.name for table in tables">
+            <option value=""></option>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

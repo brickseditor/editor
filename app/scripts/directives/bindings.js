@@ -6,6 +6,7 @@ angular.module('bricksApp')
       replace: true,
       require: '^editor',
       restrict: 'E',
+      scope: {},
       templateUrl: 'views/bindings.html',
       link: function (scope, element, attrs, editorCtrl) {
         var selection;
@@ -21,7 +22,7 @@ angular.module('bricksApp')
           };
         };
 
-        var parseModel = function(selection) {
+        var parseModel = function (selection) {
           var  column, model, table;
 
           model = selection.attr('ng-model') || selection.attr('ng-bind');

@@ -6,8 +6,10 @@ angular.module('bricksApp')
       replace: true,
       require: '^editor',
       restrict: 'E',
-      template: '<div></div>',
+      scope: {},
+      templateUrl: 'views/component-options.html',
       link: function (scope, element, attrs, editorCtrl) {
+        var panel = element.find('.panel-body');
         var allComponents = components.all();
         scope.component = {};
         scope.options = {};
@@ -35,7 +37,7 @@ angular.module('bricksApp')
           });
 
           eval(scope.component['admin-script']);
-          element.empty().append($compile(scope.component.admin)(scope));
+          panel.empty().append($compile(scope.component.admin)(scope));
         });
       }
     };
