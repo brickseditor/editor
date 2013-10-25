@@ -118,9 +118,9 @@ angular.module('bricksApp')
         // Display the template HTML code.
         scope.$watch(function () {
           return editorCtrl.page().template;
-        }, function (newValue, oldValue) {
-          if (view && newValue !== oldValue) {
-            view.html(newValue);
+        }, function (template) {
+          if (view && template !== view.html()) {
+            view.html(template);
           }
         });
 
