@@ -15,7 +15,7 @@ angular.module('bricksApp')
           if (!view) {
             view = iframe.contents().find('div[ng-view]');
           }
-          $scope.currentPage.template = view.html();
+          $scope.currentPage.template = html_beautify(view.html());
         };
 
         var selectElement = function (element) {
@@ -65,6 +65,7 @@ angular.module('bricksApp')
           scope.app.pages = [{url: '/', template: ''}];
         }
         scope.currentPage = scope.app.pages[0];
+        scope.currentPage.template = html_beautify(scope.currentPage.template);
 
         scope.addPage = function () {
           var newPage = angular.copy(scope.newPage);
