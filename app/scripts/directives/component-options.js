@@ -27,6 +27,10 @@ angular.module('bricksApp')
         // the component admin template to the directive element and executes
         // the compoent admin scripts.
         scope.$on('selection', function () {
+          scope.options = {};
+          scope.component = {};
+          form.empty();
+
           allComponents.some(function (component) {
             var condition;
 
@@ -40,8 +44,13 @@ angular.module('bricksApp')
             return condition;
           });
 
-          eval(scope.component['admin-script']);
-          form.empty().append($compile(scope.component.admin)(scope));
+          if (scope.component['admin-script']) {
+            eval(scope.component['admin-script']);
+          }
+
+          if (scope.component.admin) {
+            form.append($compile(scope.component.admin)(scope));
+          }
 
           $timeout(function () {
             scope.$apply();
