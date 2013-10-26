@@ -6,7 +6,7 @@
   </div>
   <div class="panel-collapse" ng-show="open">
     <div class="panel-body">
-      <form>
+      <form ng-if="tables && tables.length > 0">
         <div class="form-group">
           <label class="control-label" for="bindingsTable">Database Table</label>
           <select class="form-control input-sm" id="bindingsTable" ng-model="bindings.table" ng-disabled="!selection" ng-options="table.name as table.name for table in tables">
@@ -29,6 +29,8 @@
           </select>
         </div>
       </form>
+      <p ng-if="!tables || tables.length === 0">There're no tables in the database.
+        <a href="#/database">Create tables.</a></p>
     </div>
   </div>
 </div>
