@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+    <style>
+      :empty:not(#bricks-highlight) {
+        min-height: 50px;
+        min-width: 50px;
+        border: 4px dashed #f0ad4e;
+      }
+      .bricks-dragover {
+        border-bottom: 4px solid #428bca;
+      }
+    </style>
+  </head>
+  <body>
+    <div ng-view=""></div>
+  </body>
+</html>
