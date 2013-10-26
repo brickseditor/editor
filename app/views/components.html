@@ -4,7 +4,7 @@
     <template>
       <div class="container"></div>
     </template>
-    <selector>.container</selector>
+    <selector>div.container</selector>
   </component>
 
   <component>
@@ -21,7 +21,7 @@
         </div>
       </div>
     </template>
-    <selector>.row</selector>
+    <selector>div.row</selector>
   </component>
 
   <component>
@@ -32,26 +32,24 @@
         <p>This is a paragraph.</p>
       </div>
     </template>
-    <selector>[class*='col-']</selector>
+    <selector>div[class*='col-']</selector>
     <admin>
-      <form role="form">
-        <div class="form-group">
-          <label for="optionsGridColumnWidth">Column width</label>
-          <select class="form-control input-sm" id="optionsGridColumnWidth"
-            ng-model="options.width" required ng-change="change()" ng-options="k for k in options.widths">
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="optionsGridColumnDevices">Collapse on</label>
-          <select class="form-control input-sm" id="optionsGridColumnDevices"
-            ng-model="options.devices" required ng-change="change()">
-            <option value="lg">all small and medium screens</option>
-            <option value="md">tablets and phones</option>
-            <option value="sm">phones only</option>
-            <option value="xs">neither</option>
-          </select>
-        </div>
-      </form>
+      <div class="form-group">
+        <label for="optionsGridColumnWidth">Column width</label>
+        <select id="optionsGridColumnWidth" ng-model="options.width"
+          ng-options="k for k in options.widths" ng-change="change()">
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="optionsGridColumnDevices">Collapse on</label>
+        <select id="optionsGridColumnDevices" ng-model="options.devices"
+          ng-change="change()">
+          <option value="lg">all small and medium screens</option>
+          <option value="md">tablets and phones</option>
+          <option value="sm">phones only</option>
+          <option value="xs">neither</option>
+        </select>
+      </div>
     </admin>
     <admin-script>
       var classes = [];
@@ -85,7 +83,7 @@
       });
 
       // Updates the selection classes.
-      scope.updateSelection = function () {
+      scope.update = function () {
         var newDeviceWidthClass = 'col-' + scope.options.devices + '-' +
                                   scope.options.width;
 
@@ -103,6 +101,29 @@
       <h1>This is a heading.</h1>
     </template>
     <selector>h1, h2, h3, h4, h5, h6</selector>
+    <admin>
+      <div class="form-group">
+        <label for="optionsHeadingType">Type</label>
+        <select id="optionsGridColumnWidth" ng-model="options.type"
+          ng-options="k.value as k.label for k in options.types"
+          ng-change="change()">
+        </select>
+      </div>
+    </admin>
+    <admin-script>
+      scope.options.types = Array.apply(0, Array(6)).map(function (x, i) {
+        var j = i + 1;
+        return {value: 'H' + j, label: 'heading ' + j};
+      });
+      scope.options.type = scope.selection.prop('nodeName');
+
+      scope.update = function () {
+        var newElement = angular.element(document.createElement(scope.options.type));
+        newElement.append(scope.selection.contents());
+        scope.selection.replaceWith(newElement);
+        scope.select(newElement);
+      };
+    </admin-script>
   </component>
 
   <component>
@@ -132,8 +153,10 @@
     <name>Blockquote</name>
     <template>
       <blockquote>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-        <small>Someone famous in <cite title="Source Title">Source Title</cite></small>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Integer posuere erat a ante.</p>
+        <small>Someone famous in <cite title="Source Title">Source Title</cite>
+        </small>
       </blockquote>
     </template>
     <selector>blockquote</selector>
@@ -154,12 +177,12 @@
   <component>
     <name>Description</name>
     <template>
-    <dl>
-      <dt>Defined Term 1</dt>
-      <dd>This is the definition of Term 1.</dd>
-      <dt>Defined Term 2</dt>
-      <dd>This is the definition of Term 2.</dd>
-    </dl>
+      <dl>
+        <dt>Defined Term 1</dt>
+        <dd>This is the definition of Term 1.</dd>
+        <dt>Defined Term 2</dt>
+        <dd>This is the definition of Term 2.</dd>
+      </dl>
     </template>
     <selector>dl</selector>
   </component>
@@ -206,8 +229,8 @@
     <template>
       <form role="form">
         <div class="form-group">
-          <label for="exampleInputEmail1">Input label</label>
-          <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter text">
+          <label>Text Input</label>
+          <input type="text" class="form-control">
         </div>
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
@@ -218,41 +241,76 @@
   <component>
     <name>Text Input</name>
     <template>
+      <div class="form-group">
+        <label>Text Input</label>
+        <input type="text" class="form-control">
+      </div>
     </template>
-    <condition>
-    </condition>
+    <selector>input[type="text"]</selector>
   </component>
 
   <component>
     <name>Textarea</name>
     <template>
+      <div class="form-group">
+        <label>Textarea</label>
+        <textarea class="form-control" rows="3"></textarea>
+      </div>
     </template>
-    <condition>
-    </condition>
+    <selector>textarea</selector>
   </component>
 
   <component>
     <name>Checkbox</name>
     <template>
+      <div class="form-group">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="">
+            Checkbox
+          </label>
+        </div>
+      </div>
     </template>
-    <condition>
-    </condition>
+    <selector>input[type="checkbox"]</selector>
   </component>
 
   <component>
     <name>Radio</name>
     <template>
+      <div class="form-group">
+        <div class="radio">
+          <label>
+            <input type="radio" name="optionsRadios" value="1" checked>
+            Radio Option 1
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" name="optionsRadios" value="2">
+            Radio Option 2
+          </label>
+        </div>
+      </div>
     </template>
-    <condition>
-    </condition>
+    <selector>input[type="radio"]</selector>
   </component>
 
   <component>
     <name>Select</name>
     <template>
+      <div class="form-group">
+        <label>Select</label>
+        <select class="form-control">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </div>
     </template>
-    <condition>
-    </condition>
+    <selector>select</selector>
   </component>
 
   <component>
@@ -260,8 +318,7 @@
     <template>
       <button type="button" class="btn btn-default">Button</button>
     </template>
-    <condition>
-    </condition>
+    <selector>.btn</selector>
   </component>
 
   <component>
@@ -269,7 +326,46 @@
     <template>
       <img src="http://placehold.it/100x100" alt="">
     </template>
-    <condition>
-    </condition>
+    <selector>img</selector>
+    <admin>
+      <div class="form-group">
+        <label for="optionsImageSrc">URL</label>
+        <input type="text" id="optionsImageSrc" ng-model="options.src"
+          ng-change="change()">
+      </div>
+      <div class="form-group">
+        <label for="optionsImageResponsive">Responsive</label>
+        <select id="optionsImageResponsive" ng-model="options.responsive"
+          ng-options="k for k in ['yes', 'no']" ng-change="change()">
+        </select>
+      </div>
+    </admin>
+    <admin-script>
+      scope.options.src = scope.selection.attr('src');
+
+      if (scope.selection.hasClass('img-responsive')) {
+        scope.options.responsive = 'yes';
+      } else {
+        scope.options.responsive = 'no';
+      }
+
+      scope.update = function () {
+        scope.selection.attr('src', scope.options.src);
+
+        if (scope.options.responsive === 'yes') {
+          scope.selection.addClass('img-responsive');
+        } else {
+          scope.selection.removeClass('img-responsive');
+        }
+      };
+    </admin-script>
+  </component>
+
+  <component>
+    <name>Close Icon</name>
+    <template>
+      <button type="button" class="close" aria-hidden="true">&times;</button>
+    </template>
+    <selector>button.close</selector>
   </component>
 </components>

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bricksApp')
-  .directive('bindings', function (apps) {
+  .directive('bindings', function ($timeout, apps) {
     return {
       replace: true,
       require: '^editor',
@@ -9,7 +9,7 @@ angular.module('bricksApp')
       scope: {},
       templateUrl: 'views/bindings.html',
       link: function (scope, element, attrs, editorCtrl) {
-        scope.selection;
+        scope.selection = null;
         scope.tables = apps.current().tables;
         scope.bindings = {};
 
@@ -106,7 +106,9 @@ angular.module('bricksApp')
           parseModel(scope.selection);
           parseRepeat(scope.selection);
 
-          scope.$apply();
+          $timeout(function () {
+            scope.$apply();
+          });
         });
       }
     };

@@ -28,8 +28,13 @@ angular.module('bricksApp')
           }
         };
 
-        var selection = function () {
-          return selectedElement;
+        var selection = function (element) {
+          if (element) {
+            selectedElement = element;
+            $scope.$broadcast('selection');
+          } else {
+            return selectedElement;
+          }
         };
 
         var page = function () {

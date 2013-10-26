@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bricksApp')
-  .directive('componentOptions', function ($compile, components) {
+  .directive('componentOptions', function ($compile, $timeout, components) {
     return {
       replace: true,
       require: '^editor',
@@ -9,16 +9,17 @@ angular.module('bricksApp')
       scope: {},
       templateUrl: 'views/component-options.html',
       link: function (scope, element, attrs, editorCtrl) {
-        var panel = element.find('.panel-body');
+        var form = element.find('form');
         var allComponents = components.all();
         scope.component = {};
         scope.options = {};
-        scope.updateSelection = function () {};
+        scope.update = function () {};
+        scope.select = editorCtrl.selection;
 
         // Update the selected DOM element and emit a change event to be
         // received by the iframe.
         scope.change = function () {
-          scope.updateSelection();
+          scope.update();
           editorCtrl.updateTemplate();
         };
 
@@ -28,16 +29,23 @@ angular.module('bricksApp')
         scope.$on('selection', function () {
           allComponents.some(function (component) {
             var condition;
+
             scope.selection = editorCtrl.selection();
             condition = scope.selection.is(component.selector);
+
             if (condition) {
               scope.component = component;
             }
+
             return condition;
           });
 
           eval(scope.component['admin-script']);
-          panel.empty().append($compile(scope.component.admin)(scope));
+          form.empty().append($compile(scope.component.admin)(scope));
+
+          $timeout(function () {
+            scope.$apply();
+          });
         });
       }
     };

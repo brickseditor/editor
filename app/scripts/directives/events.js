@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bricksApp')
-  .directive('events', function (apps) {
+  .directive('events', function ($timeout, apps) {
     return {
       replace: true,
       require: '^editor',
@@ -9,8 +9,7 @@ angular.module('bricksApp')
       scope: {},
       templateUrl: 'views/events.html',
       link: function (scope, element, attrs, editorCtrl) {
-        scope.selection;
-
+        scope.selection = null;
         scope.tables = apps.current().tables;
         scope.events = {};
 
@@ -31,7 +30,10 @@ angular.module('bricksApp')
         scope.$on('selection', function () {
           scope.selection = editorCtrl.selection();
           parseEvent(scope.selection, 'click');
-          scope.$apply();
+
+          $timeout(function () {
+            scope.$apply();
+          });
         });
 
         scope.$watch('events', function (events) {
