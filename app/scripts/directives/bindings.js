@@ -61,17 +61,19 @@ angular.module('bricksApp')
         };
 
         scope.$watch('bindings.table', function (table) {
-          scope.tables.some(function (t) {
-            if (t.name === table) {
-              scope.columns = t.columns;
-              return true;
-            }
-          });
+          if (scope.tables && table) {
+            scope.tables.some(function (t) {
+              if (t.name === table) {
+                scope.columns = t.columns;
+                return true;
+              }
+            });
+          }
         });
 
         // Changes element attributes according to selected bindings.
         scope.$watch('bindings', function (bindings) {
-          if (!scope.selection) {
+          if (!scope.selection || !scope.bindings.tables) {
             return;
           }
 

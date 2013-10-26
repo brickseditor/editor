@@ -12,10 +12,16 @@ angular.module('bricksApp')
     $scope.app = apps.current();
     $scope.storage = new Storage($scope.app.id);
 
+    $scope.selectTable = function (i) {
+      $scope.currentTable = $scope.app.tables[i];
+      $scope.currentIndex = i;
+      if ($scope.currentTable) {
+        $scope.data = $scope.storage.getTable($scope.currentTable.name);
+      }
+    };
+
     if ($scope.app.tables) {
-      $scope.currentIndex = 0;
-      $scope.currentTable = $scope.app.tables[0];
-      $scope.data = $scope.storage.getTable($scope.currentTable.name);
+      $scope.selectTable(0);
     }
 
     // Properties used in modals
@@ -39,12 +45,6 @@ angular.module('bricksApp')
 
     $scope.hasTables = function () {
       return $scope.app.tables && $scope.app.tables.length > 0;
-    };
-
-    $scope.selectTable = function (i) {
-      $scope.currentTable = $scope.app.tables[i];
-      $scope.currentIndex = i;
-      $scope.data = $scope.storage.getTable($scope.currentTable.name);
     };
 
     $scope.isDefaultColumn = function (column) {
