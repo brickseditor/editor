@@ -73,7 +73,7 @@ angular.module('bricksApp')
 
         // Changes element attributes according to selected bindings.
         scope.$watch('bindings', function (bindings) {
-          if (!scope.selection || !scope.bindings.tables) {
+          if (!scope.selection || !scope.tables) {
             return;
           }
 
@@ -81,11 +81,9 @@ angular.module('bricksApp')
           var isInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(nodeName) > -1;
           var attr, repeat;
 
-          if (bindings.repeat === 'yes') {
-            if (bindings.table) {
-              repeat = bindings.table + ' in data[\'' + bindings.table + '\']';
-              scope.selection.attr('ng-repeat', repeat);
-            }
+          if (bindings.repeat === 'yes' && bindings.table) {
+            repeat = bindings.table + ' in data[\'' + bindings.table + '\']';
+            scope.selection.attr('ng-repeat', repeat);
           } else {
             scope.selection.removeAttr('ng-repeat');
           }

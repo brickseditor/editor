@@ -110,7 +110,8 @@ angular.module('bricksApp')
 
     $scope.addRow = function () {
       $scope.storage.addRow($scope.currentTable.name, $scope.newRow);
-      $scope.data.push($scope.newRow);
+      $scope.data.push(angular.copy($scope.newRow));
+      $scope.newRow = {};
       $scope.showModal.newRow = false;
     };
 

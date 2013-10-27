@@ -6,7 +6,8 @@ angular.module('bricksApp')
       replace: true,
       require: '^editor',
       restrict: 'E',
-      template: '<iframe src="about:blank" seamless></iframe>',
+      template: '<iframe class="edit-frame" src="about:blank" seamless>' +
+        '</iframe>',
       link: function (scope, element, attrs, editorCtrl) {
         var hadDraggable, dragging;
         var iframe = element;
@@ -134,8 +135,8 @@ angular.module('bricksApp')
           page.on('dragleave', dragleave);
           page.on('drop', drop);
 
-          page.on('mouseover', makeDraggable);
-          page.on('mouseout', destroyDraggable);
+          page.on('mousedown', makeDraggable);
+          page.on('mouseup', destroyDraggable);
         });
 
         $http.get('views/layout.html', {cache: true})
