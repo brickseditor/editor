@@ -9,9 +9,7 @@
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <!-- build:css(.tmp) styles/preview.css -->
-        <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- endbuild -->
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
   <body ng-app="bricksAppPreview">
     <!--[if lt IE 7]>
@@ -25,18 +23,9 @@
 
     <div ng-view=""></div>
 
-        <!-- build:js scripts/preview-plugins.js -->
-        <script src="bower_components/jquery/jquery.js"></script>
-        <script src="bower_components/angular/angular.js"></script>
-        <script src="bower_components/node-uuid/uuid.js"></script>
-        <!-- endbuild -->
-
-        <!-- build:js scripts/preview-modules.js -->
-        <script src="bower_components/angular-route/angular-route.js"></script>
-        <!-- endbuild -->
-
-        <!-- build:js({.tmp,app}) scripts/preview-scripts.js -->
-        <script src="scripts/preview.js"></script>
-        <!-- endbuild -->
+        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular-route.min.js"></script>
+        <script src="scripts/build.js"></script>
 </body>
 </html>

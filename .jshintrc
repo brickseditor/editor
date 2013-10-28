@@ -22,6 +22,8 @@
     "angular": false,
     "html_beautify": false,
     "jQuery": false,
+    "JSZip": false,
+    "saveAs": false,
     "uuid": false
   }
 }
