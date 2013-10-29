@@ -1,0 +1,13 @@
+{
+  "name": "FileSaver",
+  "version": "1.0.0",
+  "main": "./FileSaver.js",
+  "dependencies": {},
+  "_cacheHeaders": {
+    "Content-Type": "application/zip",
+    "Content-Disposition": "attachment; filename=FileSaver.js-d8c81c105f3f952326ead7700c8cf6da2690eba0.zip"
+  },
+  "_source": "https://github.com/eligrey/FileSaver.js/archive/d8c81c105f3f952326ead7700c8cf6da2690eba0.zip",
+  "_target": "*",
+  "_originalSource": "https://github.com/eligrey/FileSaver.js/archive/d8c81c105f3f952326ead7700c8cf6da2690eba0.zip"
+}
