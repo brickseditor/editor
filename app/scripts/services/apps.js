@@ -37,7 +37,10 @@ angular.module('bricksApp')
       // Adds an app from the supplied parameters. Generates a UUID for
       // the app id.
       add: function (app) {
-        app.id = uuid();
+        app.id = app.id || uuid();
+        app.pages = app.pages || [];
+        app.tables = app.tables || [];
+
         apps.push(angular.copy(app));
         $window.localStorage.setItem(keyAll, JSON.stringify(apps));
       },

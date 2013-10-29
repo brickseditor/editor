@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('bricksAppPreview', ['ngRoute'])
+angular.module('bricksApp', ['ngRoute'])
   .config(function ($routeProvider) {
     var template = function (route) {
       var app = window.bricksApp;
@@ -8,7 +8,7 @@ angular.module('bricksAppPreview', ['ngRoute'])
       var path = route.route ? '/' + route.route : '/';
       var template;
 
-      if (!app.pages || app.pages.length === 0) {
+      if (app.pages.length === 0) {
         return notFound;
       }
 

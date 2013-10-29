@@ -29,7 +29,7 @@ angular.module('bricksApp')
           document[0].close();
         };
 
-        $http.get('views/preview.html', {cache: true})
+        $http.get('preview.html', {cache: true})
           .success(function (response) {
             scope.content = response;
             scope.reload();

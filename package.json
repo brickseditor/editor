@@ -18,7 +18,7 @@
     "grunt-contrib-imagemin": "~0.2.0",
     "grunt-contrib-watch": "~0.5.2",
     "grunt-autoprefixer": "~0.2.0",
-    "grunt-usemin": "~0.1.11",
+    "grunt-usemin": "https://github.com/sorich87/grunt-usemin/archive/usemin-prepare-multiple-targets.tar.gz",
     "grunt-svgmin": "~0.2.0",
     "grunt-rev": "~0.1.0",
     "grunt-open": "~0.2.0",

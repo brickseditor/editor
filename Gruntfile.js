@@ -1,9 +1,27 @@
 // Generated on 2013-10-14 using generator-angular 0.4.0
 'use strict';
 var LIVERELOAD_PORT = 35729;
+var path = require('path');
 var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
 var mountFolder = function (connect, dir) {
-  return connect.static(require('path').resolve(dir));
+  return connect.static(path.resolve(dir));
+};
+var useminNgminStep = {
+  name: 'ngmin',
+  createConfig: function(context, block) {
+    var cfg = {files: []};
+    // FIXME: check context has all the needed info
+    var outfile = path.join(context.outDir, block.dest);
+
+    // Depending whether or not we're the last of the step we're not going to output the same thing
+    var files = {};
+    files.dest = outfile;
+    files.src = [];
+    context.inFiles.forEach(function(f) { files.src.push(path.join(context.inDir, f));} );
+    cfg.files.push(files);
+    context.outFiles = [block.dest];
+    return cfg;
+  }
 };
 
 // # Globbing
@@ -173,6 +191,7 @@ module.exports = function (grunt) {
         files: {
           src: [
             '<%= yeoman.dist %>/scripts/{,*/}*.js',
+            '!<%= yeoman.dist %>/scripts/preview.js',
             '<%= yeoman.dist %>/styles/{,*/}*.css',
             '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
             '<%= yeoman.dist %>/styles/fonts/*'
@@ -181,16 +200,25 @@ module.exports = function (grunt) {
       }
     },
     useminPrepare: {
-      html: '<%= yeoman.app %>/index.html',
+      dist: {
+        src: ['<%= yeoman.app %>/index.html', '<%= yeoman.app %>/preview.html']
+      },
       options: {
-        dest: '<%= yeoman.dist %>'
+        dest: '<%= yeoman.dist %>',
+        flow: {
+          steps: {
+            js: ['concat', useminNgminStep, 'uglifyjs'],
+            css: ['concat', 'cssmin']
+          },
+          post: {}
+        }
       }
     },
     usemin: {
       html: ['<%= yeoman.dist %>/{,*/}*.html'],
       css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
       options: {
-        dirs: ['<%= yeoman.dist %>']
+        assetsDirs: ['<%= yeoman.dist %>']
       }
     },
     imagemin: {
@@ -260,7 +288,8 @@ module.exports = function (grunt) {
             '.htaccess',
             'bower_components/**/*',
             'images/{,*/}*.{gif,webp}',
-            'styles/fonts/*'
+            'styles/fonts/*',
+            'scripts/preview.js'
           ]
         }, {
           expand: true,
@@ -311,7 +340,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.dist %>/scripts',
-          src: '*.js',
+          src: ['*.js', '!preview.js'],
           dest: '<%= yeoman.dist %>/scripts'
         }]
       }
