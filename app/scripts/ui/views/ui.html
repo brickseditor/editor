@@ -48,24 +48,17 @@
     <collapse-button position="left"></collapse-button>
   </div>
 
-  <div id="canvas" ng-class="{'inspector-visible': showInspector}">
+  <div id="canvas">
     <div id="toolbar">
-      <device-switch iframe=".edit-frame"></device-switch>
-      <button class="btn btn-link" ng-click="showInspector = !showInspector">
-        <span class="fa fa-code"></span>
-      </button>
-      <preview-button app="app" url="currentPage.url"></preview-button>
+      <devices iframe=".edit-frame"></devices>
+      <inspector template="currentPage.template"></inspector>
+      <preview app="app" url="currentPage.url"></preview>
       <button class="save" ng-click="savePage()">{{savePageText}}</button>
     </div>
 
     <editor-frame></editor-frame>
 
     <overlay iframe=".edit-frame"></overlay>
-
-    <div id="inspector" ng-show="showInspector">
-      <textarea ui-codemirror="codemirrorOptions" ui-refresh="showInspector"
-        ng-model="currentPage.template"></textarea>
-    </div>
   </div>
 
   <modal title="'New Page'" submit="addPage()"

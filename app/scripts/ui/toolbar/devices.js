@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('bricksApp.ui')
-  .directive('deviceSwitch', function () {
+  .directive('devices', function () {
     return {
       restrict: 'E',
       scope: {
         iframe: '@'
       },
-      templateUrl: 'scripts/ui/views/device-switch.html',
+      templateUrl: 'scripts/ui/toolbar/devices.html',
       link: function (scope) {
         var iframe = angular.element(scope.iframe);
 

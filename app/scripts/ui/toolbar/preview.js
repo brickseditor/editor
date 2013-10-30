@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bricksApp.ui')
-  .directive('previewButton', function ($http, apps) {
+  .directive('preview', function ($http) {
     return {
       replace: true,
       restrict: 'E',
