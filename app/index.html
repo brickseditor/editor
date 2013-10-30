@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <!-- build:css(.tmp) styles/main.css -->
+        <!-- build:css({.tmp,app}) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
         <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css">
         <link rel="stylesheet" href="bower_components/codemirror/theme/base16-dark.css">
@@ -27,7 +27,7 @@
       <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
 
-    <div ng-include="'views/navbar.html'"></div>
+    <div ng-include="'scripts/common/views/navbar.html'"></div>
 
     <div class="container" ng-view=""></div>
 
@@ -88,6 +88,7 @@
         <script src="scripts/ui/services/components.js"></script>
         <script src="scripts/ui/toolbar/devices.js"></script>
         <script src="scripts/ui/toolbar/inspector.js"></script>
+        <script src="scripts/ui/toolbar/pages.js"></script>
         <script src="scripts/ui/toolbar/preview.js"></script>
         <script src="scripts/app.js"></script>
         <!-- endbuild -->

@@ -4,15 +4,17 @@ angular.module('bricksApp.ui')
   .directive('inspector', function ($compile) {
     return {
       replace: true,
+      require: '^editor',
       restrict: 'E',
-      scope: {template: '='},
       template: '<button class="btn btn-link" ng-click="show = !show">' +
         '<span class="fa fa-code"></span></button>',
-      link: function (scope, element) {
-        var canvas = element.parent().parent();
+      link: function (scope, element, attrs, editorCtrl) {
+        var canvas = element.closest('#canvas');
+
+        scope.page = editorCtrl.page;
 
         canvas.append($compile('<div id="inspector" ng-show="show">' +
-            '<textarea ng-model="template" ui-refresh="show" ' +
+            '<textarea ng-model="page().template" ui-refresh="show" ' +
               'ui-codemirror="codemirrorOptions"></textarea>' +
             '</div>')(scope));
 

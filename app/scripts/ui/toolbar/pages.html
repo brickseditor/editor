@@ -1,0 +1,44 @@
+<div class="btn-group pages">
+  <button type="button" class="switch-page" ng-click="showMenu = !showMenu">
+    Page: {{current.url}} <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" ng-show="showMenu">
+    <li ng-repeat="page in app.pages"
+      ng-class="{disabled: page.url === current.url}">
+      <a href ng-click="setCurrent(page)">{{page.url}}</a>
+      <li class="divider"></li>
+      <li>
+        <a href="" ng-click="showModal = true">
+          <span class="glyphicon glyphicon-plus"></span>
+          New Page
+        </a>
+      </li>
+    </li>
+  </ul>
+
+  <preview></preview>
+  <button class="delete" ng-click="deletePage()"
+    ng-disabled="current.url === '/'">
+    Delete
+  </button>
+  <button class="save" ng-click="savePage()">
+    {{savePageText}}
+  </button>
+
+  <modal title="'New Page'" submit="addPage()"
+    close="showModal = false" open="showModal">
+    <form class="form-horizontal" action="" ng-submit="addPage()">
+      <div class="form-group">
+        <label class="col-sm-4 control-label" for="newPageURL">
+          URL
+        </label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="newPageURL" required
+            ng-model="$parent.newPage.url" ng-pattern="/^\/[a-zA-Z0-9_]*$/"
+            name="name" validation-class>
+          <span class="help-block">Example '/products', '/users'</span>
+        </div>
+      </div>
+    </form>
+  </modal>
+</div>

@@ -38,7 +38,7 @@ angular.module('bricksApp.common')
       // the app id.
       add: function (app) {
         app.id = app.id || uuid();
-        app.pages = app.pages || [];
+        app.pages = app.pages || [{url: '/', template: ''}];
         app.tables = app.tables || [];
 
         apps.push(angular.copy(app));
