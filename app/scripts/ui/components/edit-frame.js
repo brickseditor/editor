@@ -108,6 +108,7 @@ angular.module('bricksApp.ui')
         };
 
         var selectElement = function (e) {
+          e.preventDefault();
           var element = angular.element(e.target);
           uiCtrl.selectElement(element);
         };
