@@ -1,14 +1,10 @@
 'use strict';
 
 angular.module('bricksApp.ui')
-  .directive('editorFrame', function ($http) {
+  .directive('editFrame', function ($http) {
     return {
-      replace: true,
-      require: '^editor',
-      restrict: 'E',
-      template: '<iframe class="edit-frame" src="about:blank" seamless>' +
-        '</iframe>',
-      link: function (scope, element, attrs, editorCtrl) {
+      require: '^ui',
+      link: function (scope, element, attrs, uiCtrl) {
         var hadDraggable, dragging;
         var iframe = element;
         var page = iframe.contents();
@@ -105,7 +101,7 @@ angular.module('bricksApp.ui')
 
           dropTarget.removeClass('bricks-dragover');
           insertComponent(html, e.target);
-          editorCtrl.updateTemplate();
+          uiCtrl.updateTemplate();
           scope.$apply();
 
           return false;
@@ -113,12 +109,12 @@ angular.module('bricksApp.ui')
 
         var selectElement = function (e) {
           var element = angular.element(e.target);
-          editorCtrl.selectElement(element);
+          uiCtrl.selectElement(element);
         };
 
         // Display the template HTML code.
         scope.$watch(function () {
-          return editorCtrl.page().template;
+          return uiCtrl.page().template;
         }, function (template) {
           if (view && template !== view.html()) {
             view.html(template);
@@ -127,7 +123,7 @@ angular.module('bricksApp.ui')
 
         iframe.on('load', function () {
           view = page.find('div[ng-view]');
-          view.html(editorCtrl.page().template);
+          view.html(uiCtrl.page().template);
 
           page.on('click', selectElement);
 
@@ -139,7 +135,7 @@ angular.module('bricksApp.ui')
           page.on('mouseup', destroyDraggable);
         });
 
-        $http.get('scripts/ui/views/layout.html', {cache: true})
+        $http.get('layout.html', {cache: true})
           .success(function (response) {
             page[0].open();
             page[0].write(response);

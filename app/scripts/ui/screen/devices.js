@@ -4,12 +4,9 @@ angular.module('bricksApp.ui')
   .directive('devices', function () {
     return {
       restrict: 'E',
-      scope: {
-        iframe: '@'
-      },
-      templateUrl: 'scripts/ui/toolbar/devices.html',
-      link: function (scope) {
-        var iframe = angular.element(scope.iframe);
+      templateUrl: 'scripts/ui/screen/devices.html',
+      link: function (scope, element) {
+        var iframes = angular.element('#canvas').find('iframe');
 
         scope.devices = [
           'mobile', 'tablet', 'laptop', 'desktop', 'resize-full'
@@ -17,7 +14,7 @@ angular.module('bricksApp.ui')
         scope.currentDevice = 'resize-full';
 
         scope.$watch('currentDevice', function (value, oldValue) {
-          iframe.removeClass('device-' + oldValue).addClass('device-' + value);
+          iframes.removeClass('device-' + oldValue).addClass('device-' + value);
         });
       }
     };

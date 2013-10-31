@@ -1,6 +1,6 @@
 @import "../bower_components/bootstrap/less/bootstrap.less";
 @import "../bower_components/font-awesome/less/font-awesome.less";
-@import "directives/collapseButton.less";
+@import "ui/sidebar-toggle.less";
 
 // Bootstap variables overwrites.
 @icon-font-path: "../bower_components/bootstrap/fonts/";
@@ -161,13 +161,15 @@ body {
 #editor {
   width: 100%;
   height: 100%;
+  position: absolute;
+  overflow: hidden;
 }
 
 .sidebar {
   background-color: @panels-bg;
   color: @panels-color;
   position: relative;
-  padding-top: (@navbar-height + 2px);
+  padding-top: @navbar-height;
   height: 100%;
   width: @sidebar-width;
   z-index: 10;
@@ -197,13 +199,17 @@ body {
 
 #details {
   float: right;
-  overflow-y: scroll;
-  padding-top: @navbar-height;
   font-size: @font-size-small;
+
+  .panel-group {
+    height: 100%;
+    overflow-y: scroll;
+  }
 
   label {
     font-weight: 300;
   }
+
   input, select {
     .form-control;
     .input-sm;
@@ -212,8 +218,8 @@ body {
 
 #toolbar {
   background-color: #505050;
+  margin: @navbar-height @sidebar-width 0 @sidebar-width;
   height: 30px;
-  margin-top: -30px;
 
   .pages {
     padding-left: 10px;
@@ -280,13 +286,13 @@ body {
   }
 }
 
-#inspector {
+.inspector {
   height: 300px;
 }
 
 #canvas {
   background-color: #505050;
-  padding: (@navbar-height + 30px) @sidebar-width 0 @sidebar-width;
+  padding: 0 @sidebar-width;
   width: 100%;
   height: 100%;
 
@@ -309,22 +315,17 @@ body {
       width: @screen-lg;
     }
 
-    &.preview-frame {
+    &[preview-frame] {
       display: none;
     }
   }
 
-  &.inspector-visible iframe {
-    height: -webkit-calc(~"100% -" 300px);
-    height: calc(~"100% -" 300px);
-  }
-
   &.preview {
-    .preview-frame {
+    [preview-frame] {
       display: block;
     }
 
-    .edit-frame {
+    [edit-frame] {
       display: none;
     }
   }
@@ -336,6 +337,11 @@ body.collapsed-right #canvas {
 
 body.collapsed-left #canvas {
   padding-right: 0;
+}
+
+body.inspector-visible #canvas iframe {
+  height: -webkit-calc(~"100% -" 370px);
+  height: calc(~"100% -" 370px);
 }
 
 #database {

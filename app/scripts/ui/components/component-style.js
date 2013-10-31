@@ -1,26 +1,26 @@
 'use strict';
 
 angular.module('bricksApp.ui')
-  .directive('componentOptions', function ($compile, $timeout, components) {
+  .directive('componentStyle', function ($compile, $timeout, components) {
     return {
       replace: true,
-      require: '^editor',
+      require: '^ui',
       restrict: 'E',
       scope: {},
-      templateUrl: 'scripts/ui/views/component-options.html',
-      link: function (scope, element, attrs, editorCtrl) {
+      templateUrl: 'scripts/ui/components/component-style.html',
+      link: function (scope, element, attrs, uiCtrl) {
         var form = element.find('form');
         var allComponents = components.all();
         scope.component = {};
         scope.options = {};
         scope.update = function () {};
-        scope.select = editorCtrl.selection;
+        scope.select = uiCtrl.selection;
 
         // Update the selected DOM element and emit a change event to be
         // received by the iframe.
         scope.change = function () {
           scope.update();
-          editorCtrl.updateTemplate();
+          uiCtrl.updateTemplate();
         };
 
         // Sets the selected element and its corresponding component, appends
@@ -34,7 +34,7 @@ angular.module('bricksApp.ui')
           allComponents.some(function (component) {
             var condition;
 
-            scope.selection = editorCtrl.selection();
+            scope.selection = uiCtrl.selection();
             condition = scope.selection.is(component.selector);
 
             if (condition) {

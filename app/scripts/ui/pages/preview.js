@@ -4,15 +4,13 @@ angular.module('bricksApp.ui')
   .directive('preview', function ($http, apps) {
     return {
       replace: true,
-      require: '^editor',
+      require: '^ui',
       restrict: 'E',
       template: '<button class="preview" ' +
         'ng-click="visible = !visible">{{buttonText}}',
-      link: function (scope, element, attrs, editorCtrl) {
-        var iframe = angular.element(
-          '<iframe class="preview-frame" src="about:blank" seamless>'
-        ).insertAfter('.edit-frame');
+      link: function (scope, element, attrs, uiCtrl) {
         var canvas = angular.element('#canvas');
+        var iframe = canvas.find('iframe[preview-frame]');
         var document = iframe.contents();
 
         scope.app = apps.current();
@@ -21,7 +19,7 @@ angular.module('bricksApp.ui')
         scope.content = '';
 
         scope.reload = function () {
-          iframe[0].src = '#' + editorCtrl.page().url;
+          iframe[0].src = '#' + uiCtrl.page().url;
           document[0].open();
           document[0].write(scope.content);
           document[0].close();

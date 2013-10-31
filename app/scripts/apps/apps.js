@@ -145,7 +145,7 @@ angular.module('bricksApp.apps', [])
           var zip = new JSZip();
           var root = zip.folder(scope.currentApp.name);
 
-          $http.get('scripts/apps/build.html', {cache: true})
+          $http.get('build.html', {cache: true})
           .then(function (response) {
             var app = '<script>window.bricksApp = JSON.parse(\'' +
               escape(JSON.stringify(scope.currentApp)) +

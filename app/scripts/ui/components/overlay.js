@@ -4,13 +4,13 @@ angular.module('bricksApp.ui')
   .directive('overlay', function() {
     return {
       replace: true,
-      require: '^editor',
+      require: '^ui',
       restrict: 'E',
       template: '<div class="overlay"><div class="overlay-highlight"></div>' +
         '<div class="overlay-select"><a href="" class="delete">' +
         '<span class="glyphicon glyphicon-trash"></span></a></div>',
-      link: function (scope, element, attrs, editorCtrl) {
-        var iframe = angular.element(attrs.iframe);
+      link: function (scope, element, attrs, uiCtrl) {
+        var iframe = angular.element('iframe[edit-frame]');
         var select = element.find('.overlay-select');
         var highlight = element.find('.overlay-highlight');
         var deleteButton = element.find('.delete');
@@ -65,7 +65,7 @@ angular.module('bricksApp.ui')
             parent.html(parent.html().trim());
           }
 
-          editorCtrl.updateTemplate();
+          uiCtrl.updateTemplate();
 
           select.hide();
         });
@@ -80,7 +80,7 @@ angular.module('bricksApp.ui')
         });
 
         scope.$watch(function () {
-          return editorCtrl.page();
+          return uiCtrl.page();
         }, function () {
           highlight.hide();
           select.hide();

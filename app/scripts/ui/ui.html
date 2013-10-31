@@ -1,4 +1,4 @@
-<div id="editor" editor>
+<div id="editor" ui>
   <div id="structure" class="sidebar components">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -10,30 +10,34 @@
       </div>
     </div>
 
-    <collapse-button position="right"></collapse-button>
+    <sidebar-toggle position="right"></sidebar-toggle>
   </div>
 
   <div id="details" class="sidebar">
     <div class="panel-group">
-      <component-options></component-options>
+      <component-style></component-style>
       <bindings></bindings>
       <events></events>
     </div>
 
-    <collapse-button position="left"></collapse-button>
+    <sidebar-toggle position="left"></sidebar-toggle>
   </div>
 
-  <div id="canvas">
-    <div id="toolbar">
-      <pages></pages>
-      <div class="actions">
-        <devices iframe=".edit-frame"></devices>
-        <inspector></inspector>
-      </div>
+  <div id="toolbar">
+    <pages></pages>
+    <div class="actions">
+      <devices></devices>
+      <inspector-toggle></inspector-toggle>
     </div>
+  </div>
 
-    <editor-frame></editor-frame>
 
-    <overlay iframe=".edit-frame"></overlay>
+  <div id="canvas">
+    <iframe edit-frame src="about:blank" seamless></iframe>
+    <iframe preview-frame src="preview.html" seamless></iframe>
+
+    <overlay></overlay>
+
+    <inspector></inspector>
   </div>
 </div>

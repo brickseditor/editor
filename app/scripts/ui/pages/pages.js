@@ -4,10 +4,10 @@ angular.module('bricksApp.ui')
   .directive('pages', function ($timeout, $window, apps) {
     return {
       replace: true,
-      require: '^editor',
+      require: '^ui',
       restrict: 'E',
-      templateUrl: 'scripts/ui/toolbar/pages.html',
-      link: function (scope, element, attrs, editorCtrl) {
+      templateUrl: 'scripts/ui/pages/pages.html',
+      link: function (scope, element, attrs, uiCtrl) {
         scope.app = apps.current();
         scope.newPage = {template: ''};
         scope.showModal = false;
@@ -16,7 +16,7 @@ angular.module('bricksApp.ui')
 
         scope.setCurrent = function (current) {
           scope.current = current;
-          editorCtrl.page(current);
+          uiCtrl.page(current);
           scope.showMenu = false;
         };
 

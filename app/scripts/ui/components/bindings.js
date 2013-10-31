@@ -4,11 +4,11 @@ angular.module('bricksApp.ui')
   .directive('bindings', function ($timeout, apps) {
     return {
       replace: true,
-      require: '^editor',
+      require: '^ui',
       restrict: 'E',
       scope: {},
-      templateUrl: 'scripts/ui/views/bindings.html',
-      link: function (scope, element, attrs, editorCtrl) {
+      templateUrl: 'scripts/ui/components/bindings.html',
+      link: function (scope, element, attrs, uiCtrl) {
         scope.selection = null;
         scope.tables = apps.current().tables;
         scope.bindings = {};
@@ -95,12 +95,12 @@ angular.module('bricksApp.ui')
             scope.selection.removeAttr('ng-bind').removeAttr('ng-model');
           }
 
-          editorCtrl.updateTemplate();
+          uiCtrl.updateTemplate();
         }, true);
 
         // Parses element attributes to set bindings values.
         scope.$on('selection', function () {
-          scope.selection = editorCtrl.selection();
+          scope.selection = uiCtrl.selection();
 
           resetBindings();
           parseModel(scope.selection);

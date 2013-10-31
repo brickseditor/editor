@@ -4,11 +4,11 @@ angular.module('bricksApp.ui')
   .directive('events', function ($timeout, apps) {
     return {
       replace: true,
-      require: '^editor',
+      require: '^ui',
       restrict: 'E',
       scope: {},
-      templateUrl: 'scripts/ui/views/events.html',
-      link: function (scope, element, attrs, editorCtrl) {
+      templateUrl: 'scripts/ui/components/events.html',
+      link: function (scope, element, attrs, uiCtrl) {
         scope.selection = null;
         scope.tables = apps.current().tables;
         scope.events = {};
@@ -28,7 +28,7 @@ angular.module('bricksApp.ui')
         };
 
         scope.$on('selection', function () {
-          scope.selection = editorCtrl.selection();
+          scope.selection = uiCtrl.selection();
           parseEvent(scope.selection, 'click');
 
           $timeout(function () {
@@ -50,7 +50,7 @@ angular.module('bricksApp.ui')
             scope.selection.removeAttr('ng-' + events.type);
           }
 
-          editorCtrl.updateTemplate();
+          uiCtrl.updateTemplate();
         }, true);
       }
     };
