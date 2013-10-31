@@ -1,0 +1,295 @@
+#editor {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+}
+
+#toolbar {
+  background-color: #505050;
+  padding: @navbar-height @sidebar-width 0 @sidebar-width;
+  height: 30px;
+
+  .pages {
+    padding-left: 10px;
+  }
+
+  .delete,
+  .preview,
+  .save,
+  .switch-page {
+    .btn;
+    .btn-sm;
+    padding: 2px 5px;
+    margin: 4px 3px;
+    min-width: 80px;
+  }
+
+  .delete {
+    .btn-danger;
+  }
+
+  .preview,
+  .switch-page {
+    .btn-default;
+  }
+
+  .save {
+    .btn-primary;
+  }
+
+  .fa {
+    width: 32px;
+    text-align: center;
+  }
+
+  .devices {
+    .dropdown-menu;
+    min-width: 32px;
+    width: 32px;
+
+    > li > a {
+      padding: 3px 0;
+      color: @link-color;
+
+      &:hover {
+        color: @link-hover-color;
+      }
+    }
+  }
+
+  .actions {
+    float: right;
+
+    .btn {
+      padding: 4px 0;
+    }
+
+    .btn-link {
+      color: #f5f5f5;
+
+      &:hover {
+        color: #d0d0d0;
+      }
+    }
+  }
+}
+
+#canvas {
+  background-color: #505050;
+  padding: 0 @sidebar-width;
+  width: 100%;
+  height: 100%;
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    margin: 0 auto;
+
+    &.device-mobile {
+      width: @screen-xs;
+    }
+    &.device-tablet {
+      width: @screen-sm;
+    }
+    &.device-laptop {
+      width: @screen-md;
+    }
+    &.device-desktop {
+      width: @screen-lg;
+    }
+
+    &[preview-frame] {
+      display: none;
+    }
+  }
+
+  &.preview {
+    [preview-frame] {
+      display: block;
+    }
+
+    [edit-frame] {
+      display: none;
+    }
+  }
+}
+
+.collapsed-right {
+  #canvas,
+  #toolbar {
+    padding-left: 0;
+  }
+}
+
+.collapsed-left {
+  #canvas,
+  #toolbar {
+    padding-right: 0;
+  }
+}
+
+.inspector-visible #canvas iframe {
+  height: -webkit-calc(~"100% -" 370px);
+  height: calc(~"100% -" 370px);
+}
+
+.inspector {
+  height: 300px;
+}
+
+.sidebar {
+  background-color: @panels-bg;
+  color: @panels-color;
+  position: relative;
+  padding-top: @navbar-height;
+  height: 100%;
+  width: @sidebar-width;
+  z-index: 10;
+}
+
+#structure {
+  float: left;
+
+  .panel {
+    height: 100%;
+
+    .panel-body {
+      height: -webkit-calc(~"100% -" @navbar-height);
+      height: calc(~"100% -" @navbar-height);
+      overflow-y: scroll;
+    }
+  }
+
+  .component {
+    background-color: #505050;
+    padding: @padding-base-vertical @padding-base-horizontal;
+    margin: 4px 0;
+    cursor: move;
+    .box-shadow(0 1px 1px #b0b0b0);
+  }
+}
+
+#details {
+  float: right;
+  font-size: @font-size-small;
+
+  .panel-group {
+    height: 100%;
+    overflow-y: scroll;
+  }
+
+  label {
+    font-weight: 300;
+  }
+
+  input, select {
+    .form-control;
+    .input-sm;
+  }
+}
+
+.collapse-button {
+  background-color: @panels-bg;
+  color: @panels-color;
+  border: 0;
+  position: absolute;
+  top: 50%;
+  padding: 0;
+  width: 16px;
+  height: 24px;
+  font-size: 12px;
+  font-family: 'Glyphicons Halflings';
+  -webkit-font-smoothing: antialiased;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.collapse-button-parent.closed-add,
+.collapse-button-parent.closed-remove {
+  -webkit-transition: 0.2s linear all;
+  -moz-transition: 0.2s linear all;
+  -o-transition: 0.2s linear all;
+  transition: 0.2s linear all;
+}
+
+.collapse-button-parent.right {
+  &.closed,
+  &.closed-remove,
+  &.closed-add.closed-add-active {
+    margin-left: -@sidebar-width;
+
+    .collapse-button {
+      padding-left: 2px;
+      .glyphicon-arrow-right;
+    }
+  }
+
+  .collapse-button {
+    right: -16px;
+  }
+}
+
+.collapse-button-parent.left {
+  &.closed,
+  &.closed-remove,
+  &.closed-add.closed-add-active {
+    margin-right: -@sidebar-width;
+
+    .collapse-button {
+      padding-right: 2px;
+      .glyphicon-arrow-left;
+    }
+  }
+
+  .collapse-button {
+    left: -16px;
+  }
+}
+
+.collapse-button-parent.right,
+.collapse-button-parent.right.closed-add,
+.collapse-button-parent.right.closed-remove.closed-remove-active {
+  margin-left: 0;
+
+  .collapse-button {
+    padding-right: 2px;
+    .glyphicon-arrow-left;
+  }
+}
+
+.collapse-button-parent.left,
+.collapse-button-parent.left.closed-add,
+.collapse-button-parent.left.closed-remove.closed-remove-active {
+  margin-right: 0;
+
+  .collapse-button {
+    padding-left: 2px;
+    .glyphicon-arrow-right;
+  }
+}
+
+.overlay-highlight,
+.overlay-select {
+  display:none;
+  position:absolute;
+  box-shadow: inset 0 0 0 2px @brand-info;
+  pointer-events:none;
+}
+
+.overlay-select .delete {
+  background-color: @brand-info;
+  color: #fff;
+  position: absolute;
+  top: auto;
+  right: 0;
+  bottom: -16px;
+  width: 20px;
+  height: 16px;
+  font-size: 10px;
+  text-align: center;
+  pointer-events: auto;
+}
