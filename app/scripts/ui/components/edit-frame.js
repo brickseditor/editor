@@ -43,7 +43,7 @@ angular.module('bricksApp.ui')
             element = view;
           }
 
-          if (element.is('div[ng-view], :empty')) {
+          if (element.is('div[ng-view], :empty:not(input, textarea)')) {
             element.append(node);
           } else {
             element.after(node);
