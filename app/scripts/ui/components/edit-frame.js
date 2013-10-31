@@ -136,7 +136,7 @@ angular.module('bricksApp.ui')
           page.on('mouseup', destroyDraggable);
         });
 
-        $http.get('layout.html', {cache: true})
+        $http.get('edit.html', {cache: true})
           .success(function (response) {
             page[0].open();
             page[0].write(response);
