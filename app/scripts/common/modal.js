@@ -12,7 +12,7 @@ angular.module('bricksApp.common')
         submit: '&',
         title: '='
       },
-      templateUrl: 'scripts/common/views/modal.html',
+      templateUrl: 'scripts/common/modal.html',
       transclude: true,
       link: function(scope) {
         // Modal can be closed by default.

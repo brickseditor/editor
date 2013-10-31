@@ -5,9 +5,6 @@ angular.module('bricksApp.about', ['ngRoute'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/about', {
-        templateUrl: 'scripts/about/about.html',
-        controller: 'AboutCtrl'
+        templateUrl: 'scripts/about/about.html'
       });
-  })
-
-  .controller('AboutCtrl', function () {});
+  });

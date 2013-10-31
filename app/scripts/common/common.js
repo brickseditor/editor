@@ -1,3 +1,5 @@
 'use strict';
 
-angular.module('bricksApp.common', []);
+angular.module('bricksApp.common', [
+    'bricksApp.apps'
+  ]);

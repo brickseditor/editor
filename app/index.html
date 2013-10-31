@@ -27,7 +27,7 @@
       <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
 
-    <div ng-include="'scripts/common/views/navbar.html'"></div>
+    <navbar hide-on="'/start'"></navbar>
 
     <div class="container" ng-view=""></div>
 
@@ -65,13 +65,13 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/common/common.js"></script>
-        <script src="scripts/common/controllers/navbar.js"></script>
-        <script src="scripts/common/directives/activelink.js"></script>
-        <script src="scripts/common/directives/modal.js"></script>
-        <script src="scripts/common/directives/validation-class.js"></script>
-        <script src="scripts/common/services/apps.js"></script>
-        <script src="scripts/common/services/storage.js"></script>
+        <script src="scripts/common/navbar.js"></script>
+        <script src="scripts/common/activelink.js"></script>
+        <script src="scripts/common/modal.js"></script>
+        <script src="scripts/common/validation-class.js"></script>
+        <script src="scripts/common/storage.js"></script>
         <script src="scripts/about/about.js"></script>
+        <script src="scripts/apps/apps.js"></script>
         <script src="scripts/database/database.js"></script>
         <script src="scripts/settings/settings.js"></script>
         <script src="scripts/start/start.js"></script>

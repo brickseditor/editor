@@ -6,6 +6,7 @@ angular.module('bricksApp', [
     'ui.codemirror',
     'bricksApp.common',
     'bricksApp.about',
+    'bricksApp.apps',
     'bricksApp.database',
     'bricksApp.settings',
     'bricksApp.start',
