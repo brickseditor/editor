@@ -106,11 +106,12 @@
   }
 
   &.preview {
-    [preview-frame] {
+    iframe[preview-frame] {
       display: block;
     }
 
-    [edit-frame] {
+    iframe[edit-frame],
+    .overlay {
       display: none;
     }
   }
