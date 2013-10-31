@@ -1,58 +1,81 @@
 'use strict';
 
 angular.module('bricksApp.ui')
-  .directive('overlay', function() {
+
+  .factory('Overlay', function () {
+    var Overlay = function (element, events) {
+      var iframe = this.iframe = angular.element('iframe[edit-frame]');
+
+      this.element = element;
+
+      iframe.on('load', function () {
+        iframe.contents().on(events);
+      });
+    };
+
+    // Set the overlay position and dimensions according to the
+    // target element and the iframe.
+    Overlay.prototype.moveTo = function (target) {
+      var top = this.iframe[0].offsetTop;
+      var left = this.iframe[0].offsetLeft;
+      var offset = target.offset();
+
+      this.element.css({
+        display: 'block',
+        width: target[0].clientWidth + 'px',
+        height: target[0].clientHeight + 'px',
+        top: (top + offset.top) + 'px',
+        left: (left + offset.left) + 'px'
+      });
+    };
+
+    return Overlay;
+  })
+
+  .directive('overlayHighlight', function (Overlay) {
     return {
       replace: true,
       require: '^ui',
       restrict: 'E',
-      template: '<div class="overlay"><div class="overlay-highlight"></div>' +
-        '<div class="overlay-select"><a href="" class="delete">' +
-        '<span class="glyphicon glyphicon-trash"></span></a></div>',
-      link: function (scope, element, attrs, uiCtrl) {
-        var iframe = angular.element('iframe[edit-frame]');
-        var select = element.find('.overlay-select');
-        var highlight = element.find('.overlay-highlight');
-        var deleteButton = element.find('.delete');
-        var selected;
-
-        // Set the overlay position and dimensions according to the
-        // target element and the iframe.
-        var showElement = function (overlay, target) {
-          var top = iframe[0].offsetTop;
-          var left = iframe[0].offsetLeft;
-          var offset = target.offset();
-
-          overlay.css('display', 'block')
-            .css('width', target[0].clientWidth + 'px')
-            .css('height', target[0].clientHeight + 'px')
-            .css('top', (top + offset.top) + 'px')
-            .css('left', (left + offset.left) + 'px');
-        };
-
-        var showHighlight = function (e) {
+      template: '<div class="overlay-highlight"></div>',
+      link: function (scope, element) {
+        var showElement = function (e) {
           var target = angular.element(e.target);
 
           if (!target.is('html, body, div[ng-view]')) {
-            showElement(highlight, target);
+            overlay.moveTo(target);
           }
         };
 
-        var showSelect = function (e) {
+        var overlay = new Overlay(element, {
+          'click mouseout': function () {element.hide();},
+          mouseover: showElement
+        });
+      }
+    };
+  })
+
+  .directive('overlaySelect', function (Overlay) {
+    return {
+      replace: true,
+      require: '^ui',
+      restrict: 'E',
+      template: '<div class="overlay-select"><a href="" class="delete">' +
+        '<span class="glyphicon glyphicon-trash"></span></a></div>',
+      link: function (scope, element, attrs, uiCtrl) {
+        var deleteButton = element.find('.delete');
+        var selected;
+
+        var showElement = function (e) {
           var target = angular.element(e.target);
 
           if (!target.is('html, body, div[ng-view]')) {
             selected = target;
-            showElement(select, target);
-            highlight.hide();
+            overlay.moveTo(target);
           }
         };
 
-        iframe.on('load', function () {
-          var page = iframe.contents();
-          page.on('mouseover', showHighlight);
-          page.on('click', showSelect);
-        });
+        var overlay = new Overlay(element, {click: showElement});
 
         deleteButton.on('click', function (e) {
           var parent = selected.parent();
@@ -67,7 +90,7 @@ angular.module('bricksApp.ui')
 
           uiCtrl.updateTemplate();
 
-          select.hide();
+          element.hide();
         });
 
         // Redraws selected element overlay when the element changes.
@@ -75,15 +98,14 @@ angular.module('bricksApp.ui')
           return selected && selected.prop('outerHTML');
         }, function () {
           if (selected) {
-            showElement(select, selected);
+            overlay.moveTo(selected);
           }
         });
 
         scope.$watch(function () {
           return uiCtrl.page();
         }, function () {
-          highlight.hide();
-          select.hide();
+          element.hide();
         });
       }
     };
