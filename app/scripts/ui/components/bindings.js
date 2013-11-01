@@ -59,6 +59,9 @@ angular.module('bricksApp.ui')
           return {table: table, filters: filters};
         };
 
+        // Creates the ng-repeat attribute.
+        // If a filter was set with no column, filter on all attributes.
+        // If a filter was set with no value, check for column existence.
         var writeRepeat = function (selection, bindings) {
           if (!bindings.repeat) {
             scope.selection.removeAttr('ng-repeat');
@@ -70,8 +73,13 @@ angular.module('bricksApp.ui')
 
           if (bindings.filters.length > 0) {
             bindings.filters.forEach(function (filter) {
-              if (filter.column && filter.value) {
-                filters.push(filter.column + ': \'' + filter.value + '\'');
+              var column, value;
+
+              if (filter.column || filter.value) {
+                column = filter.column ? filter.column : '$';
+                value = filter.value ? '\'' + filter.value + '\'' : 'true';
+
+                filters.push(column + ': ' + value);
               }
             });
 
