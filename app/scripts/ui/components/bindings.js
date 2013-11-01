@@ -13,30 +13,10 @@ angular.module('bricksApp.ui')
         scope.tables = apps.current().tables;
         scope.bindings = {};
 
-        var parseRepeat = function (expression) {
-          if (!expression) {
-            return {};
-          }
-
+        // Parses a string of filters into an array.
+        var parseFilters = function (expression) {
           var filters = [];
-          var repeat, table;
 
-          // The part before an eventual first pipe is in the form 'test in tests'.
-          expression = expression.split('|');
-          repeat = expression ? expression.shift().trim().split(' ') : [];
-          if (repeat.length !== 3) {
-            return {};
-          }
-
-          // Table name is the first part.
-          scope.tables.some(function (t) {
-            if (t.name === repeat[0]) {
-              table = t.name;
-              return true;
-            }
-          });
-
-          // Processing filters (pipes separations after the first pipe).
           expression.forEach(function (filter) {
             filter = filter.split(':');
 
@@ -56,7 +36,35 @@ angular.module('bricksApp.ui')
             }
           });
 
-          return {table: table, filters: filters};
+          return filters;
+        };
+
+        var parseRepeat = function (expression) {
+          if (!expression) {
+            return {};
+          }
+
+          var repeat, table;
+
+          // The part before an eventual first pipe is in the form 'test in tests'.
+          expression = expression.split('|');
+          repeat = expression ? expression.shift().trim().split(' ') : [];
+          if (repeat.length !== 3) {
+            return {};
+          }
+
+          // Table name is the first part.
+          scope.tables.some(function (t) {
+            if (t.name === repeat[0]) {
+              table = t.name;
+              return true;
+            }
+          });
+
+          return {
+            table: table,
+            filters: parseFilters(expression)
+          };
         };
 
         // Creates the ng-repeat attribute.
