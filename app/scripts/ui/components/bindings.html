@@ -32,16 +32,30 @@
           </div>
 
           <div class="form-group" ng-show="bindings.repeat">
-            <label class="control-label" for="bindingsFilter">Filters</label>
+            <label class="control-label">Filters</label>
             <p ng-repeat="filter in bindings.filters">
-              <input id="bindingsFilter" ng-model="filter.column"
-                placeholder="column" style="width: 48%">
-              <input id="bindingsFilter" ng-model="filter.value"
-                placeholder="value" style="width: 48%">
+              <input ng-model="filter.name" placeholder="column"
+                style="width: 48%">
+              <input ng-model="filter.value" placeholder="value"
+                style="width: 48%">
             </p>
             <p>
               <button class="btn btn-default btn-sm"
                 ng-click="bindings.filters.push({})">Add filter</button>
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" for="bindingsClass">CSS Classes</label>
+            <p ng-repeat="class in bindings.classes">
+              <input ng-model="class.name" placeholder="class"
+                style="width: 48%">
+              <input ng-model="class.value" placeholder="condition"
+                style="width: 48%">
+            </p>
+            <p>
+              <button class="btn btn-default btn-sm"
+                ng-click="bindings.classes.push({})">Add class</button>
             </p>
           </div>
         </fieldset>

@@ -13,6 +13,28 @@ angular.module('bricksApp.ui')
         scope.tables = apps.current().tables;
         scope.bindings = {};
 
+        // Parse an string representation of an object.
+        var parseObject = function (expression) {
+          var objects = [];
+
+          if (angular.isString(expression)) {
+            expression = expression.trim();
+
+            if (expression.charAt(0) === '{' && expression.slice('-1') === '}') {
+              expression.slice(1, -1).split(',').forEach (function (part) {
+                  part = part.split(':');
+
+                  objects.push({
+                    name: part[0].trim(),
+                    value: part[1].trim()
+                  });
+                });
+            }
+          }
+
+          return objects;
+        };
+
         // Parses a string of filters into an array.
         var parseFilters = function (expression) {
           var filters = [];
@@ -24,15 +46,11 @@ angular.module('bricksApp.ui')
             if (filter.shift().trim() === 'filter' && filter.length > 0) {
               // Pull back all the remaining part of the filter together to
               // change the whole into an object.
-              filter = filter.join(':').slice(1, -1).split(',');
-
-              filter.forEach (function (column) {
-                column = column.split(':');
-                filters.push({
-                  column: column[0].trim(),
-                  value: column[1].trim().slice(1, -1)
-                });
+              filter = parseObject(filter.join(':')).map(function (unit) {
+                unit.value = unit.value.slice(1, -1);
+                return unit;
               });
+              filters = filters.concat(filter);
             }
           });
 
@@ -67,36 +85,58 @@ angular.module('bricksApp.ui')
           };
         };
 
+        var writeClass = function (selection, bindings) {
+          var classes = [];
+
+          bindings.classes.forEach(function (object) {
+            if (object.name && object.value) {
+              classes.push(object.name + ': ' + object.value);
+            }
+          });
+
+          if (classes.length > 0) {
+            selection.attr('ng-class', '{' + classes.join(', ') + '}');
+          } else {
+            selection.removeAttr('ng-class');
+          }
+        };
+
+        var writeFilters = function (bindings) {
+          var filters = [];
+
+          if (bindings.filters.length > 0) {
+            bindings.filters.forEach(function (filter) {
+              var name, value;
+
+              if (filter.name || filter.value) {
+                name = filter.name ? filter.name : '$';
+                value = filter.value ? '\'' + filter.value + '\'' : 'true';
+
+                filters.push(name + ': ' + value);
+              }
+            });
+
+            if (filters.length > 0) {
+              return 'filter:{' + filters.join(', ') + '}';
+            }
+          }
+
+          return '';
+        };
+
         // Creates the ng-repeat attribute.
         // If a filter was set with no column, filter on all attributes.
         // If a filter was set with no value, check for column existence.
         var writeRepeat = function (selection, bindings) {
           if (!bindings.repeat) {
-            scope.selection.removeAttr('ng-repeat');
+            selection.removeAttr('ng-repeat');
             return;
           }
 
-          var repeat = bindings.repeat + ' in data[\'' + bindings.repeat + '\']';
-          var filters = [];
+          var repeat = bindings.repeat + ' in data[\'' +
+            bindings.repeat + '\']' + ' | ' + writeFilters(bindings);
 
-          if (bindings.filters.length > 0) {
-            bindings.filters.forEach(function (filter) {
-              var column, value;
-
-              if (filter.column || filter.value) {
-                column = filter.column ? filter.column : '$';
-                value = filter.value ? '\'' + filter.value + '\'' : 'true';
-
-                filters.push(column + ': ' + value);
-              }
-            });
-
-            if (filters.length > 0) {
-              repeat += ' | filter:{' + filters.join(', ') + '}';
-            }
-          }
-
-          scope.selection.attr('ng-repeat', repeat);
+          selection.attr('ng-repeat', repeat);
         };
 
         // Changes element attributes according to selected bindings.
@@ -108,6 +148,7 @@ angular.module('bricksApp.ui')
           scope.selection.attr('ng-bind', bindings.bind);
           scope.selection.attr('ng-model', bindings.model);
 
+          writeClass(scope.selection, bindings);
           writeRepeat(scope.selection, bindings);
 
           uiCtrl.updateTemplate();
@@ -125,7 +166,8 @@ angular.module('bricksApp.ui')
             bind: scope.selection.attr('ng-bind'),
             model: scope.selection.attr('ng-model'),
             repeat: repeat.table,
-            filters: repeat.filters || []
+            filters: repeat.filters || [],
+            classes: parseObject(scope.selection.attr('ng-class'))
           };
 
           $timeout(function () {
