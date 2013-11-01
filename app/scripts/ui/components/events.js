@@ -44,7 +44,8 @@ angular.module('bricksApp.ui')
           }
 
           if (events.type && events.action && events.object) {
-            attrValue = events.action + '(\'' + events.object + '\')';
+            attrValue = events.action +
+              '(\'' + events.object + '\', ' + events.object + ')';
             scope.selection.attr('ng-' + events.type, attrValue);
           } else {
             scope.selection.removeAttr('ng-' + events.type);
