@@ -13,21 +13,74 @@ angular.module('bricksApp.ui')
         scope.tables = apps.current().tables;
         scope.bindings = {};
 
-        var parseRepeat = function (repeat) {
-          var table;
+        var parseRepeat = function (expression) {
+          if (!expression) {
+            return {};
+          }
 
-          repeat = repeat ? repeat.split(' ') : [];
+          var filters = [];
+          var repeat, table;
 
-          if (repeat.length === 3) {
-            scope.tables.some(function (t) {
-              if (t.name === repeat[0]) {
-                table = t.name;
-                return true;
+          // The part before an eventual first pipe is in the form 'test in tests'.
+          expression = expression.split('|');
+          repeat = expression ? expression.shift().trim().split(' ') : [];
+          if (repeat.length !== 3) {
+            return {};
+          }
+
+          // Table name is the first part.
+          scope.tables.some(function (t) {
+            if (t.name === repeat[0]) {
+              table = t.name;
+              return true;
+            }
+          });
+
+          // Processing filters (pipes separations after the first pipe).
+          expression.forEach(function (filter) {
+            filter = filter.split(':');
+
+            // Before the first colon is the filter name.
+            if (filter.shift().trim() === 'filter' && filter.length > 0) {
+              // Pull back all the remaining part of the filter together to
+              // change the whole into an object.
+              filter = filter.join(':').slice(1, -1).split(',');
+
+              filter.forEach (function (column) {
+                column = column.split(':');
+                filters.push({
+                  column: column[0].trim(),
+                  value: column[1].trim().slice(1, -1)
+                });
+              });
+            }
+          });
+
+          return {table: table, filters: filters};
+        };
+
+        var writeRepeat = function (selection, bindings) {
+          if (!bindings.repeat) {
+            scope.selection.removeAttr('ng-repeat');
+            return;
+          }
+
+          var repeat = bindings.repeat + ' in data[\'' + bindings.repeat + '\']';
+          var filters = [];
+
+          if (bindings.filters.length > 0) {
+            bindings.filters.forEach(function (filter) {
+              if (filter.column && filter.value) {
+                filters.push(filter.column + ': \'' + filter.value + '\'');
               }
             });
 
-            return table;
+            if (filters.length > 0) {
+              repeat += ' | filter:{' + filters.join(', ') + '}';
+            }
           }
+
+          scope.selection.attr('ng-repeat', repeat);
         };
 
         // Changes element attributes according to selected bindings.
@@ -36,15 +89,10 @@ angular.module('bricksApp.ui')
             return;
           }
 
-          scope.selection.attr('ng-bind', scope.bindings.bind);
-          scope.selection.attr('ng-model', scope.bindings.model);
+          scope.selection.attr('ng-bind', bindings.bind);
+          scope.selection.attr('ng-model', bindings.model);
 
-          if (bindings.repeat) {
-            var repeat = bindings.repeat + ' in data[\'' + bindings.repeat + '\']';
-            scope.selection.attr('ng-repeat', repeat);
-          } else {
-            scope.selection.removeAttr('ng-repeat');
-          }
+          writeRepeat(scope.selection, bindings);
 
           uiCtrl.updateTemplate();
         }, true);
@@ -55,10 +103,13 @@ angular.module('bricksApp.ui')
           scope.nodeName = scope.selection.prop('nodeName');
           scope.isInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(scope.nodeName) > -1;
 
+          var repeat = parseRepeat(scope.selection.attr('ng-repeat'));
+
           scope.bindings = {
             bind: scope.selection.attr('ng-bind'),
             model: scope.selection.attr('ng-model'),
-            repeat: parseRepeat(scope.selection.attr('ng-repeat'))
+            repeat: repeat.table,
+            filters: repeat.filters || []
           };
 
           $timeout(function () {
