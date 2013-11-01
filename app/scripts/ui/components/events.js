@@ -11,6 +11,9 @@ angular.module('bricksApp.ui')
       link: function (scope, element, attrs, uiCtrl) {
         scope.selection = null;
         scope.tables = apps.current().tables;
+        scope.names = ('click dblclick mousedown mouseup mouseover mouseout ' +
+          'mousemove mouseenter mouseleave keydown keyup keypress submit ' +
+          'focus blur copy cut paste').split(' ').sort();
         scope.events = {};
 
         var parseEvent = function (selection, type) {
