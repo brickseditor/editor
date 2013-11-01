@@ -19,10 +19,12 @@ angular.module('bricksApp.ui')
         scope.content = '';
 
         scope.reload = function () {
-          iframe[0].src = '#' + uiCtrl.page().url;
-          document[0].open();
-          document[0].write(scope.content);
-          document[0].close();
+          if (scope.visible) {
+            iframe[0].src = '#' + uiCtrl.page().url;
+            document[0].open();
+            document[0].write(scope.content);
+            document[0].close();
+          }
         };
 
         $http.get('preview.html', {cache: true})
