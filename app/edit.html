@@ -3,9 +3,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- build:css({.tmp,app}) styles/edit.css -->
+        <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+        <link href="bower_components/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet">
+        <!-- endbuild -->
+
     <style>
-      :empty:not(input, textarea) {
+      div[ng-view] :empty:not(input):not(textarea) {
         min-height: 50px;
         min-width: 50px;
         border: 4px dashed #f0ad4e;

@@ -202,7 +202,11 @@ module.exports = function (grunt) {
     },
     useminPrepare: {
       dist: {
-        src: ['<%= yeoman.app %>/index.html', '<%= yeoman.app %>/preview.html']
+        src: [
+          '<%= yeoman.app %>/index.html',
+          '<%= yeoman.app %>/edit.html',
+          '<%= yeoman.app %>/preview.html'
+        ]
       },
       options: {
         dest: '<%= yeoman.dist %>',

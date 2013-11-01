@@ -5,7 +5,7 @@ angular.module('bricksApp.ui')
     return {
       restrict: 'E',
       templateUrl: 'scripts/ui/screen/devices.html',
-      link: function (scope, element) {
+      link: function (scope) {
         var iframes = angular.element('#canvas').find('iframe');
 
         scope.devices = [

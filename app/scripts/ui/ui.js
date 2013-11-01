@@ -21,9 +21,6 @@ angular.module('bricksApp.ui', [
 
         // Changes the scope template attribute.
         var updateTemplate = function () {
-          if (selectedElement) {
-            selectedElement.removeClass('bricks-selected');
-          }
           if (!view) {
             view = iframe.contents().find('div[ng-view]');
           }
@@ -32,10 +29,7 @@ angular.module('bricksApp.ui', [
 
         var selectElement = function (element) {
           if (!element.is('html, body, [ng-view]')) {
-            if (selectedElement) {
-              selectedElement.removeClass('bricks-selected');
-            }
-            selectedElement = element.addClass('bricks-selected');
+            selectedElement = element;
             $scope.$broadcast('selection');
           }
         };

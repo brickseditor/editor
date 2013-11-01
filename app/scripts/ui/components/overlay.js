@@ -16,7 +16,7 @@ angular.module('bricksApp.ui')
     // Set the overlay position and dimensions according to the
     // target element and the iframe.
     Overlay.prototype.moveTo = function (target) {
-      if (target.is('html, body, div[ng-view]')) {
+      if (target.closest('div[ng-view]').length === 0) {
         return;
       }
 
