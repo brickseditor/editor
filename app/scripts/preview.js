@@ -2,34 +2,16 @@
 
 angular.module('bricksApp', ['ngRoute'])
   .config(function ($routeProvider) {
-    var template = function (route) {
-      var app = window.bricksApp;
-      var notFound = 'Nothing Found.';
-      var path = route.route ? '/' + route.route : '/';
-      var template;
-
-      if (app.pages.length === 0) {
-        return notFound;
-      }
-
-      app.pages.some(function (p) {
-        if (p.url === path) {
-          template = p.template;
-          return true;
-        }
+    window.bricksApp.pages.forEach(function (page) {
+      $routeProvider.when(page.url, {
+        controller: 'MainCtrl',
+        template: page.template
       });
+    });
 
-      return template ? template : notFound;
-    };
-
-    var params = {
-      template: template,
-      controller: 'MainCtrl'
-    };
-
-    $routeProvider
-      .when('/', params)
-      .when('/:route*', params);
+    $routeProvider.otherwise({
+      template: 'Nothing Found.'
+    });
   })
 
   .run(function ($window) {
