@@ -31,7 +31,7 @@ angular.module('bricksApp.apps', [])
               object = a;
             }
           });
-          return angular.copy(object ? object : apps[0]);
+          return object ? object : apps[0];
         }
       },
 
@@ -39,6 +39,7 @@ angular.module('bricksApp.apps', [])
       // the app id.
       add: function (app) {
         app.id = app.id || uuid();
+        app.css = '';
         app.pages = app.pages || [{url: '/', template: ''}];
         app.tables = app.tables || [];
 

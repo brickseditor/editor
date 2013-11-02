@@ -1,0 +1,20 @@
+<div class="inspector">
+  <ul class="nav nav-tabs">
+    <li ng-class="{active: view === 'html'}">
+      <a href="" ng-click="view = 'html'">HTML</a>
+    </li>
+    <li ng-class="{active: view === 'css'}">
+      <a href="" ng-click="view = 'css'">CSS</a>
+    </li>
+  </ul>
+
+  <div ng-show="view === 'html'">
+    <textarea ng-model="page().template" ui-codemirror="htmlOptions"
+      ui-refresh="view === 'html'"></textarea>
+  </div>
+
+  <div ng-show="view === 'css'">
+    <textarea ng-model="app.css" ui-codemirror="cssOptions"
+      ui-refresh="view === 'css'"></textarea>
+  </div>
+</div>

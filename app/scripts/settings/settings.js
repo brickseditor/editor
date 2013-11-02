@@ -16,7 +16,7 @@ angular.module('bricksApp.settings', [
     // Watches for change to the current app.
     $scope.appsService = apps;
     $scope.$watch('appsService.current()', function (newVal) {
-      $scope.app = newVal;
+      $scope.app = angular.copy(newVal);
     }, true);
 
     $scope.saveSettings = function () {

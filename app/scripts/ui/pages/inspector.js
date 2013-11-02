@@ -1,27 +1,49 @@
 'use strict';
 
 angular.module('bricksApp.ui')
-  .directive('inspector', function () {
+  .directive('inspector', function (apps) {
     return {
       replace: true,
       require: '^ui',
       restrict: 'E',
-      template: '<div class="inspector">' +
-          '<textarea ng-model="page().template" ui-refresh="show" ' +
-            'ui-codemirror="codemirrorOptions"></textarea>' +
-        '</div>',
+      templateUrl: 'scripts/ui/pages/inspector.html',
       link: function (scope, element, attrs, uiCtrl) {
-        scope.page = uiCtrl.page;
+        var iframe = angular.element('iframe[edit-frame]');
+        var style;
 
-        scope.codemirrorOptions = {
+        var codemirrorOptions = {
           lineWrapping : true,
           lineNumbers: true,
+          theme: 'base16-dark'
+        };
+
+        scope.page = uiCtrl.page;
+        scope.view = 'html';
+        scope.app = apps.current();
+
+        scope.htmlOptions = angular.extend({
           mode: {
             name: 'xml',
             htmlMode: true
           },
-          theme: 'base16-dark'
-        };
+        }, codemirrorOptions);
+
+        scope.cssOptions = angular.extend({
+          mode: 'css',
+        }, codemirrorOptions);
+
+        iframe.on('load', function () {
+          if (!style) {
+            style = iframe.contents().find('#bricksAppStyle');
+          }
+          style.html(scope.app.css);
+        });
+
+        scope.$watch('app.css', function (css) {
+          if (style) {
+            style.html(css);
+          }
+        });
       }
     };
   });
