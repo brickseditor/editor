@@ -133,8 +133,12 @@ angular.module('bricksApp.ui')
             return;
           }
 
-          var repeat = bindings.repeat + ' in data[\'' +
-            bindings.repeat + '\']' + ' | ' + writeFilters(bindings);
+          var repeat = bindings.repeat + ' in data[\'' + bindings.repeat + '\']';
+          var filters = writeFilters(bindings);
+
+          if (filters) {
+            repeat += ' | ' + filters;
+          }
 
           selection.attr('ng-repeat', repeat);
         };
