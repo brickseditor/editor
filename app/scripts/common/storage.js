@@ -9,7 +9,7 @@ angular.module('bricksApp.common')
 
     Storage.prototype.getTable = function (table) {
       var data = $window.localStorage.getItem(this.prefix + table);
-      return data ? JSON.parse(data) : [];
+      return data ? angular.fromJson(data) : [];
     };
 
     Storage.prototype.emptyTable = function (table) {
@@ -25,7 +25,7 @@ angular.module('bricksApp.common')
       attributes.updated_at = date;
 
       data.push(attributes);
-      $window.localStorage.setItem(this.prefix + table, JSON.stringify(data));
+      $window.localStorage.setItem(this.prefix + table, angular.toJson(data));
     };
 
     Storage.prototype.removeRow = function (table, attributes) {
@@ -35,7 +35,7 @@ angular.module('bricksApp.common')
           data.splice(i, 1);
         }
       });
-      $window.localStorage.setItem(this.prefix + table, JSON.stringify(data));
+      $window.localStorage.setItem(this.prefix + table, angular.toJson(data));
     };
 
     Storage.prototype._date = function () {

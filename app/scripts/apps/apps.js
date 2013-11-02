@@ -9,7 +9,7 @@ angular.module('bricksApp.apps', [])
     var apps = $window.localStorage.getItem(keyAll);
     var current = $window.localStorage.getItem(keyCurrent);
 
-    apps = apps ? JSON.parse(apps) : [];
+    apps = apps ? angular.fromJson(apps) : [];
 
     return {
       all: function () {
@@ -44,14 +44,14 @@ angular.module('bricksApp.apps', [])
         app.tables = app.tables || [];
 
         apps.push(angular.copy(app));
-        $window.localStorage.setItem(keyAll, JSON.stringify(apps));
+        $window.localStorage.setItem(keyAll, angular.toJson(apps));
       },
 
       update: function (app) {
         apps.forEach(function (a, i) {
           if (a.id === app.id) {
             apps[i] = angular.copy(app);
-            $window.localStorage.setItem(keyAll, JSON.stringify(apps));
+            $window.localStorage.setItem(keyAll, angular.toJson(apps));
           }
         });
       },
@@ -61,7 +61,7 @@ angular.module('bricksApp.apps', [])
         apps.forEach(function (a, i) {
           if (a.id === id) {
             apps.splice(i, 1);
-            $window.localStorage.setItem(keyAll, JSON.stringify(apps));
+            $window.localStorage.setItem(keyAll, angular.toJson(apps));
           }
         });
       }
@@ -149,7 +149,7 @@ angular.module('bricksApp.apps', [])
           $http.get('build.html', {cache: true})
           .then(function (response) {
             var app = '<script>window.bricksApp = JSON.parse(\'' +
-              escape(JSON.stringify(scope.currentApp)) +
+              escape(angular.toJson(scope.currentApp)) +
               '\');</script>';
             var html = response.data.replace('</head>', app + '\n</head>');
             root.file('index.html', html);
