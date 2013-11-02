@@ -60,7 +60,7 @@ angular.module('bricksApp', ['ngRoute'])
       return data;
     };
 
-    Storage.add = function (tableName, row) {
+    Storage.create = function (tableName, row) {
       var date = (new Date()).toISOString().split('.')[0].replace('T', ' ');
 
       row.id = uuid();
@@ -72,11 +72,24 @@ angular.module('bricksApp', ['ngRoute'])
       saveTable(tableName);
     };
 
+    Storage.update = function (tableName, row) {
+      if (data[tableName]) {
+        data[tableName].some(function (storedRow, i) {
+          if (storedRow.id === row.id) {
+            data[tableName][i] = row;
+            return true;
+          }
+        });
+        saveTable(tableName);
+      }
+    };
+
     Storage.delete = function (tableName, row) {
       if (data[tableName]) {
         data[tableName].some(function (storedRow, i) {
           if (storedRow.id === row.id) {
             data[tableName].splice(i, 1);
+            return true;
           }
         });
         saveTable(tableName);
@@ -90,8 +103,11 @@ angular.module('bricksApp', ['ngRoute'])
     $scope.data = Storage.all();
 
     $scope.save = function (table, instance) {
-      var row = angular.copy(instance);
-      Storage.add(table, row);
+      if (instance.id) {
+        Storage.update(table, instance);
+      } else {
+        Storage.create(table, angular.copy(instance));
+      }
       $scope[table] = {};
       $scope.submitted = true;
     };
