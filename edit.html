@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="styles/1f8a5829.edit.css"/>
+
+    <style>
+      div[ng-view] :empty:not(input):not(textarea) {
+        min-height: 50px;
+        min-width: 50px;
+        border: 4px dashed #f0ad4e;
+      }
+      .bricks-dragover {
+        border-bottom: 4px solid #428bca;
+      }
+    </style>
+    <style id="bricksAppStyle"></style>
+  </head>
+  <body>
+    <div ng-view=""></div>
+  </body>
+</html>

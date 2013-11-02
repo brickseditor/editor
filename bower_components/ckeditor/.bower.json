@@ -1,0 +1,14 @@
+{
+  "name": "ckeditor",
+  "homepage": "https://github.com/ckeditor/ckeditor-releases",
+  "_release": "4.2.2/standard",
+  "_resolution": {
+    "type": "tag",
+    "tag": "4.2.2/standard",
+    "commit": "76729f5898cd15b1eca6bc13a8830527c5e4b573"
+  },
+  "_source": "git://github.com/ckeditor/ckeditor-releases.git",
+  "_target": "4.2.2/standard",
+  "_originalSource": "ckeditor",
+  "_direct": true
+}

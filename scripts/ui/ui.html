@@ -1,0 +1,45 @@
+<div id="editor" ui="">
+  <div id="structure" class="sidebar components">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Components</h4>
+      </div>
+      <div class="panel-body">
+        <div class="component" ng-repeat="component in components" draggable="true" html="component.template">{{component.name}}</div>
+      </div>
+    </div>
+
+    <sidebar-toggle position="right"></sidebar-toggle>
+  </div>
+
+  <div id="details" class="sidebar">
+    <div class="panel-group">
+      <component-style></component-style>
+      <bindings></bindings>
+      <events></events>
+    </div>
+
+    <sidebar-toggle position="left"></sidebar-toggle>
+  </div>
+
+  <div id="toolbar">
+    <pages></pages>
+    <div class="actions">
+      <devices></devices>
+      <inspector-toggle></inspector-toggle>
+    </div>
+  </div>
+
+
+  <div id="canvas">
+    <iframe edit-frame="" droppable="" src="about:blank" seamless=""></iframe>
+    <iframe preview-frame="" src="preview.html" seamless=""></iframe>
+
+    <div class="overlay">
+      <overlay-highlight></overlay-highlight>
+      <overlay-select></overlay-select>
+    </div>
+
+    <inspector></inspector>
+  </div>
+</div>

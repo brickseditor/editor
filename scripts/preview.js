@@ -32,6 +32,10 @@ angular.module('bricksApp', ['ngRoute'])
       .when('/:route*', params);
   })
 
+  .run(function ($window) {
+    angular.element('#bricksAppStyle').html($window.bricksApp.css);
+  })
+
   .factory('Storage', function ($window) {
     var Storage = {};
     var app = $window.bricksApp;
