@@ -42,6 +42,21 @@ angular.module('bricksApp', ['ngRoute'])
       return data;
     };
 
+    Storage.get = function (tableName, id) {
+      var row;
+
+      if (data[tableName]) {
+        data[tableName].some(function (storedRow, i) {
+          if (storedRow.id === id) {
+            row = storedRow;
+            return true;
+          }
+        });
+      }
+
+      return row;
+    };
+
     Storage.create = function (tableName, row) {
       var date = (new Date()).toISOString().split('.')[0].replace('T', ' ');
 
@@ -81,8 +96,16 @@ angular.module('bricksApp', ['ngRoute'])
     return Storage;
   })
 
-  .controller('MainCtrl', function ($scope, Storage) {
+  .controller('MainCtrl', function ($routeParams, $scope, Storage) {
+    var routeKeys = Object.keys($routeParams);
+
     $scope.data = Storage.all();
+
+    if (routeKeys.length > 0) {
+      routeKeys.forEach(function (table) {
+        $scope[table] = Storage.get(table, $routeParams[table]) || {};
+      });
+    }
 
     $scope.save = function (table, instance) {
       if (instance.id) {
