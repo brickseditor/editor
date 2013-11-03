@@ -10,6 +10,7 @@ angular.module('bricksApp', [
     'bricksApp.database',
     'bricksApp.settings',
     'bricksApp.start',
+    'bricksApp.storage',
     'bricksApp.ui'
   ])
 

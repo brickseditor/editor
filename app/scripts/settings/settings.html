@@ -3,13 +3,17 @@
     <h1>Settings</h1>
   </div>
 
+  <div class="alert alert-{{alert.type}}" ng-repeat="alert in alerts">
+    {{alert.message}}
+  </div>
+
   <form class="form-horizontal" action="" name="settingsForm"
     ng-submit="saveSettings()">
     <div class="form-group">
       <label class="col-sm-4 control-label" for="settingsAppName">
         App Name
       </label>
-      <div class="col-sm-8">
+      <div class="col-sm-6">
         <input type="text" class="form-control" id="settingsAppName"
         ng-model="$parent.app.name" name="name" validation-class required>
       </div>
@@ -17,14 +21,23 @@
 
     <div class="form-group">
       <label class="col-sm-4 control-label">Data Storage</label>
-      <div class="col-sm-8">
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" id="settingsPersistenceLocalStorage"
-            name="settings.persistence[]" value="localStorage" checked>
-            User's Device
-          </label>
-        </div>
+      <div class="col-sm-6">
+        <select class="form-control" id="settingsStorage"
+          ng-options="storage.name as storage.label for storage in $parent.storages"
+          ng-model="$parent.app.storage" name="storage"
+          validation-class required>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" ng-if="app.storage === 'firebase'">
+      <label class="col-sm-4 control-label" for="settingsFirebase">
+        Firebase Name
+      </label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control" id="settingsFirebase"
+          ng-model="$parent.app.settings.firebase" name="firebase"
+          validation-class required>
       </div>
     </div>
 

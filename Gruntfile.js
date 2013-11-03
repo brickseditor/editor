@@ -193,6 +193,7 @@ module.exports = function (grunt) {
           src: [
             '<%= yeoman.dist %>/scripts/**/*.js',
             '!<%= yeoman.dist %>/scripts/preview.js',
+            '!<%= yeoman.dist %>/scripts/storage/storage.js',
             '<%= yeoman.dist %>/styles/{,*/}*.css',
             '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
             '<%= yeoman.dist %>/styles/fonts/*'
@@ -297,7 +298,8 @@ module.exports = function (grunt) {
             'bower_components/**/*',
             'images/{,*/}*.{gif,webp}',
             'styles/fonts/*',
-            'scripts/preview.js'
+            'scripts/preview.js',
+            'scripts/storage/storage.js'
           ]
         }, {
           expand: true,
@@ -348,7 +350,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.dist %>/scripts',
-          src: ['*.js', '!preview.js'],
+          src: ['*.js', '!preview.js', '!storage/storage.js'],
           dest: '<%= yeoman.dist %>/scripts'
         }]
       }

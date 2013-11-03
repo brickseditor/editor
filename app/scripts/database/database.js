@@ -22,13 +22,13 @@ angular.module('bricksApp.database', [
     ];
 
     $scope.app = apps.current();
-    $scope.storage = new Storage($scope.app.id);
+    $scope.storage = new Storage($scope.app);
 
     $scope.selectTable = function (i) {
       $scope.currentTable = $scope.app.tables[i];
       $scope.currentIndex = i;
       if ($scope.currentTable) {
-        $scope.data = $scope.storage.getTable($scope.currentTable.name);
+        $scope.data = $scope.storage.all($scope.currentTable.name);
       }
     };
 
@@ -43,17 +43,20 @@ angular.module('bricksApp.database', [
     $scope.newRow = {};
 
     // Watch for changes to the current app and set the current table.
-    $scope.appsService = apps;
-    $scope.$watch('appsService.current().id', function () {
-      $scope.app = apps.current();
-      $scope.storage = new Storage($scope.app.id);
+    $scope.$watch(function () {
+      return apps.current().id;
+    }, function (id) {
+      if ($scope.app.id !== id) {
+        $scope.app = apps.current();
+        $scope.storage = new Storage($scope.app);
 
-      if ($scope.app.tables) {
-        $scope.selectTable(0);
-      } else {
-        $scope.app.tables = [];
+        if ($scope.app.tables) {
+          $scope.selectTable(0);
+        } else {
+          $scope.app.tables = [];
+        }
       }
-    }, true);
+    });
 
     $scope.hasTables = function () {
       return $scope.app.tables && $scope.app.tables.length > 0;
@@ -121,15 +124,13 @@ angular.module('bricksApp.database', [
     };
 
     $scope.addRow = function () {
-      $scope.storage.addRow($scope.currentTable.name, $scope.newRow);
-      $scope.data.push(angular.copy($scope.newRow));
+      $scope.storage.add($scope.currentTable.name, $scope.newRow);
       $scope.newRow = {};
       $scope.showModal.newRow = false;
     };
 
     $scope.deleteRow = function (row, i) {
-      $scope.storage.removeRow($scope.currentTable.name, row);
-      $scope.data.splice(i, 1);
+      $scope.storage.remove($scope.currentTable.name, row);
     };
 
     $scope.emptyTable = function () {
@@ -137,8 +138,7 @@ angular.module('bricksApp.database', [
         $scope.currentTable.name + '"?';
 
       if ($window.confirm(text)) {
-        $scope.storage.emptyTable($scope.currentTable.name);
-        $scope.data = [];
+        $scope.storage.clear($scope.currentTable.name);
       }
       $scope.showMenu.actions = false;
     };

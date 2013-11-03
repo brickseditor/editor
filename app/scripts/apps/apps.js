@@ -39,8 +39,9 @@ angular.module('bricksApp.apps', [])
       // the app id.
       add: function (app) {
         app.id = app.id || uuid();
-        app.css = '';
+        app.css = app.css || '';
         app.pages = app.pages || [{url: '/', template: ''}];
+        app.storage = app.storage || 'local';
         app.tables = app.tables || [];
 
         apps.push(angular.copy(app));
@@ -161,6 +162,14 @@ angular.module('bricksApp.apps', [])
 
           .then(function (response) {
             scope.scripts = response.data;
+
+            return $http.get('scripts/storage/storage.js', {
+              cache: true
+            });
+          })
+
+          .then(function (response) {
+            scope.scripts += response.data;
 
             return $http.get('scripts/preview.js', {
               cache: true
