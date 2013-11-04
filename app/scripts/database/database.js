@@ -42,6 +42,12 @@ angular.module('bricksApp.database', [
     $scope.newColumn = {};
     $scope.newRow = {};
 
+    $scope.$watch(function () {
+      return $scope.storage.all($scope.currentTable.name);
+    }, function (data) {
+      $scope.data = data;
+    });
+
     // Watch for changes to the current app and set the current table.
     $scope.$watch(function () {
       return apps.current().id;
