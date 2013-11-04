@@ -32,6 +32,10 @@ angular.module('bricksApp.ui')
           mode: 'css',
         }, codemirrorOptions);
 
+        scope.jsOptions = angular.extend({
+          mode: 'javascript',
+        }, codemirrorOptions);
+
         iframe.on('load', function () {
           if (!style) {
             style = iframe.contents().find('#bricksAppStyle');

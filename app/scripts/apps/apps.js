@@ -40,6 +40,7 @@ angular.module('bricksApp.apps', [])
       add: function (app) {
         app.id = app.id || uuid();
         app.css = app.css || '';
+        app.js = app.js || '';
         app.pages = app.pages || [{url: '/', template: ''}];
         app.storage = app.storage || 'local';
         app.tables = app.tables || [];

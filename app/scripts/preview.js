@@ -43,4 +43,6 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
     $scope.delete = function (table, instance) {
       storage.remove(table, instance);
     };
+
+    eval($window.bricksApp.js);
   });

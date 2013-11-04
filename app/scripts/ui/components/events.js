@@ -43,19 +43,23 @@ angular.module('bricksApp.ui')
           });
         });
 
-        scope.$watch('events', function (events) {
+        scope.$watch('event', function (event) {
           var attrValue;
 
           if (!scope.selection) {
             return;
           }
 
-          if (events.type && events.action && events.object) {
-            attrValue = events.action +
-              '(\'' + events.object + '\', ' + events.object + ')';
-            scope.selection.attr('ng-' + events.type, attrValue);
+          if (event.type && event.action && event.object) {
+            if (event.action === 'custom') {
+              attrValue = event.object;
+            } else {
+              attrValue = event.action +
+                '(\'' + event.object + '\', ' + event.object + ')';
+            }
+            scope.selection.attr('ng-' + event.type, attrValue);
           } else {
-            scope.selection.removeAttr('ng-' + events.type);
+            scope.selection.removeAttr('ng-' + event.type);
           }
 
           uiCtrl.updateTemplate();
