@@ -100,7 +100,9 @@ angular.module('bricksApp.ui')
           selected.remove();
 
           if (parent) {
-            parent.html(parent.html().trim());
+            var html = parent.html();
+            html = html ? parent.html().trim() : '';
+            parent.html(html);
           }
 
           uiCtrl.updateTemplate();
