@@ -33,39 +33,7 @@
     </div>
   </div>
 
-  <div class="rows">
-    <table class="table table-bordered rows" ng-if="hasTables()">
-      <thead>
-        <tr>
-          <th></th>
-          <th ng-repeat="column in currentTable.columns">
-            {{column.name}}
-            <a href="" class="text-danger" ng-click="deleteColumn(column, $index)"
-              ng-if="!isDefaultColumn(column)">
-              <span class="glyphicon glyphicon-remove"></span>
-            </a>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-      <tr ng-repeat="row in data">
-        <td>
-          <a href="" ng-click="deleteRow(row, $index)" class="text-danger">
-            <span class="glyphicon glyphicon-remove"></span>
-          </a>
-        </td>
-        <td ng-repeat="column in currentTable.columns">
-          {{row[column.name]}}
-        </td>
-      </tr>
-      <tr ng-show="data.length === 0">
-        <td colspan="{{currentTable.columns.length + 1}}" class="text-center">
-          No data in the selected table.
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+  <div class="rows" ng-grid="gridOptions"></div>
 
   <modal title="'New Table'" submit="addTable()"
     close="showModal.newTable = false" closeable="hasTables()"

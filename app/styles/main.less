@@ -157,6 +157,16 @@ body {
   }
 }
 
+// ngGrid styles overwrites.
+.ngViewport {
+  height: auto !important;
+}
+
+.ngRow {
+  position: static;
+  height: auto !important;
+}
+
 // Custom styles.
 #database {
   padding-top: (@navbar-height);
@@ -170,7 +180,7 @@ body {
     }
   }
   .actions {
-    padding: (@line-height-computed / 2);
+    margin: (@line-height-computed / 2);
   }
   .rows {
     padding: 0 (@line-height-computed / 2);

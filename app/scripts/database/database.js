@@ -36,6 +36,16 @@ angular.module('bricksApp.database', [
       $scope.selectTable(0);
     }
 
+    $scope.gridOptions = {
+      data: 'data',
+      enableCellEditOnFocus: true,
+      enableCellSelection: true,
+      enablePaging: true,
+      enablePinning: true,
+      enableRowSelection: false,
+      showFooter: true
+    };
+
     // Properties used in modals
     $scope.showModal = {newTable: false, newColumn: false};
     $scope.newTable = {};

@@ -3,6 +3,7 @@
 angular.module('bricksApp', [
     'ngAnimate',
     'ngRoute',
+    'ngGrid',
     'ui.codemirror',
     'bricksApp.common',
     'bricksApp.about',
