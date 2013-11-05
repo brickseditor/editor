@@ -8,7 +8,6 @@ angular.module('bricksApp.ui')
       restrict: 'E',
       templateUrl: 'scripts/ui/pages/pages.html',
       link: function (scope, element, attrs, uiCtrl) {
-        scope.app = apps.current();
         scope.newPage = {template: ''};
         scope.showModal = false;
         scope.savePageText = 'Save';
@@ -20,7 +19,12 @@ angular.module('bricksApp.ui')
           scope.showMenu = false;
         };
 
-        scope.setCurrent(scope.app.pages[0]);
+        scope.$watch(function () {
+          return apps.current().id;
+        }, function (app) {
+          scope.app = apps.current();
+          scope.setCurrent(scope.app.pages[0]);
+        });
 
         scope.addPage = function () {
           var newPage = angular.copy(scope.newPage);
