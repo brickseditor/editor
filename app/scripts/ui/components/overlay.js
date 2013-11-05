@@ -26,8 +26,8 @@ angular.module('bricksApp.ui')
 
       return this.element.css({
         display: 'block',
-        width: target[0].clientWidth + 'px',
-        height: target[0].clientHeight + 'px',
+        width: target.outerWidth() + 'px',
+        height: target.outerHeight() + 'px',
         top: (top + offset.top) + 'px',
         left: (left + offset.left) + 'px'
       });
