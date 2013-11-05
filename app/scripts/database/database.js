@@ -28,9 +28,6 @@ angular.module('bricksApp.database', [
       $scope.currentTable = $scope.app.tables[i];
       $scope.currentIndex = i;
       if ($scope.currentTable) {
-        $scope.columns = $scope.currentTable.columns.map(function (column) {
-          return {field: column.name};
-        });
         $scope.data = $scope.storage.all($scope.currentTable.name);
       }
     };
@@ -55,6 +52,7 @@ angular.module('bricksApp.database', [
     $scope.newTable = {};
     $scope.newColumn = {};
     $scope.newRow = {};
+    $scope.columnToDelete = {};
 
     $scope.$watch(function () {
       if ($scope.currentTable && $scope.currentTable.name) {
@@ -79,6 +77,12 @@ angular.module('bricksApp.database', [
         }
       }
     });
+
+    $scope.$watch('currentTable.columns', function (columns) {
+      $scope.columns = columns.map(function (column) {
+        return {field: column.name};
+      });
+    }, true);
 
     $scope.hasTables = function () {
       return $scope.app.tables && $scope.app.tables.length > 0;
@@ -136,12 +140,14 @@ angular.module('bricksApp.database', [
     };
 
     // Delete a column after confirmation.
-    $scope.deleteColumn = function (column, i) {
+    $scope.deleteColumn = function () {
+      var column = $scope.currentTable.columns[$scope.columnToDelete];
       var confirmed = $window.confirm('Are you sure you want to delete the ' +
                                       'column "' + column.name + '"?');
       if (confirmed) {
-        $scope.currentTable.columns.splice(i, 1);
+        $scope.currentTable.columns.splice($scope.columnToDelete, 1);
         apps.update($scope.app);
+        $scope.showModal.deleteColumn = false;
       }
     };
 
