@@ -19,7 +19,8 @@
     "Blob.js": "https://github.com/eligrey/Blob.js/archive/b5453eee554f109a23c096615415a035de2183f4.zip",
     "FileSaver": "https://github.com/eligrey/FileSaver.js/archive/d8c81c105f3f952326ead7700c8cf6da2690eba0.zip",
     "jszip": "https://github.com/Stuk/jszip/archive/7718693d50a35d48824204d6781f24c0b0a1d818.zip",
-    "ng-grid": "~2.0.7"
+    "ng-grid": "~2.0.7",
+    "angular-fire": "~0.3.1"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0-rc.3",
