@@ -28,6 +28,9 @@ angular.module('bricksApp.database', [
       $scope.currentTable = $scope.app.tables[i];
       $scope.currentIndex = i;
       if ($scope.currentTable) {
+        $scope.columns = $scope.currentTable.columns.map(function (column) {
+          return {field: column.name};
+        });
         $scope.data = $scope.storage.all($scope.currentTable.name);
       }
     };
@@ -37,6 +40,7 @@ angular.module('bricksApp.database', [
     }
 
     $scope.gridOptions = {
+      columnDefs: 'columns',
       data: 'data',
       enableCellEditOnFocus: true,
       enableCellSelection: true,
