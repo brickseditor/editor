@@ -57,7 +57,9 @@ angular.module('bricksApp.database', [
     $scope.newRow = {};
 
     $scope.$watch(function () {
-      return $scope.storage.all($scope.currentTable.name);
+      if ($scope.currentTable && $scope.currentTable.name) {
+        return $scope.storage.all($scope.currentTable.name);
+      }
     }, function (data) {
       $scope.data = data;
     });
