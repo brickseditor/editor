@@ -26,12 +26,14 @@
   <modal title="'New Page'" submit="addPage()" close="showModal = false" open="showModal">
     <form class="form-horizontal" action="" ng-submit="addPage()">
       <div class="form-group">
-        <label class="col-sm-4 control-label" for="newPageURL">
+        <label class="col-sm-3 control-label" for="newPageURL">
           URL
         </label>
-        <div class="col-sm-6">
-          <input type="text" class="form-control" id="newPageURL" required="" ng-model="$parent.newPage.url" ng-pattern="/^\/[a-zA-Z0-9_]*$/" name="name" validation-class="">
-          <span class="help-block">Example '/products', '/users'</span>
+        <div class="col-sm-7">
+          <input type="text" class="form-control" id="newPageURL" required="" ng-model="$parent.newPage.url" ng-pattern="/^\/[a-zA-Z0-9\/_:]*$/" name="name" validation-class="">
+          <span class="help-block">
+            Examples: /products, /users, /users/:user
+          </span>
         </div>
       </div>
     </form>

@@ -25,44 +25,16 @@
         More <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu" ng-show="showMenu.actions">
+        <li><a href="" ng-click="showModal.deleteColumn = true">
+          Delete Column
+        </a></li>
         <li><a href="" ng-click="emptyTable()">Empty Table</a></li>
         <li><a href="" ng-click="deleteTable()">Delete Table</a></li>
       </ul>
     </div>
   </div>
 
-  <div class="rows">
-    <table class="table table-bordered rows" ng-if="hasTables()">
-      <thead>
-        <tr>
-          <th></th>
-          <th ng-repeat="column in currentTable.columns">
-            {{column.name}}
-            <a href="" class="text-danger" ng-click="deleteColumn(column, $index)" ng-if="!isDefaultColumn(column)">
-              <span class="glyphicon glyphicon-remove"></span>
-            </a>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-      <tr ng-repeat="row in data">
-        <td>
-          <a href="" ng-click="deleteRow(row, $index)" class="text-danger">
-            <span class="glyphicon glyphicon-remove"></span>
-          </a>
-        </td>
-        <td ng-repeat="column in currentTable.columns">
-          {{row[column.name]}}
-        </td>
-      </tr>
-      <tr ng-show="data.length === 0">
-        <td colspan="{{currentTable.columns.length + 1}}" class="text-center">
-          No data in the selected table.
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+  <div class="rows" ng-grid="gridOptions"></div>
 
   <modal title="'New Table'" submit="addTable()" close="showModal.newTable = false" closeable="hasTables()" open="!hasTables() || showModal.newTable">
     <form class="form-horizontal" action="" name="newTableForm" ng-submit="addTable(newTable)">
@@ -89,6 +61,20 @@
           <input type="text" class="form-control" id="newColumnName" required="" ng-model="$parent.newColumn.name" ng-pattern="/^[a-zA-Z_][a-zA-Z0-9_]*$/" name="name" validation-class="">
           <span class="help-block">Must begin with a letter or underscore and
             only contain letters, underscores or digits.</span>
+        </div>
+      </div>
+    </form>
+  </modal>
+
+  <modal title="'Delete Column'" submit="deleteColumn()" close="showModal.deleteColumn = false" open="showModal.deleteColumn">
+    <form class="form-horizontal" action="" name="deleteColumnForm" ng-submit="deleteColumn()">
+      <div class="form-group">
+        <label class="col-sm-4 control-label" for="deleteColumnName">
+          Name
+        </label>
+        <div class="col-sm-6">
+          <select class="form-control" id="deleteColumnName" validation-class="" ng-model="$parent.$parent.columnToDelete" name="name" required="" ng-options="i as column.name for (i, column) in $parent.currentTable.columns">
+          </select>
         </div>
       </div>
     </form>

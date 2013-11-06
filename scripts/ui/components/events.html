@@ -8,24 +8,30 @@
     <div class="panel-body">
       <form>
         <div class="form-group">
-          <label class="control-label" for="eventsEvent">Event</label>
-          <select class="form-control input-sm" id="eventsType" ng-model="events.type" ng-disabled="!selection" ng-options="name for name in names">
+          <label class="control-label" for="eventEvent">Event</label>
+          <select class="form-control input-sm" id="eventType" ng-model="event.type" ng-disabled="!selection" ng-options="name for name in names">
             <option value=""></option>
           </select>
         </div>
 
         <div class="form-group">
-          <label class="control-label" for="eventsAction">Action</label>
-          <select class="form-control input-sm" id="eventsAction" ng-model="events.action" ng-disabled="!selection">
+          <label class="control-label" for="eventAction">Action</label>
+          <select class="form-control input-sm" id="eventAction" ng-model="event.action" ng-disabled="!selection">
             <option value=""></option>
             <option value="save">save</option>
             <option value="delete">delete</option>
+            <option value="custom">custom</option>
           </select>
         </div>
 
-        <div class="form-group">
-          <label class="control-label" for="eventsObject">Object</label>
-          <select class="form-control input-sm" id="eventsObject" ng-model="events.object" ng-disabled="!selection" ng-options="table.name as table.name for table in tables">
+        <div class="form-group" ng-if="event.action === 'custom'">
+          <label class="control-label" for="eventObject">Object</label>
+          <input class="form-control" id="eventObject" ng-model="event.object">
+        </div>
+
+        <div class="form-group" ng-if="event.action !== 'custom'">
+          <label class="control-label" for="eventObject">Object</label>
+          <select class="form-control input-sm" id="eventObject" ng-model="event.object" ng-disabled="!selection" ng-options="table.name as table.name for table in tables">
             <option value=""></option>
           </select>
         </div>
