@@ -92,9 +92,14 @@ angular.module('bricksApp.ui')
           if (id) {
             scope.selector = '#' + id;
           } else {
-            var classNames = element.attr('class').split(/\s+/).join('.');
-            scope.selector = [element.prop('tagName').toLowerCase(), classNames]
-                              .join('.');
+            var classes = element.attr('class');
+            var selector = element.prop('tagName').toLowerCase();
+
+            if (classes) {
+              scope.selector = selector + '.' + classes.split(/\s+/).join('.');
+            } else {
+              scope.selector = selector;
+            }
           }
         };
 
