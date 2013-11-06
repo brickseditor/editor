@@ -23,6 +23,7 @@
             <option value=""></option>
             <option value="save">save</option>
             <option value="delete">delete</option>
+            <option value="visit">load page</option>
             <option value="custom">custom</option>
           </select>
         </div>
@@ -33,11 +34,20 @@
             ng-model="event.object">
         </div>
 
-        <div class="form-group" ng-if="event.action !== 'custom'">
+        <div class="form-group" ng-if="['save', 'delete'].indexOf(event.action) > -1">
           <label class="control-label" for="eventObject">Object</label>
           <select class="form-control input-sm" id="eventObject"
             ng-model="event.object" ng-disabled="!selection"
-            ng-options="table.name as table.name for table in tables">
+            ng-options="table.name as table.name for table in app.tables">
+            <option value=""></option>
+          </select>
+        </div>
+
+        <div class="form-group" ng-if="event.action === 'visit'">
+          <label class="control-label" for="eventObject">Page</label>
+          <select class="form-control input-sm" id="eventObject"
+            ng-model="event.object" ng-disabled="!selection"
+            ng-options="page.url as page.url for page in app.pages">
             <option value=""></option>
           </select>
         </div>

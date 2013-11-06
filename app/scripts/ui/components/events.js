@@ -10,7 +10,7 @@ angular.module('bricksApp.ui')
       templateUrl: 'scripts/ui/components/events.html',
       link: function (scope, element, attrs, uiCtrl) {
         scope.selection = null;
-        scope.tables = apps.current().tables;
+        scope.app = apps.current();
         scope.event = {};
 
         scope.names = (
@@ -25,8 +25,15 @@ angular.module('bricksApp.ui')
           if (event) {
             scope.event.type = type;
             scope.event.action = event.split('(')[0];
+
             if (scope.event.action) {
-              scope.event.object = event.split('\'')[1];
+              var part2 = event.split('\'')[1];
+
+              if (scope.event.action === 'visit') {
+                scope.event.object = part2.replace(/{{(\w+)\.id}}/, ":$1");
+              } else {
+                scope.event.object = part2;
+              }
             }
           }
         };
@@ -51,11 +58,19 @@ angular.module('bricksApp.ui')
           }
 
           if (event.type && event.action && event.object) {
-            if (event.action === 'custom') {
-              attrValue = event.object;
-            } else {
-              attrValue = event.action +
-                '(\'' + event.object + '\', ' + event.object + ')';
+            switch (event.action) {
+              case 'custom':
+                attrValue = event.object;
+              break;
+
+              case 'visit':
+                var url = event.object.replace(/:(\w+)/, "{{$1.id}}");
+                attrValue = event.action + '(\'' + url + '\')';
+              break;
+
+              default:
+                attrValue = event.action +
+                  '(\'' + event.object + '\', ' + event.object + ')';
             }
             scope.selection.attr('ng-' + event.type, attrValue);
           } else {

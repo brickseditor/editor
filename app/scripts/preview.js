@@ -18,7 +18,7 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
     angular.element('#bricksAppStyle').html($window.bricksApp.css);
   })
 
-  .controller('MainCtrl', function ($routeParams, $scope, $window, Storage) {
+  .controller('MainCtrl', function ($location, $parse, $routeParams, $scope, $window, Storage) {
     var routeKeys = Object.keys($routeParams);
     var storage = new Storage($window.bricksApp);
 
@@ -42,6 +42,10 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
 
     $scope.delete = function (table, instance) {
       storage.remove(table, instance);
+    };
+
+    $scope.visit = function (url) {
+      $location.path(url);
     };
 
     eval($window.bricksApp.js);
