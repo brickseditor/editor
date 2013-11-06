@@ -90,7 +90,7 @@ angular.module('bricksApp.ui')
 
           bindings.classes.forEach(function (object) {
             if (object.name && object.value) {
-              classes.push(object.name + ': ' + object.value);
+              classes.push('\'' + object.name + '\': ' + object.value);
             }
           });
 
