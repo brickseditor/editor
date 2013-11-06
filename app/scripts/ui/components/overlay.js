@@ -62,12 +62,12 @@ angular.module('bricksApp.ui')
       restrict: 'E',
       template: '<div class="overlay-select"><div class="actions">' +
           '<span>{{selector}}</span>' +
-          '<a href="" ng-click="parent($event)"><span class="fa fa-level-up">' +
-            '</span></a>' +
-          '<a href="" ng-click="copy($event)"><span class="fa fa-copy">' +
-            '</span></a>' +
-          '<a href="" ng-click="delete($event)"><span class="fa fa-trash-o">' +
-            '</span></a>' +
+          '<a href="" title="Select parent" ng-click="parent($event)">' +
+            '<span class="fa fa-level-up"></span></a>' +
+          '<a href="" title="Duplicate" ng-click="copy($event)">' +
+            '<span class="fa fa-copy"></span></a>' +
+          '<a href="" title="Delete" ng-click="delete($event)">' +
+            '<span class="fa fa-trash-o"></span></a>' +
         '</div></div>',
       link: function (scope, element, attrs, uiCtrl) {
         var selected;
