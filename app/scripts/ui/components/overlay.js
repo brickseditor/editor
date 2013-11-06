@@ -61,6 +61,9 @@ angular.module('bricksApp.ui')
       require: '^ui',
       restrict: 'E',
       template: '<div class="overlay-select"><div class="actions">' +
+          '<span>{{selector}}</span>' +
+          '<a href="" ng-click="parent($event)"><span class="fa fa-level-up">' +
+            '</span></a>' +
           '<a href="" ng-click="copy($event)"><span class="fa fa-copy">' +
             '</span></a>' +
           '<a href="" ng-click="delete($event)"><span class="fa fa-trash-o">' +
@@ -82,6 +85,28 @@ angular.module('bricksApp.ui')
             }
           }
         });
+
+        var setSelector = function (element) {
+          var id = element.attr('id');
+
+          if (id) {
+            scope.selector = '#' + id;
+          } else {
+            var classNames = element.attr('class').split(/\s+/).join('.');
+            scope.selector = [element.prop('tagName').toLowerCase(), classNames]
+                              .join('.');
+          }
+        };
+
+        // Selects the parent of an element.
+        scope.parent = function (e) {
+          e.preventDefault();
+          var parent = selected.parent();
+          if (!parent.is('div[ng-view]')) {
+            selected = parent;
+          }
+          overlay.moveTo(selected);
+        };
 
         // Clones an element and selects the clone.
         scope.copy = function (e) {
@@ -116,6 +141,7 @@ angular.module('bricksApp.ui')
         }, function () {
           if (selected) {
             overlay.moveTo(selected);
+            setSelector(selected);
           }
         });
 
