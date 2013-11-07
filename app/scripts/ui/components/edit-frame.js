@@ -18,7 +18,7 @@ angular.module('bricksApp.ui')
         scope.$watch(function () {
           return uiCtrl.page().template;
         }, function (template) {
-          if (view && template !== view.html()) {
+          if (view && template !== html_beautify(view.html())) {
             view.html(template);
           }
         });
