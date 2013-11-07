@@ -14,6 +14,8 @@ angular.module('bricksApp.database', [
   })
 
   .controller('DatabaseCtrl', function ($scope, $window, apps, Storage) {
+    var storage;
+
     $scope.showMenu = {actions: false};
     $scope.defaultColumns = [
       {name: 'id'},
@@ -22,19 +24,22 @@ angular.module('bricksApp.database', [
     ];
 
     $scope.app = apps.current();
-    $scope.storage = new Storage($scope.app);
 
     $scope.selectTable = function (i) {
       $scope.currentTable = $scope.app.tables[i];
       $scope.currentIndex = i;
       if ($scope.currentTable) {
-        $scope.data = $scope.storage.all($scope.currentTable.name);
+        $scope.data = storage.all($scope.currentTable.name);
       }
     };
 
-    if ($scope.app.tables) {
-      $scope.selectTable(0);
-    }
+    Storage.init($scope.app).then(function (res) {
+      storage = res;
+
+      if ($scope.app.tables) {
+        $scope.selectTable(0);
+      }
+    });
 
     $scope.gridOptions = {
       columnDefs: 'columns',
@@ -56,7 +61,7 @@ angular.module('bricksApp.database', [
 
     $scope.$watch(function () {
       if ($scope.currentTable && $scope.currentTable.name) {
-        return $scope.storage.all($scope.currentTable.name);
+        return storage.all($scope.currentTable.name);
       }
     }, function (data) {
       $scope.data = data;
@@ -68,20 +73,24 @@ angular.module('bricksApp.database', [
     }, function (id) {
       if ($scope.app.id !== id) {
         $scope.app = apps.current();
-        $scope.storage = new Storage($scope.app);
+        Storage.init($scope.app).then(function (res) {
+          storage = res;
 
-        if ($scope.app.tables) {
-          $scope.selectTable(0);
-        } else {
-          $scope.app.tables = [];
-        }
+          if ($scope.app.tables) {
+            $scope.selectTable(0);
+          } else {
+            $scope.app.tables = [];
+          }
+        });
       }
     });
 
     $scope.$watch('currentTable.columns', function (columns) {
-      $scope.columns = columns.map(function (column) {
-        return {field: column.name};
-      });
+      if (columns) {
+        $scope.columns = columns.map(function (column) {
+          return {field: column.name};
+        });
+      }
     }, true);
 
     $scope.hasTables = function () {
@@ -152,13 +161,13 @@ angular.module('bricksApp.database', [
     };
 
     $scope.addRow = function () {
-      $scope.storage.add($scope.currentTable.name, $scope.newRow);
+      storage.add($scope.currentTable.name, $scope.newRow);
       $scope.newRow = {};
       $scope.showModal.newRow = false;
     };
 
     $scope.deleteRow = function (row, i) {
-      $scope.storage.remove($scope.currentTable.name, row);
+      storage.remove($scope.currentTable.name, row);
     };
 
     $scope.emptyTable = function () {
@@ -166,7 +175,7 @@ angular.module('bricksApp.database', [
         $scope.currentTable.name + '"?';
 
       if ($window.confirm(text)) {
-        $scope.storage.clear($scope.currentTable.name);
+        storage.clear($scope.currentTable.name);
       }
       $scope.showMenu.actions = false;
     };

@@ -2,8 +2,8 @@
 
 angular.module('bricksApp.storage', ['firebase'])
 
-  .factory('localData', function ($rootScope, $window) {
-    var scope = $rootScope.$new();
+  .factory('localData', function ($q, $window) {
+    var data = {};
     var prefix;
 
     var getTable = function (tableName) {
@@ -12,15 +12,16 @@ angular.module('bricksApp.storage', ['firebase'])
     };
 
     var saveTable = function (tableName) {
-      var dataString = scope.data[tableName] ?
-        angular.toJson(scope.data[tableName]) :
+      var dataString = data[tableName] ?
+        angular.toJson(data[tableName]) :
         '';
       $window.localStorage.setItem(prefix + tableName, dataString);
     };
 
-    scope.data = {};
+    return function (app, scope) {
+      var deferred = $q.defer();
 
-    return function (app) {
+      data = scope.data;
       prefix = 'bricks_app_' + app.id + '_';
 
       app.tables.forEach(function (table) {
@@ -31,40 +32,46 @@ angular.module('bricksApp.storage', ['firebase'])
         }, true);
       });
 
-      return scope.data;
+      deferred.resolve();
+
+      return deferred.promise;
     }
   })
 
   .factory('firebaseData', function ($rootScope, angularFire) {
-    return function (app) {
-      var scope = $rootScope.$new();
-
-      scope.data = {};
-
-      app.tables.forEach (function (table) {
-        scope.data[table.name] = [];
-
-        angularFire(new Firebase(
-          'https://' + app.settings.firebase + '.firebaseio.com/' + table.name
-        ), scope, 'data.' + table.name);
-      });
-
-      return scope.data;
+    return function (app, scope) {
+      return angularFire(new Firebase(
+        'https://' + app.settings.firebase + '.firebaseio.com'
+      ), scope, 'data');
     }
   })
 
-  .factory('Storage', function (firebaseData, localData) {
+  .service('Storage', function ($q, $rootScope, firebaseData, localData) {
+    var Storage = {};
     var data;
 
-    var Storage = function (app) {
+    Storage.init = function (app) {
+      var deferred = $q.defer();
+      var scope = $rootScope.$new();
+      var dataPromise;
+
+      scope.data = {};
+
       if (app.storage === 'firebase') {
-        data = firebaseData(app);
+        dataPromise = firebaseData(app, scope);
       } else {
-        data = localData(app);
+        dataPromise = localData(app, scope);
       }
+
+      dataPromise.then(function () {
+        deferred.resolve(Storage);
+        data = scope.data;
+      });
+
+      return deferred.promise;
     };
 
-    Storage.prototype.all = function (tableName) {
+    Storage.all = function (tableName) {
       if (tableName) {
         return data[tableName];
       } else {
@@ -72,7 +79,7 @@ angular.module('bricksApp.storage', ['firebase'])
       }
     };
 
-    Storage.prototype.get = function (tableName, id) {
+    Storage.get = function (tableName, id) {
       var row;
 
       if (data[tableName]) {
@@ -87,7 +94,7 @@ angular.module('bricksApp.storage', ['firebase'])
       return row;
     };
 
-    Storage.prototype.add = function (tableName, row) {
+    Storage.add = function (tableName, row) {
       var date = (new Date()).toISOString().split('.')[0].replace('T', ' ');
 
       row.id = uuid();
@@ -98,7 +105,7 @@ angular.module('bricksApp.storage', ['firebase'])
       data[tableName].push(row);
     };
 
-    Storage.prototype.update = function (tableName, row) {
+    Storage.update = function (tableName, row) {
       if (data[tableName]) {
         data[tableName].some(function (storedRow, i) {
           if (storedRow.id === row.id) {
@@ -109,7 +116,7 @@ angular.module('bricksApp.storage', ['firebase'])
       }
     };
 
-    Storage.prototype.remove = function (tableName, row) {
+    Storage.remove = function (tableName, row) {
       if (data[tableName]) {
         data[tableName].some(function (storedRow, i) {
           if (storedRow.id === row.id) {
@@ -120,7 +127,7 @@ angular.module('bricksApp.storage', ['firebase'])
       }
     };
 
-    Storage.prototype.clear = function (tableName) {
+    Storage.clear = function (tableName) {
       data[tableName].length = 0;
     };
 

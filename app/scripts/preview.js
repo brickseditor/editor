@@ -5,7 +5,12 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
     window.bricksApp.pages.forEach(function (page) {
       $routeProvider.when(page.url, {
         controller: 'MainCtrl',
-        template: page.template
+        template: page.template,
+        resolve: {
+          storage: function ($window, Storage) {
+            return Storage.init($window.bricksApp);
+          }
+        }
       });
     });
 
@@ -18,9 +23,8 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
     angular.element('#bricksAppStyle').html($window.bricksApp.css);
   })
 
-  .controller('MainCtrl', function ($location, $parse, $routeParams, $scope, $window, Storage) {
+  .controller('MainCtrl', function ($location, $parse, $routeParams, $scope, $window, storage) {
     var routeKeys = Object.keys($routeParams);
-    var storage = new Storage($window.bricksApp);
 
     $scope.data = storage.all();
 
