@@ -71,17 +71,15 @@ angular.module('bricksApp.ui')
             '<span class="fa fa-trash-o"></span></a>' +
         '</div></div>',
       link: function (scope, element, attrs, uiCtrl) {
-        var selected;
-
         var overlay = new Overlay(element, {
           click: function (e) {
-            if (element.is(':visible') && selected[0] === e.target) {
+            if (element.is(':visible') && scope.selected[0] === e.target) {
               element.hide();
-              selected = null;
+              scope.selected = null;
             } else {
               var target = angular.element(e.target);
               if (overlay.moveTo(target)) {
-                selected = target;
+                scope.selected = target;
               }
             }
           }
@@ -107,29 +105,29 @@ angular.module('bricksApp.ui')
         // Selects the parent of an element.
         scope.parent = function (e) {
           e.preventDefault();
-          var parent = selected.parent();
+          var parent = scope.selected.parent();
           if (!parent.is('div[ng-view]')) {
-            selected = parent;
+            scope.selected = parent;
+            uiCtrl.selectElement(scope.selected);
           }
-          overlay.moveTo(selected);
         };
 
         // Clones an element and selects the clone.
         scope.copy = function (e) {
           e.preventDefault();
-          selected = selected.clone().insertAfter(selected);
-          overlay.moveTo(selected);
+          scope.selected = scope.selected.clone().insertAfter(scope.selected);
+          uiCtrl.selectElement(scope.selected);
           uiCtrl.updateTemplate();
         };
 
         // Deletes selected element and trim parent element to remove
         // empty text nodes.
         scope.delete = function (e) {
-          var parent = selected.parent();
+          var parent = scope.selected.parent();
 
           e.preventDefault();
 
-          selected.remove();
+          scope.selected.remove();
 
           if (parent) {
             var html = parent.html();
@@ -143,9 +141,7 @@ angular.module('bricksApp.ui')
         };
 
         // Redraws selected element overlay when the element changes.
-        scope.$watch(function () {
-          return selected && selected.prop('outerHTML');
-        }, function () {
+        scope.$watch('selected', function (selected) {
           if (selected) {
             overlay.moveTo(selected);
             setSelector(selected);
