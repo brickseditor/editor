@@ -25,7 +25,7 @@ angular.module('bricksApp.ui')
                   part = part.split(':');
 
                   objects.push({
-                    name: part[0].trim(),
+                    name: part[0].trim().slice(1, -1),
                     value: part[1].trim()
                   });
                 });
@@ -112,7 +112,7 @@ angular.module('bricksApp.ui')
                 name = filter.name ? filter.name : '$';
                 value = filter.value ? filter.value : 'true';
 
-                filters.push(name + ': ' + value);
+                filters.push('\'' + name + '\': ' + value);
               }
             });
 
