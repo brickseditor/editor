@@ -20,8 +20,9 @@ angular.module('bricksApp.ui')
         return;
       }
 
-      var top = this.iframe[0].offsetTop;
-      var left = this.iframe[0].offsetLeft;
+      var iframeWindow = this.iframe[0].contentWindow;
+      var top = this.iframe[0].offsetTop - iframeWindow.pageYOffset;
+      var left = this.iframe[0].offsetLeft - iframeWindow.pageXOffset;
       var offset = target.offset();
 
       return this.element.css({
