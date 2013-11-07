@@ -149,8 +149,17 @@ angular.module('bricksApp.ui')
             return;
           }
 
-          scope.selection.attr('ng-bind', bindings.bind);
-          scope.selection.attr('ng-model', bindings.model);
+          if (bindings.bind) {
+            scope.selection.attr('ng-bind', bindings.bind);
+          } else {
+            scope.selection.removeAttr('ng-bind');
+          }
+
+          if (bindings.model) {
+            scope.selection.attr('ng-model', bindings.model);
+          } else {
+            scope.selection.removeAttr('ng-model');
+          }
 
           writeClass(scope.selection, bindings);
           writeRepeat(scope.selection, bindings);
