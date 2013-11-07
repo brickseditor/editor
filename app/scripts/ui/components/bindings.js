@@ -46,10 +46,7 @@ angular.module('bricksApp.ui')
             if (filter.shift().trim() === 'filter' && filter.length > 0) {
               // Pull back all the remaining part of the filter together to
               // change the whole into an object.
-              filter = parseObject(filter.join(':')).map(function (unit) {
-                unit.value = unit.value.slice(1, -1);
-                return unit;
-              });
+              filter = parseObject(filter.join(':'));
               filters = filters.concat(filter);
             }
           });
