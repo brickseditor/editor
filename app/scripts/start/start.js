@@ -16,10 +16,12 @@ angular.module('bricksApp.start', [
       });
   })
 
-  .run(function (apps, $location) {
-    if (apps.all().length === 0) {
-      $location.path('/start');
-    }
+  .run(function (apps, $location, $rootScope) {
+    $rootScope.$on('$locationChangeStart', function (e, newUrl) {
+      if (apps.all().length === 0 && newUrl.indexOf('/start') === -1) {
+        $location.path('/start');
+      }
+    });
   })
 
   .controller('StartCtrl', function ($location, $scope, apps) {
