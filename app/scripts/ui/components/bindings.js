@@ -110,7 +110,7 @@ angular.module('bricksApp.ui')
 
               if (filter.name || filter.value) {
                 name = filter.name ? filter.name : '$';
-                value = filter.value ? '\'' + filter.value + '\'' : 'true';
+                value = filter.value ? filter.value : 'true';
 
                 filters.push(name + ': ' + value);
               }
