@@ -118,6 +118,7 @@ angular.module('bricksApp.ui')
           e.preventDefault();
           selected = selected.clone().insertAfter(selected);
           overlay.moveTo(selected);
+          uiCtrl.updateTemplate();
         };
 
         // Deletes selected element and trim parent element to remove
