@@ -19,13 +19,9 @@
         <div class="form-group">
           <label class="control-label" for="eventAction">Action</label>
           <select class="form-control input-sm" id="eventAction"
-            ng-model="event.action" ng-disabled="!selection">
+            ng-model="event.action" ng-disabled="!selection"
+            ng-options="k as v for (k,v) in actions">
             <option value=""></option>
-            <option value="add">add row</option>
-            <option value="update">update row</option>
-            <option value="remove">remove row</option>
-            <option value="visit">load page</option>
-            <option value="custom">custom</option>
           </select>
         </div>
 

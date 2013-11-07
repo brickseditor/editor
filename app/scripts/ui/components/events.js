@@ -19,6 +19,14 @@ angular.module('bricksApp.ui')
           'mouseover mouseup paste submit'
         ).split(' ');
 
+        scope.actions = {
+          add: 'add row',
+          update: 'update row',
+          remove: 'remove row',
+          visit: 'load page',
+          custom: 'custom'
+        };
+
         var parseEvent = function (selection, type) {
           var event = selection.attr('ng-' + type);
 
@@ -26,7 +34,8 @@ angular.module('bricksApp.ui')
             scope.event.type = type;
             scope.event.action = event.split('(')[0];
 
-            if (scope.event.action) {
+            if (scope.event.action &&
+                Object.keys(scope.actions).indexOf(scope.event.action) > -1) {
               var part2 = event.split('\'')[1];
 
               if (scope.event.action === 'visit') {
@@ -34,6 +43,9 @@ angular.module('bricksApp.ui')
               } else {
                 scope.event.object = part2;
               }
+            } else {
+              scope.event.action = 'custom';
+              scope.event.object = event;
             }
           }
         };
