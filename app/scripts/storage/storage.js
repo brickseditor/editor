@@ -51,24 +51,21 @@ angular.module('bricksApp.storage', ['firebase'])
     var data;
 
     Storage.init = function (app) {
-      var deferred = $q.defer();
       var scope = $rootScope.$new();
-      var dataPromise;
+      var promise;
 
       scope.data = {};
 
       if (app.storage === 'firebase') {
-        dataPromise = firebaseData(app, scope);
+        promise = firebaseData(app, scope);
       } else {
-        dataPromise = localData(app, scope);
+        promise = localData(app, scope);
       }
 
-      dataPromise.then(function () {
-        deferred.resolve(Storage);
+      return promise.then(function () {
         data = scope.data;
+        return Storage;
       });
-
-      return deferred.promise;
     };
 
     Storage.all = function (tableName) {
