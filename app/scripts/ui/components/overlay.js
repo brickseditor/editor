@@ -108,7 +108,6 @@ angular.module('bricksApp.ui')
           var parent = scope.selected.parent();
           if (!parent.is('div[ng-view]')) {
             scope.selected = parent;
-            uiCtrl.selectElement(scope.selected);
           }
         };
 
@@ -116,7 +115,6 @@ angular.module('bricksApp.ui')
         scope.copy = function (e) {
           e.preventDefault();
           scope.selected = scope.selected.clone().insertAfter(scope.selected);
-          uiCtrl.selectElement(scope.selected);
           uiCtrl.updateTemplate();
         };
 
@@ -145,6 +143,7 @@ angular.module('bricksApp.ui')
           if (selected) {
             overlay.moveTo(selected);
             setSelector(selected);
+            uiCtrl.selectElement(scope.selected);
           }
         });
 
