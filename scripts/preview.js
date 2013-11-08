@@ -5,7 +5,12 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
     window.bricksApp.pages.forEach(function (page) {
       $routeProvider.when(page.url, {
         controller: 'MainCtrl',
-        template: page.template
+        template: page.template,
+        resolve: {
+          storage: ['$window', 'Storage', function ($window, Storage) {
+            return Storage.init($window.bricksApp);
+          }]
+        }
       });
     });
 
@@ -18,9 +23,8 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
     angular.element('#bricksAppStyle').html($window.bricksApp.css);
   })
 
-  .controller('MainCtrl', function ($routeParams, $scope, $window, Storage) {
+  .controller('MainCtrl', function ($location, $parse, $routeParams, $scope, $window, storage) {
     var routeKeys = Object.keys($routeParams);
-    var storage = new Storage($window.bricksApp);
 
     $scope.data = storage.all();
 
@@ -30,18 +34,37 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
       });
     }
 
-    $scope.save = function (table, instance) {
-      if (instance.id) {
-        storage.update(table, instance);
-      } else {
-        storage.add(table, angular.copy(instance));
+    $scope.add = function (table, instance, e) {
+      if (e) {
+        e.preventDefault();
       }
+
+      storage.add(table, angular.copy(instance));
       $scope[table] = {};
-      $scope.submitted = true;
     };
 
-    $scope.delete = function (table, instance) {
+    $scope.update = function (table, instance, e) {
+      if (e) {
+        e.preventDefault();
+      }
+
+      storage.update(table, instance);
+    };
+
+    $scope.remove = function (table, instance, e) {
+      if (e) {
+        e.preventDefault();
+      }
+
       storage.remove(table, instance);
+    };
+
+    $scope.visit = function (url, e) {
+      if (e) {
+        e.preventDefault();
+      }
+
+      $location.path(url);
     };
 
     eval($window.bricksApp.js);
