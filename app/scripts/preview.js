@@ -7,9 +7,9 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
         controller: 'MainCtrl',
         template: page.template,
         resolve: {
-          storage: function ($window, Storage) {
+          storage: ['$window', 'Storage', function ($window, Storage) {
             return Storage.init($window.bricksApp);
-          }
+          }]
         }
       });
     });
