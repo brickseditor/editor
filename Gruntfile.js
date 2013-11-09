@@ -1,28 +1,5 @@
 // Generated on 2013-10-14 using generator-angular 0.4.0
 'use strict';
-var LIVERELOAD_PORT = 35729;
-var path = require('path');
-var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
-var mountFolder = function (connect, dir) {
-  return connect.static(path.resolve(dir));
-};
-var useminNgminStep = {
-  name: 'ngmin',
-  createConfig: function(context, block) {
-    var cfg = {files: []};
-    // FIXME: check context has all the needed info
-    var outfile = path.join(context.outDir, block.dest);
-
-    // Depending whether or not we're the last of the step we're not going to output the same thing
-    var files = {};
-    files.dest = outfile;
-    files.src = [];
-    context.inFiles.forEach(function(f) { files.src.push(path.join(context.inDir, f));} );
-    cfg.files.push(files);
-    context.outFiles = [block.dest];
-    return cfg;
-  }
-};
 
 // # Globbing
 // for performance reasons we're only matching one level down:
@@ -34,27 +11,13 @@ module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
   require('time-grunt')(grunt);
 
-  // configurable paths
-  var yeomanConfig = {
-    app: 'app',
-    dist: 'dist'
-  };
-
-  try {
-    yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app;
-  } catch (e) {}
-
   grunt.initConfig({
-    yeoman: yeomanConfig,
+    yeoman: {
+      // configurable paths
+      app: require('./bower.json').appPath || 'app',
+      dist: 'dist'
+    },
     watch: {
-      coffee: {
-        files: ['<%= yeoman.app %>/scripts/**/*.coffee'],
-        tasks: ['coffee:dist']
-      },
-      coffeeTest: {
-        files: ['test/spec/{,*/}*.coffee'],
-        tasks: ['coffee:test']
-      },
       less: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.less'],
         tasks: ['less']
@@ -65,7 +28,7 @@ module.exports = function (grunt) {
       },
       livereload: {
         options: {
-          livereload: LIVERELOAD_PORT
+          livereload: '<%= connect.options.livereload %>'
         },
         files: [
           '<%= yeoman.app %>/*.html',
@@ -91,42 +54,32 @@ module.exports = function (grunt) {
       options: {
         port: 9000,
         // Change this to '0.0.0.0' to access the server from outside.
-        hostname: 'localhost'
+        hostname: 'localhost',
+        livereload: 35729
       },
       livereload: {
         options: {
-          middleware: function (connect) {
-            return [
-              lrSnippet,
-              mountFolder(connect, '.tmp'),
-              mountFolder(connect, yeomanConfig.app)
-            ];
-          }
+          open: true,
+          base: [
+            '.tmp',
+            '<%= yeoman.app %>'
+          ]
         }
       },
       test: {
         options: {
-          middleware: function (connect) {
-            return [
-              mountFolder(connect, '.tmp'),
-              mountFolder(connect, 'test')
-            ];
-          }
+          port: 9001,
+          base: [
+            '.tmp',
+            'test',
+            '<%= yeoman.app %>'
+          ]
         }
       },
       dist: {
         options: {
-          middleware: function (connect) {
-            return [
-              mountFolder(connect, yeomanConfig.dist)
-            ];
-          }
+          base: '<%= yeoman.dist %>'
         }
-      }
-    },
-    open: {
-      server: {
-        url: 'http://localhost:<%= connect.options.port %>'
       }
     },
     clean: {
@@ -144,36 +97,13 @@ module.exports = function (grunt) {
     },
     jshint: {
       options: {
-        jshintrc: '.jshintrc'
+        jshintrc: '.jshintrc',
+        reporter: require('jshint-stylish')
       },
       all: [
         'Gruntfile.js',
         '<%= yeoman.app %>/scripts/**/*.js'
       ]
-    },
-    coffee: {
-      options: {
-        sourceMap: true,
-        sourceRoot: ''
-      },
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/scripts',
-          src: '**/*.coffee',
-          dest: '.tmp/scripts',
-          ext: '.js'
-        }]
-      },
-      test: {
-        files: [{
-          expand: true,
-          cwd: 'test/spec',
-          src: '{,*/}*.coffee',
-          dest: '.tmp/spec',
-          ext: '.js'
-        }]
-      }
     },
     less: {
       dist: {
@@ -210,14 +140,7 @@ module.exports = function (grunt) {
         ]
       },
       options: {
-        dest: '<%= yeoman.dist %>',
-        flow: {
-          steps: {
-            js: ['concat', useminNgminStep, 'uglifyjs'],
-            css: ['concat', 'cssmin']
-          },
-          post: {}
-        }
+        dest: '<%= yeoman.dist %>'
       }
     },
     usemin: {
@@ -320,16 +243,16 @@ module.exports = function (grunt) {
     },
     concurrent: {
       server: [
-        'coffee:dist',
-        'less'
+        'less',
+        'copy:styles'
       ],
       test: [
-        'coffee',
-        'less'
+        'less',
+        'copy:styles'
       ],
       dist: [
-        'coffee',
         'less',
+        'copy:styles',
         'imagemin',
         'svgmin',
         'htmlmin'
@@ -341,18 +264,13 @@ module.exports = function (grunt) {
         singleRun: true
       }
     },
-    cdnify: {
-      dist: {
-        html: ['<%= yeoman.dist %>/*.html']
-      }
-    },
     ngmin: {
       dist: {
         files: [{
           expand: true,
-          cwd: '<%= yeoman.dist %>/scripts',
+          cwd: '.tmp/concat/scripts',
           src: ['*.js', '!preview.js', '!storage/storage.js'],
-          dest: '<%= yeoman.dist %>/scripts'
+          dest: '.tmp/concat/scripts'
         }]
       }
     },
@@ -377,7 +295,6 @@ module.exports = function (grunt) {
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
-      'open',
       'watch'
     ]);
   });
@@ -396,8 +313,8 @@ module.exports = function (grunt) {
     'concurrent:dist',
     'autoprefixer',
     'concat',
-    'copy:dist',
     'ngmin',
+    'copy:dist',
     'cssmin',
     'uglify',
     'rev',

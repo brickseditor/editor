@@ -9,9 +9,9 @@ angular.module('bricksApp.ui')
         var iframes = angular.element('#canvas').find('iframe');
 
         scope.devices = [
-          'mobile', 'tablet', 'laptop', 'desktop', 'resize-full'
+          'mobile', 'tablet', 'laptop', 'desktop', 'expand'
         ];
-        scope.currentDevice = 'resize-full';
+        scope.currentDevice = 'expand';
 
         scope.$watch('currentDevice', function (value, oldValue) {
           iframes.removeClass('device-' + oldValue).addClass('device-' + value);

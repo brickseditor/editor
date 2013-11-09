@@ -150,6 +150,7 @@ angular.module('bricksApp.database', [
 
     // Delete a column after confirmation.
     $scope.deleteColumn = function () {
+      console.log($scope.columnToDelete);
       var column = $scope.currentTable.columns[$scope.columnToDelete];
       var confirmed = $window.confirm('Are you sure you want to delete the ' +
                                       'column "' + column.name + '"?');
