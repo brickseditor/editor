@@ -9,6 +9,10 @@ components. They can be hosted on any web server or wrapped with
 [PhoneGap](http://phonegap.com/) (or similar tools) for deployment on mobile
 devices.
 
+## Demos
+- [Contacts management app created with Bricks](http://sorich87.github.io/bricks-samples/contacts/)
+- [Video recorded when creating the contacts management app](https://www.youtube.com/watch?v=dESunMRqxN0)
+
 ## Getting started
 
 There are two ways to get started with Bricks:
