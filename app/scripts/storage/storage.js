@@ -46,7 +46,7 @@ angular.module('bricksApp.storage', ['firebase'])
     }
   })
 
-  .service('Storage', function ($q, $rootScope, firebaseData, localData) {
+  .service('storage', function ($q, $rootScope, firebaseData, localData) {
     var Storage = {};
     var data;
 
