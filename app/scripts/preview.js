@@ -34,36 +34,20 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
       });
     }
 
-    $scope.add = function (table, instance, e) {
-      if (e) {
-        e.preventDefault();
-      }
-
+    $scope.add = function (table, instance) {
       storage.add(table, angular.copy(instance));
       $scope[table] = {};
     };
 
-    $scope.update = function (table, instance, e) {
-      if (e) {
-        e.preventDefault();
-      }
-
+    $scope.update = function (table, instance) {
       storage.update(table, instance);
     };
 
-    $scope.remove = function (table, instance, e) {
-      if (e) {
-        e.preventDefault();
-      }
-
+    $scope.remove = function (table, instance) {
       storage.remove(table, instance);
     };
 
-    $scope.visit = function (url, e) {
-      if (e) {
-        e.preventDefault();
-      }
-
+    $scope.visit = function (url) {
       $location.path(url);
     };
 

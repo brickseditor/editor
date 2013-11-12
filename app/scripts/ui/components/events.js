@@ -77,12 +77,12 @@ angular.module('bricksApp.ui')
 
               case 'visit':
                 var url = event.object.replace(/:(\w+)/, "{{$1.id}}");
-                attrValue = event.action + '(\'' + url + '\', $event)';
+                attrValue = event.action + '(\'' + url + '\')';
               break;
 
               default:
                 attrValue = event.action +
-                  '(\'' + event.object + '\', ' + event.object + ', $event)';
+                  '(\'' + event.object + '\', ' + event.object + ')';
             }
             scope.selection.attr('ng-' + event.type, attrValue);
           } else {
