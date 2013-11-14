@@ -47,40 +47,37 @@ angular.module('bricksApp.storage', ['firebase'])
   })
 
   .service('storage', function ($q, $rootScope, firebaseData, localData) {
-    var Storage = {};
-    var data;
+    var Storage = $rootScope.$new();
 
     Storage.init = function (app) {
-      var scope = $rootScope.$new();
       var promise;
 
-      scope.data = {};
+      Storage.data = {};
 
       if (app.storage === 'firebase') {
-        promise = firebaseData(app, scope);
+        promise = firebaseData(app, Storage);
       } else {
-        promise = localData(app, scope);
+        promise = localData(app, Storage);
       }
 
       return promise.then(function () {
-        data = scope.data;
         return Storage;
       });
     };
 
     Storage.all = function (tableName) {
       if (tableName) {
-        return data[tableName];
+        return Storage.data[tableName];
       } else {
-        return data;
+        return Storage.data;
       }
     };
 
     Storage.get = function (tableName, id) {
       var row;
 
-      if (data[tableName]) {
-        data[tableName].some(function (storedRow, i) {
+      if (Storage.data[tableName]) {
+        Storage.data[tableName].some(function (storedRow, i) {
           if (storedRow.id === id) {
             row = storedRow;
             return true;
@@ -98,15 +95,15 @@ angular.module('bricksApp.storage', ['firebase'])
       row.created_at = date;
       row.updated_at = date;
 
-      data[tableName] = data[tableName] || [];
-      data[tableName].push(row);
+      Storage.data[tableName] = Storage.data[tableName] || [];
+      Storage.data[tableName].push(row);
     };
 
     Storage.update = function (tableName, row) {
-      if (data[tableName]) {
-        data[tableName].some(function (storedRow, i) {
+      if (Storage.data[tableName]) {
+        Storage.data[tableName].some(function (storedRow, i) {
           if (storedRow.id === row.id) {
-            data[tableName][i] = row;
+            Storage.data[tableName][i] = row;
             return true;
           }
         });
@@ -114,10 +111,10 @@ angular.module('bricksApp.storage', ['firebase'])
     };
 
     Storage.remove = function (tableName, row) {
-      if (data[tableName]) {
-        data[tableName].some(function (storedRow, i) {
+      if (Storage.data[tableName]) {
+        Storage.data[tableName].some(function (storedRow, i) {
           if (storedRow.id === row.id) {
-            data[tableName].splice(i, 1);
+            Storage.data[tableName].splice(i, 1);
             return true;
           }
         });
@@ -125,7 +122,7 @@ angular.module('bricksApp.storage', ['firebase'])
     };
 
     Storage.clear = function (tableName) {
-      data[tableName].length = 0;
+      Storage.data[tableName].length = 0;
     };
 
     return Storage;

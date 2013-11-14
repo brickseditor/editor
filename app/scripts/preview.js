@@ -26,7 +26,11 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
   .controller('MainCtrl', function ($location, $parse, $routeParams, $scope, $window, Storage) {
     var routeKeys = Object.keys($routeParams);
 
-    $scope.data = Storage.all();
+    $scope.$watch(function () {
+      return Storage.all();
+    }, function (data) {
+      $scope.data = data;
+    });
 
     if (routeKeys.length > 0) {
       routeKeys.forEach(function (table) {
