@@ -101,7 +101,7 @@ angular.module('bricksApp.database', [
         $scope.columns = columns.reduce(function (result, column) {
           result.push({field: column.name});
           return result;
-        }, defaultTableColumns);
+        }, angular.copy(defaultTableColumns));
       }
     }, true);
 
