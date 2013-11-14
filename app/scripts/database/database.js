@@ -16,6 +16,17 @@ angular.module('bricksApp.database', [
   .controller('DatabaseCtrl', function ($scope, $window, apps, storage) {
     var Storage;
 
+    var defaultTableColumns = [{
+      field: 'actions',
+      displayName: '',
+      enableCellEdit: false,
+      pinnable: false,
+      width: 24,
+      cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()">' +
+        '<a href="" ng-click="deleteRow(row.entity)">' +
+        '<span class="fa fa-trash-o text-danger"></span></a></div>'
+    }];
+
     $scope.showMenu = {actions: false};
     $scope.defaultColumns = [
       {name: 'id'},
@@ -87,9 +98,10 @@ angular.module('bricksApp.database', [
 
     $scope.$watch('currentTable.columns', function (columns) {
       if (columns) {
-        $scope.columns = columns.map(function (column) {
-          return {field: column.name};
-        });
+        $scope.columns = columns.reduce(function (result, column) {
+          result.push({field: column.name});
+          return result;
+        }, defaultTableColumns);
       }
     }, true);
 
@@ -166,7 +178,7 @@ angular.module('bricksApp.database', [
       $scope.showModal.newRow = false;
     };
 
-    $scope.deleteRow = function (row, i) {
+    $scope.deleteRow = function (row) {
       Storage.remove($scope.currentTable.name, row);
     };
 
