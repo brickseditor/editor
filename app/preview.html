@@ -9,7 +9,7 @@
 
     <style id="bricksAppStyle"></style>
   </head>
-  <body ng-app="bricksApp">
+  <body>
     <div ng-view=""></div>
 
         <script src="//cdn.firebase.com/v0/firebase.js"></script>
@@ -29,5 +29,14 @@
         <script src="scripts/storage/storage.js"></script>
         <script src="scripts/preview.js"></script>
         <!-- endbuild -->
+
+    <script>
+      window.addEventListener('message', function (e) {
+        if (e.origin === window.location.origin && e.data) {
+          window.bricksApp = e.data;
+          angular.bootstrap(document, ['bricksApp']);
+        }
+      }, false);
+    </script>
 </body>
 </html>

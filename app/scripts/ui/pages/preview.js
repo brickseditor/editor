@@ -1,51 +1,32 @@
 'use strict';
 
 angular.module('bricksApp.ui')
-  .directive('preview', function ($http, apps) {
+  .directive('preview', function ($http, $location, $window, apps) {
     return {
       replace: true,
       require: '^ui',
       restrict: 'E',
-      template: '<button class="preview" ' +
-        'ng-click="visible = !visible">{{buttonText}}',
+      template: '<button class="preview" ng-click="preview()">Preview</button>',
       link: function (scope, element, attrs, uiCtrl) {
         var canvas = angular.element('#canvas');
-        var iframe = canvas.find('iframe[preview-frame]');
-        var document = iframe.contents();
+        var preview = null;
 
-        scope.app = apps.current();
-        scope.visible = false;
-        scope.buttonText = 'Preview';
-        scope.content = '';
-
-        scope.reload = function () {
-          if (scope.visible) {
-            iframe[0].src = '#' + uiCtrl.page().url;
-            document[0].open();
-            document[0].write(scope.content);
-            document[0].close();
+        scope.preview = function () {
+          // Don't reuse the window reference because the load event
+          // is only sent once.
+          if (preview && !preview.closed) {
+            preview.close();
           }
+          preview = $window.open('preview.html');
+
+          angular.element(preview).on('load', function () {
+            preview.postMessage(apps.current(), $location.absUrl());
+          });
         };
 
-        $http.get('preview.html', {cache: true})
-          .success(function (response) {
-            scope.content = response;
-            scope.reload();
-          });
-
-        scope.$watch('app', function (app) {
-          iframe[0].contentWindow.bricksApp = app;
-          scope.reload();
-        }, true);
-
-        scope.$watch('visible', function (visible) {
-          if (visible) {
-            canvas.addClass('preview');
-            scope.buttonText = 'Edit';
-            scope.reload();
-          } else {
-            canvas.removeClass('preview');
-            scope.buttonText = 'Preview';
+        scope.$on('$destroy', function () {
+          if (preview) {
+            preview.close();
           }
         });
       }
