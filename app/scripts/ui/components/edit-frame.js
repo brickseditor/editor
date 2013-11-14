@@ -6,7 +6,6 @@ angular.module('bricksApp.ui')
       require: '^ui',
       link: function (scope, element, attrs, uiCtrl) {
         var iframe = element;
-        var page = iframe.contents();
         var view;
 
         var select = function (e) {
@@ -24,18 +23,13 @@ angular.module('bricksApp.ui')
         });
 
         iframe.on('load', function () {
+          var page = iframe.contents();
+
           view = page.find('div[ng-view]');
           view.html(uiCtrl.page().template);
 
           page.on('click', select);
         });
-
-        $http.get('edit.html', {cache: true})
-          .success(function (response) {
-            page[0].open();
-            page[0].write(response);
-            page[0].close();
-          });
       }
     };
   });

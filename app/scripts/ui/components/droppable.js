@@ -7,7 +7,6 @@ angular.module('bricksApp.ui')
       link: function (scope, element, attrs, uiCtrl) {
         var hadDraggable, dragging;
         var iframe = element;
-        var page = iframe.contents();
         var dropTarget, view;
 
         // Makes an element on the page draggable, saves previous
@@ -108,6 +107,8 @@ angular.module('bricksApp.ui')
         };
 
         iframe.on('load', function () {
+          var page = iframe.contents();
+
           view = page.find('div[ng-view]');
 
           page.on({
