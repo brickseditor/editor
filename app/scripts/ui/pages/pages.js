@@ -8,6 +8,8 @@ angular.module('bricksApp.ui')
       restrict: 'E',
       templateUrl: 'scripts/ui/pages/pages.html',
       link: function (scope, element, attrs, uiCtrl) {
+        var changed = false;
+
         scope.newPage = {template: ''};
         scope.showModal = false;
         scope.savePageText = 'Save';
@@ -26,6 +28,23 @@ angular.module('bricksApp.ui')
           scope.setCurrent(scope.app.pages[0]);
         });
 
+        scope.$watch(function () {
+          return uiCtrl.page().template;
+        }, function (newValue, oldValue) {
+          if (newValue !== oldValue) {
+            changed = true;
+          }
+        });
+
+        $window.addEventListener('beforeunload', function (e) {
+          if (changed) {
+            var message = 'You have unsaved changes on this page. ' +
+              'If you leave without saving your changes will be lost.';
+            (e || $window.event).returnValue = message;
+            return message;
+          }
+        });
+
         scope.addPage = function () {
           var newPage = angular.copy(scope.newPage);
 
@@ -40,6 +59,7 @@ angular.module('bricksApp.ui')
         // Saves the current page.
         scope.savePage = function () {
           apps.update(scope.app);
+          changed = false;
 
           scope.savePageText = 'Saving...';
           $timeout(function () {
