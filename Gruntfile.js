@@ -26,6 +26,9 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['copy:styles', 'autoprefixer']
       },
+      gruntfile: {
+        files: ['Gruntfile.js']
+      },
       livereload: {
         options: {
           livereload: '<%= connect.options.livereload %>'
@@ -304,7 +307,7 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('server', function (target) {
+  grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
