@@ -1,15 +1,22 @@
 {
   "name": "js-beautify",
+  "version": "1.4.2",
+  "main": [
+    "./js/lib/beautify.js",
+    "./js/lib/beautify-css.js",
+    "./js/lib/beautify-html.js"
+  ],
+  "ignore": [
+    "**/.*"
+  ],
   "homepage": "https://github.com/einars/js-beautify",
-  "version": "1.4.1",
-  "_release": "1.4.1",
+  "_release": "1.4.2",
   "_resolution": {
     "type": "version",
-    "tag": "v1.4.1",
-    "commit": "7638b25c785fa7fab423fe57e779d9abf6324c51"
+    "tag": "v1.4.2",
+    "commit": "82fb861c25d761ba7aa72290d6fe6a2241ae68dd"
   },
   "_source": "git://github.com/einars/js-beautify.git",
   "_target": "~1.4.1",
-  "_originalSource": "js-beautify",
-  "_direct": true
+  "_originalSource": "js-beautify"
 }

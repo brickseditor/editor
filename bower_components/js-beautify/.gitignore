@@ -1,9 +1,0 @@
-*.orig
-node_modules
-gh-pages
-
-*.pyc
-python/MANIFEST
-python/build
-python/dist
-

@@ -43,7 +43,7 @@
           Table Name
         </label>
         <div class="col-sm-8">
-          <input type="text" class="form-control" id="newTableName" required="" ng-model="$parent.newTable.name" name="name" validation-class="" ng-pattern="/^[a-zA-Z_][a-zA-Z0-9_]*$/">
+          <input type="text" class="form-control" id="newTableName" required="" ng-model="newTable.name" name="name" validation-class="" ng-pattern="/^[a-zA-Z_][a-zA-Z0-9_]*$/">
           <span class="help-block">Must begin with a letter or underscore and
             only contain letters, underscores or digits.</span>
         </div>
@@ -58,7 +58,7 @@
           Name
         </label>
         <div class="col-sm-6">
-          <input type="text" class="form-control" id="newColumnName" required="" ng-model="$parent.newColumn.name" ng-pattern="/^[a-zA-Z_][a-zA-Z0-9_]*$/" name="name" validation-class="">
+          <input type="text" class="form-control" id="newColumnName" required="" ng-model="newColumn.name" ng-pattern="/^[a-zA-Z_][a-zA-Z0-9_]*$/" name="name" validation-class="">
           <span class="help-block">Must begin with a letter or underscore and
             only contain letters, underscores or digits.</span>
         </div>
@@ -73,7 +73,7 @@
           Name
         </label>
         <div class="col-sm-6">
-          <select class="form-control" id="deleteColumnName" validation-class="" ng-model="$parent.$parent.columnToDelete" name="name" required="" ng-options="i as column.name for (i, column) in $parent.currentTable.columns">
+          <select class="form-control" id="deleteColumnName" validation-class="" ng-model="$parent.columnToDelete" name="name" required="" ng-options="i as column.name for (i, column) in currentTable.columns">
           </select>
         </div>
       </div>

@@ -66,14 +66,10 @@ AngularFire.prototype = {
       // angular.copy, but only for later version of AngularJS.
       var local = angular.fromJson(angular.toJson(self._parse(name)($scope)));
 
-      // If remote value matches local value, don't do anything.
-      if (angular.equals(remote, local)) {
-        return;
-      }
-
       if (self._initial) {
         // First value received from the server. We try and merge any local
         // changes that may have been made with the server values.
+        self._initial = false;
         var merged = false;
         var check = Object.prototype.toString;
         if (remote && check.call(local) == check.call(remote)) {
@@ -99,7 +95,6 @@ AngularFire.prototype = {
         }
         // If types don't match or the type is primitive, just overwrite the
         // local value with the remote value.
-        self._initial = false;
       }
 
       var resolve = false;
@@ -133,10 +128,10 @@ AngularFire.prototype = {
   // will also be updated to the provided value.
   _resolve: function($scope, name, deferred, val) {
     var self = this;
-    var localVal = angular.fromJson(angular.toJson(this._parse(name)($scope)));
     if (val === null) {
       // NULL values are special in Firebase. If received, set the local value
       // to the initial state for Objects and Arrays.
+      var localVal = $scope[name];
       if (typeof localVal == "object") {
         var check = Object.prototype.toString;
         if (check.call(localVal) == check.call([])) {
@@ -203,11 +198,7 @@ AngularFire.prototype = {
 // by @petebacondarwin.
 angular.module("firebase").factory("angularFireCollection", ["$timeout",
   function($timeout) {
-    // `angularFireCollection` takes a Firebase references as the first
-    // argument, and a function as an optional second argument. The callback
-    // (if provided in the 2nd argument) will be called with a Firebase
-    // snapshot when the initial data has been loaded.
-    return function(collectionRef, initialCb, onItemChangeCb) {
+    return function(collectionRef, initialCb) {
       if (typeof collectionRef == "string") {
         throw new Error("Please provide a Firebase reference instead " +
           "of a URL, eg: new Firebase(url)");
@@ -247,12 +238,6 @@ angular.module("firebase").factory("angularFireCollection", ["$timeout",
 
       var indexes = {};
       var collection = [];
-
-      function broadcastChange(type, item) {
-        if (onItemChangeCb && typeof onItemChangeCb == "function") {
-          onItemChangeCb(type, item);
-        }
-      }
 
       function getIndex(prevId) {
         return prevId ? indexes[prevId] + 1 : 0;
@@ -308,10 +293,8 @@ angular.module("firebase").factory("angularFireCollection", ["$timeout",
       collectionRef.on("child_added", function(data, prevId) {
         $timeout(function() {
           var index = getIndex(prevId);
-          var item = new AngularFireItem(data, index);
-          addChild(index, item);
+          addChild(index, new AngularFireItem(data, index));
           updateIndexes(index);
-          broadcastChange("item_added", item);
         });
       });
 
@@ -319,10 +302,8 @@ angular.module("firebase").factory("angularFireCollection", ["$timeout",
         $timeout(function() {
           var id = data.name();
           var pos = indexes[id];
-          var item = collection[pos];
           removeChild(id);
           updateIndexes(pos);
-          broadcastChange("item_removed", item);
         });
       });
 
@@ -331,12 +312,11 @@ angular.module("firebase").factory("angularFireCollection", ["$timeout",
           var index = indexes[data.name()];
           var newIndex = getIndex(prevId);
           var item = new AngularFireItem(data, index);
-          broadcastChange("item_removed", collection[index]);
+
           updateChild(index, item);
           if (newIndex !== index) {
             moveChild(index, newIndex, item);
           }
-          broadcastChange("item_added", item);
         });
       });
 
@@ -346,7 +326,6 @@ angular.module("firebase").factory("angularFireCollection", ["$timeout",
           var newIndex = getIndex(prevId);
           var item = collection[oldIndex];
           moveChild(oldIndex, newIndex, item);
-          broadcastChange("item_moved", item);
         });
       });
 
@@ -425,44 +404,8 @@ angular.module("firebase").factory("angularFireCollection", ["$timeout",
 // Defines the `angularFireAuth` service that provides authentication support
 // for AngularFire.
 angular.module("firebase").factory("angularFireAuth", [
-  "$injector", "$rootScope", "$parse", "$timeout", "$location", "$q",
-  function($injector, $rootScope, $parse, $timeout, $location, $q) {
-    // Check if '$route' is present, use if available.
-    var $route = null;
-    if ($injector.has("$route")) {
-      $route = $injector.get("$route");
-    }
-
-    // Helper function to decode Base64 (polyfill for window.btoa on IE).
-    // From: https://github.com/mshang/base64-js/blob/master/base64.js
-    function decodeBase64(str) {
-      var char_set =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-      var output = ""; // final output
-      var buf = ""; // binary buffer
-      var bits = 8;
-      for (var i = 0; i < str.length; ++i) {
-        if (str[i] == "=") {
-          break;
-        }
-        var c_num = char_set.indexOf(str.charAt(i));
-        if (c_num == -1) {
-          throw new Error("Not base64.");
-        }
-        var c_bin = c_num.toString(2);
-        while (c_bin.length < 6) {
-          c_bin = "0" + c_bin;
-        }
-        buf += c_bin;
-
-        while (buf.length >= bits) {
-          var octet = buf.slice(0, bits);
-          buf = buf.slice(bits);
-          output += String.fromCharCode(parseInt(octet, 2));
-        }
-      }
-      return output;
-    }
+  "$rootScope", "$parse", "$timeout", "$location", "$route", "$q",
+  function($rootScope, $parse, $timeout, $location, $route, $q) {
 
     // Helper function to extract claims from a JWT. Does *not* verify the
     // validity of the token.
@@ -471,14 +414,11 @@ angular.module("firebase").factory("angularFireAuth", [
       if (!segments instanceof Array || segments.length !== 3) {
         throw new Error("Invalid JWT");
       }
-      var decoded = "";
       var claims = segments[1];
       if (window.atob) {
-        decoded = window.atob(claims);
-      } else {
-        decoded = decodeBase64(claims);
+        return JSON.parse(decodeURIComponent(escape(window.atob(claims))));
       }
-      return JSON.parse(decodeURIComponent(escape(decoded)));
+      return token;
     }
 
     // Updates the provided model.
@@ -549,7 +489,7 @@ angular.module("firebase").factory("angularFireAuth", [
 
         this._redirectTo = null;
         this._authenticated = false;
-        if (options.path && $route !== null) {
+        if (options.path) {
           // Check if the current page requires authentication.
           if ($route.current) {
             authRequiredRedirect($route.current, options.path, self);
@@ -712,4 +652,3 @@ angular.module("firebase").factory("angularFireAuth", [
     };
   }
 ]);
-

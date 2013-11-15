@@ -7,8 +7,8 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
         controller: 'MainCtrl',
         template: page.template,
         resolve: {
-          storage: ['$window', 'Storage', function ($window, Storage) {
-            return Storage.init($window.bricksApp);
+          Storage: ['$window', 'storage', function ($window, storage) {
+            return storage.init($window.bricksApp);
           }]
         }
       });
@@ -23,47 +23,35 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
     angular.element('#bricksAppStyle').html($window.bricksApp.css);
   })
 
-  .controller('MainCtrl', function ($location, $parse, $routeParams, $scope, $window, storage) {
+  .controller('MainCtrl', function ($location, $parse, $routeParams, $scope, $window, Storage) {
     var routeKeys = Object.keys($routeParams);
 
-    $scope.data = storage.all();
+    $scope.$watch(function () {
+      return Storage.all();
+    }, function (data) {
+      $scope.data = data;
+    });
 
     if (routeKeys.length > 0) {
       routeKeys.forEach(function (table) {
-        $scope[table] = storage.get(table, $routeParams[table]) || {};
+        $scope[table] = Storage.get(table, $routeParams[table]) || {};
       });
     }
 
-    $scope.add = function (table, instance, e) {
-      if (e) {
-        e.preventDefault();
-      }
-
-      storage.add(table, angular.copy(instance));
+    $scope.add = function (table, instance) {
+      Storage.add(table, angular.copy(instance));
       $scope[table] = {};
     };
 
-    $scope.update = function (table, instance, e) {
-      if (e) {
-        e.preventDefault();
-      }
-
-      storage.update(table, instance);
+    $scope.update = function (table, instance) {
+      Storage.update(table, instance);
     };
 
-    $scope.remove = function (table, instance, e) {
-      if (e) {
-        e.preventDefault();
-      }
-
-      storage.remove(table, instance);
+    $scope.remove = function (table, instance) {
+      Storage.remove(table, instance);
     };
 
-    $scope.visit = function (url, e) {
-      if (e) {
-        e.preventDefault();
-      }
-
+    $scope.visit = function (url) {
       $location.path(url);
     };
 
