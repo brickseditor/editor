@@ -26,6 +26,10 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['copy:styles', 'autoprefixer']
       },
+      components: {
+        files: ['<%= yeoman.app %>/components/*.html'],
+        tasks: ['concat:components']
+      },
       gruntfile: {
         files: ['Gruntfile.js']
       },
@@ -118,10 +122,16 @@ module.exports = function (grunt) {
     // not used since Uglify task does concat,
     // but still available if needed
     concat: {
+      components: {
+        files: {
+          '.tmp/components/components.html': ['<%= yeoman.app %>/components/*.html']
+        }
+      },
       dist: {
         files: {
           '.tmp/concat/scripts/scripts.js': [
             '.tmp/concat/scripts/scripts.js',
+            '.tmp/components.js',
             '.tmp/templates.js'
           ]
         }
@@ -254,18 +264,21 @@ module.exports = function (grunt) {
     concurrent: {
       server: [
         'less',
-        'copy:styles'
+        'copy:styles',
+        'concat:components'
       ],
       test: [
         'less',
-        'copy:styles'
+        'copy:styles',
+        'concat:components'
       ],
       dist: [
         'less',
         'copy:styles',
         'imagemin',
         'svgmin',
-        'htmlmin'
+        'htmlmin',
+        'concat:components'
       ]
     },
     karma: {
@@ -291,8 +304,12 @@ module.exports = function (grunt) {
         },
         files: [{
           cwd: '<%= yeoman.app %>',
-          src: 'scripts/**/*.html',
+          src: ['scripts/**/*.html'],
           dest: '.tmp/templates.js'
+        }, {
+          cwd: '.tmp',
+          src: ['components/components.html'],
+          dest: '.tmp/components.js'
         }]
       }
     },

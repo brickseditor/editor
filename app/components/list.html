@@ -1,0 +1,55 @@
+<component>
+  <name>List</name>
+  <template>
+    <ul>
+      <li>List item 1.</li>
+      <li>List item 2.</li>
+      <li>List item 3.</li>
+    </ul>
+  </template>
+  <selector>ul, ol</selector>
+  <admin>
+    <div class="form-group">
+      <label for="optionsListType">Type</label>
+      <select id="optionsListType" ng-model="options.type"
+        ng-options="k as v for (k,v) in options.types"
+        ng-change="change()">
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="optionsListStyle">Style</label>
+      <select id="optionsListStyle" ng-model="options.style"
+        ng-options="k for k in ['unstyled', 'inline']"
+        ng-change="change()">
+        <option value="">normal</option>
+      </select>
+    </div>
+  </admin>
+  <admin-script>
+    scope.options.types = {UL: 'unordered', OL: 'ordered'};
+    scope.options.type = scope.selection.prop('nodeName');
+
+    if (scope.selection.hasClass('list-unstyled')) {
+      scope.options.style = 'unstyled';
+    } else if (scope.selection.hasClass('list-inline')) {
+      scope.options.style = 'inline';
+    }
+
+    scope.update = function () {
+      var newElement = document.createElement(scope.options.type);
+      newElement = angular.element(newElement);
+      newElement.append(scope.selection.contents());
+
+      if (scope.options.style === 'unstyled') {
+        newElement.removeClass('list-inline').addClass('list-unstyled');
+      } else if (scope.options.style === 'inline') {
+        newElement.removeClass('list-unstyled').addClass('list-inline');
+      } else {
+        newElement.removeClass('list-unstyled').removeClass('list-inline');
+      }
+
+      scope.selection.replaceWith(newElement);
+      scope.select(newElement);
+    };
+  </admin-script>
+</component>

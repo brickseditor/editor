@@ -1,0 +1,70 @@
+<component>
+  <name>Grid Column</name>
+  <template>
+    <div class="col-sm-6"></div>
+  </template>
+  <selector>
+    div[class*='col-xs-'], div[class*='col-sm-'],
+    div[class*='col-md-'], div[class*='col-lg-']
+  </selector>
+  <admin>
+    <div class="form-group">
+      <label for="optionsGridColumnWidth">Column width</label>
+      <select id="optionsGridColumnWidth" ng-model="options.width"
+        ng-options="k for k in options.widths" ng-change="change()">
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="optionsGridColumnDevices">Collapse on</label>
+      <select id="optionsGridColumnDevices" ng-model="options.devices"
+        ng-change="change()">
+        <option value="lg">all small and medium screens</option>
+        <option value="md">tablets and phones</option>
+        <option value="sm">phones only</option>
+        <option value="xs">neither</option>
+      </select>
+    </div>
+  </admin>
+  <admin-script>
+    var classes = [];
+    var currentDeviceWidthClass = '';
+
+    scope.options.widths = Array.apply(0, Array(12)).map(function (x, i) {
+      return i + 1 + '';
+    });
+
+    // Gets all the column classes of the element.
+    scope.selection.attr('class').split(' ').forEach(function (c) {
+      if (c.indexOf('col-') === 0) {
+        c = c.split('-');
+        classes.push({
+          devices: c[1],
+          width: c[2]
+        });
+      }
+    });
+
+    // Gets the width and column type of the current element.
+    ['xs', 'sm', 'md', 'lg'].some(function (t) {
+      classes.some(function (c) {
+        if (c.devices === t) {
+          scope.options.devices = c.devices;
+          scope.options.width = c.width;
+          currentDeviceWidthClass = 'col-' + c.devices + '-' + c.width;
+          return true;
+        }
+      });
+    });
+
+    // Updates the selection classes.
+    scope.update = function () {
+      var newDeviceWidthClass = 'col-' + scope.options.devices + '-' +
+                                scope.options.width;
+
+      scope.selection.removeClass(currentDeviceWidthClass)
+        .addClass(newDeviceWidthClass);
+
+      currentDeviceWidthClass = newDeviceWidthClass;
+    };
+  </admin-script>
+</component>

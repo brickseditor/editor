@@ -67,20 +67,21 @@ angular.module('bricksApp.ui', [
     };
   })
 
-  .service('components', function ($http) {
+  .service('components', function ($http, $templateCache) {
     var components = [];
 
     // Gets the components template and parses it to return an object.
-    $http.get('scripts/ui/components/components.html', {cache: true})
+    $http.get('components/components.html', {cache: $templateCache})
       .success(function (response) {
-        jQuery(response).find('component').each(function (i, component) {
-          var object = {};
+        jQuery('<div>' + response + '</div>').find('component')
+          .each(function (i, component) {
+            var object = {};
 
-          [].forEach.call(component.children, function (child) {
-            object[child.nodeName.toLowerCase()] = child.innerHTML.trim();
+            [].forEach.call(component.children, function (child) {
+              object[child.nodeName.toLowerCase()] = child.innerHTML.trim();
+            });
+            components.push(object);
           });
-          components.push(object);
-        });
       });
 
     return {

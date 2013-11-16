@@ -1,0 +1,36 @@
+<component>
+  <name>Description</name>
+  <template>
+    <dl>
+      <dt>Defined Term 1</dt>
+      <dd>This is the definition of Term 1.</dd>
+      <dt>Defined Term 2</dt>
+      <dd>This is the definition of Term 2.</dd>
+    </dl>
+  </template>
+  <selector>dl</selector>
+  <admin>
+    <div class="form-group">
+      <label for="optionsDefinitionStyle">Style</label>
+      <select id="optionsDefinitionStyle" ng-model="options.style"
+        ng-options="k for k in ['normal', 'horizontal']"
+        ng-change="change()">
+      </select>
+    </div>
+  </admin>
+  <admin-script>
+    if (scope.selection.hasClass('dl-horizontal')) {
+      scope.options.style = 'horizontal';
+    } else {
+      scope.options.style = 'normal';
+    }
+
+    scope.update = function () {
+      if (scope.options.style === 'horizontal') {
+        scope.selection.addClass('dl-horizontal');
+      } else {
+        scope.selection.removeClass('dl-horizontal');
+      }
+    };
+  </admin-script>
+</component>

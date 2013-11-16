@@ -1,0 +1,39 @@
+<component>
+  <name>Image</name>
+  <template>
+    <img src="http://placehold.it/100x100" alt="">
+  </template>
+  <selector>img</selector>
+  <admin>
+    <div class="form-group">
+      <label for="optionsImageSrc">URL</label>
+      <input type="text" id="optionsImageSrc" ng-model="options.src"
+        ng-change="change()">
+    </div>
+    <div class="form-group">
+      <label for="optionsImageResponsive">Responsive</label>
+      <select id="optionsImageResponsive" ng-model="options.responsive"
+        ng-options="k for k in ['yes', 'no']" ng-change="change()">
+      </select>
+    </div>
+  </admin>
+  <admin-script>
+    scope.options.src = scope.selection.attr('src');
+
+    if (scope.selection.hasClass('img-responsive')) {
+      scope.options.responsive = 'yes';
+    } else {
+      scope.options.responsive = 'no';
+    }
+
+    scope.update = function () {
+      scope.selection.attr('src', scope.options.src);
+
+      if (scope.options.responsive === 'yes') {
+        scope.selection.addClass('img-responsive');
+      } else {
+        scope.selection.removeClass('img-responsive');
+      }
+    };
+  </admin-script>
+</component>

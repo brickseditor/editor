@@ -1,0 +1,31 @@
+<component>
+  <name>Heading</name>
+  <template>
+    <h1>This is a heading.</h1>
+  </template>
+  <selector>h1, h2, h3, h4, h5, h6</selector>
+  <admin>
+    <div class="form-group">
+      <label for="optionsHeadingType">Type</label>
+      <select id="optionsHeadingType" ng-model="options.type"
+        ng-options="k.value as k.label for k in options.types"
+        ng-change="change()">
+      </select>
+    </div>
+  </admin>
+  <admin-script>
+    scope.options.types = Array.apply(0, Array(6)).map(function (x, i) {
+      var j = i + 1;
+      return {value: 'H' + j, label: 'heading ' + j};
+    });
+    scope.options.type = scope.selection.prop('nodeName');
+
+    scope.update = function () {
+      var newElement = document.createElement(scope.options.type);
+      newElement = angular.element(newElement);
+      newElement.append(scope.selection.contents());
+      scope.selection.replaceWith(newElement);
+      scope.select(newElement);
+    };
+  </admin-script>
+</component>
