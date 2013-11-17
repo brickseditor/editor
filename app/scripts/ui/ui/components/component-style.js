@@ -45,7 +45,7 @@ angular.module('bricksApp.ui')
           });
 
           if (scope.component['admin-script']) {
-            eval(scope.component['admin-script']);
+            eval(scope.component['admin-script']); // jshint ignore:line
           }
 
           if (scope.component.admin) {

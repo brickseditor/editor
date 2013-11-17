@@ -7,8 +7,7 @@ angular.module('bricksApp.ui')
       require: '^ui',
       restrict: 'E',
       template: '<button class="preview" ng-click="preview()">Preview</button>',
-      link: function (scope, element, attrs, uiCtrl) {
-        var canvas = angular.element('#canvas');
+      link: function (scope) {
         var preview = null;
 
         scope.preview = function () {

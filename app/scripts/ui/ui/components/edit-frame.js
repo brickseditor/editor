@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bricksApp.ui')
-  .directive('editFrame', function ($http) {
+  .directive('editFrame', function (beautify) {
     return {
       require: '^ui',
       link: function (scope, element, attrs, uiCtrl) {
@@ -17,7 +17,7 @@ angular.module('bricksApp.ui')
         scope.$watch(function () {
           return uiCtrl.page().template;
         }, function (template) {
-          if (view && template !== html_beautify(view.html())) {
+          if (view && template !== beautify.html(view.html())) {
             view.html(template);
           }
         });

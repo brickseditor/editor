@@ -12,7 +12,7 @@ angular.module('bricksApp.ui', [
       });
   })
 
-  .directive('ui', function (components, apps) {
+  .directive('ui', function (apps, beautify, components) {
     return {
       controller: function ($scope, $element) {
         var iframe = $element.find('iframe');
@@ -24,7 +24,7 @@ angular.module('bricksApp.ui', [
           if (!view) {
             view = iframe.contents().find('div[ng-view]');
           }
-          currentPage.template = html_beautify(view.html());
+          currentPage.template = beautify.html(view.html());
         };
 
         var selectElement = function (element) {
@@ -45,7 +45,7 @@ angular.module('bricksApp.ui', [
 
         var page = function (current) {
           if (current) {
-            current.template = html_beautify(current.template);
+            current.template = beautify.html(current.template);
             currentPage = current;
           } else {
             return currentPage;

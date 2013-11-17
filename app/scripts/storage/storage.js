@@ -35,7 +35,7 @@ angular.module('bricksApp.storage', ['firebase'])
       deferred.resolve();
 
       return deferred.promise;
-    }
+    };
   })
 
   .factory('firebaseData', function ($rootScope, angularFire) {
@@ -43,7 +43,7 @@ angular.module('bricksApp.storage', ['firebase'])
       return angularFire(new Firebase(
         'https://' + app.settings.firebase + '.firebaseio.com'
       ), scope, 'data');
-    }
+    };
   })
 
   .service('storage', function ($q, $rootScope, firebaseData, localData) {
@@ -77,7 +77,7 @@ angular.module('bricksApp.storage', ['firebase'])
       var row;
 
       if (Storage.data[tableName]) {
-        Storage.data[tableName].some(function (storedRow, i) {
+        Storage.data[tableName].some(function (storedRow) {
           if (storedRow.id === id) {
             row = storedRow;
             return true;
@@ -92,8 +92,8 @@ angular.module('bricksApp.storage', ['firebase'])
       var date = (new Date()).toISOString().split('.')[0].replace('T', ' ');
 
       row.id = uuid();
-      row.created_at = date;
-      row.updated_at = date;
+      row.created_at = date; // jshint ignore:line
+      row.updated_at = date; // jshint ignore:line
 
       Storage.data[tableName] = Storage.data[tableName] || [];
       Storage.data[tableName].push(row);

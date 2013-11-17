@@ -23,7 +23,7 @@ angular.module('bricksApp.ui')
 
         scope.$watch(function () {
           return apps.current().id;
-        }, function (app) {
+        }, function () {
           scope.app = apps.current();
           scope.setCurrent(scope.app.pages[0]);
         });
