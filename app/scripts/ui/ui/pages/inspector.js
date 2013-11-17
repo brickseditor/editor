@@ -6,7 +6,7 @@ angular.module('bricksApp.ui')
       replace: true,
       require: '^ui',
       restrict: 'E',
-      templateUrl: 'scripts/ui/pages/inspector.html',
+      templateUrl: 'scripts/ui/ui/pages/inspector.html',
       link: function (scope, element, attrs, uiCtrl) {
         var iframe = angular.element('iframe[edit-frame]');
         var style;

@@ -7,7 +7,7 @@ angular.module('bricksApp.ui')
       require: '^ui',
       restrict: 'E',
       scope: {},
-      templateUrl: 'scripts/ui/components/bindings.html',
+      templateUrl: 'scripts/ui/ui/components/bindings.html',
       link: function (scope, element, attrs, uiCtrl) {
         scope.selection = null;
         scope.tables = apps.current().tables;

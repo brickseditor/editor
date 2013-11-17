@@ -11,16 +11,31 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'https://cdn.firebase.com/v0/firebase.js',
+      'app/bower_components/Blob.js/Blob.js',
+      'app/bower_components/FileSaver/FileSaver.js',
+      'app/bower_components/codemirror/lib/codemirror.js',
+      'app/bower_components/codemirror/mode/xml/xml.js',
+      'app/bower_components/codemirror/mode/css/css.js',
+      'app/bower_components/codemirror/mode/javascript/javascript.js',
+      'app/bower_components/jquery/jquery.js',
+      'app/bower_components/js-beautify/js/lib/beautify-html.js',
+      'app/bower_components/jszip/jszip.js',
+      'app/bower_components/node-uuid/uuid.js',
       'app/bower_components/angular/angular.js',
-      'app/bower_components/angular-mocks/angular-mocks.js',
-      'app/scripts/*.js',
+      'app/bower_components/ng-grid/build/ng-grid.js',
+      'app/bower_components/angular-*/*.js',
       'app/scripts/**/*.js',
+      'app/scripts/*.js',
       'test/mock/**/*.js',
       'test/spec/**/*.js'
     ],
 
     // list of files / patterns to exclude
-    exclude: [],
+    exclude: [
+      'app/bower_components/angular-*/*.min.js',
+      'app/scripts/preview.js'
+    ],
 
     // web server port
     port: 8080,

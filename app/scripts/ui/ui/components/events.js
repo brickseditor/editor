@@ -7,7 +7,7 @@ angular.module('bricksApp.ui')
       require: '^ui',
       restrict: 'E',
       scope: {},
-      templateUrl: 'scripts/ui/components/events.html',
+      templateUrl: 'scripts/ui/ui/components/events.html',
       link: function (scope, element, attrs, uiCtrl) {
         scope.selection = null;
         scope.app = apps.current();

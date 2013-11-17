@@ -6,7 +6,7 @@ angular.module('bricksApp.ui')
       replace: true,
       require: '^ui',
       restrict: 'E',
-      templateUrl: 'scripts/ui/pages/pages.html',
+      templateUrl: 'scripts/ui/ui/pages/pages.html',
       link: function (scope, element, attrs, uiCtrl) {
         var changed = false;
 

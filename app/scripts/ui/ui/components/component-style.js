@@ -7,7 +7,7 @@ angular.module('bricksApp.ui')
       require: '^ui',
       restrict: 'E',
       scope: {},
-      templateUrl: 'scripts/ui/components/component-style.html',
+      templateUrl: 'scripts/ui/ui/components/component-style.html',
       link: function (scope, element, attrs, uiCtrl) {
         var form = element.find('form');
         var allComponents = components.all();

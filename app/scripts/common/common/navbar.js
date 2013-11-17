@@ -5,7 +5,7 @@ angular.module('bricksApp.common')
     return {
       replace: true,
       restrict: 'E',
-      templateUrl: 'scripts/common/navbar.html',
+      templateUrl: 'scripts/common/common/navbar.html',
       link: function (scope, element, attrs) {
         var hideOn = $parse(attrs.hideOn)(scope);
 

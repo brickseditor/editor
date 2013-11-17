@@ -30,6 +30,10 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/components/*.html'],
         tasks: ['concat:components']
       },
+      test: {
+        files: ['<%= yeoman.app %>/scripts/**/*.js'],
+        tasks: ['karma']
+      },
       gruntfile: {
         files: ['Gruntfile.js']
       },
