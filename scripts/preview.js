@@ -55,5 +55,5 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
       $location.path(url);
     };
 
-    eval($window.bricksApp.js);
+    eval($window.bricksApp.js); // jshint ignore:line
   });
