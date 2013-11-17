@@ -24,7 +24,7 @@ module.exports = function (grunt) {
       },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
-        tasks: ['copy:styles', 'autoprefixer']
+        tasks: ['newer:copy:styles', 'autoprefixer']
       },
       components: {
         files: ['<%= yeoman.app %>/components/*.html'],
@@ -367,7 +367,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'jshint',
+    'newer:jshint',
     'test',
     'build'
   ]);
