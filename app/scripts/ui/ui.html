@@ -5,8 +5,12 @@
         <h4 class="panel-title">Components</h4>
       </div>
       <div class="panel-body">
-        <div class="component" ng-repeat="component in components"
-          draggable="true" html="component.template">{{component.name}}</div>
+        <input type="text" class="form-control" placeholder="Search by name"
+          ng-model="componentSearch.name">
+
+        <div class="component" draggable="true" html="component.template"
+          ng-repeat="component in components | filter:componentSearch">
+          {{component.name}}</div>
       </div>
     </div>
 
