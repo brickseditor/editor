@@ -25,7 +25,10 @@ module.exports = function (grunt) {
         tasks: ['concat:components']
       },
       test: {
-        files: ['<%= yeoman.app %>/scripts/**/*.js'],
+        files: [
+          '<%= yeoman.app %>/scripts/**/*.js',
+          'test/spec/**/*.js'
+        ],
         tasks: ['karma']
       },
       gruntfile: {

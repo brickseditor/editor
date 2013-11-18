@@ -62,17 +62,21 @@ angular.module('bricksApp.ui', [
       },
 
       link: function (scope) {
-        scope.components = components.all();
+        components.all().then(function (all) {
+          scope.components = all;
+        });
       }
     };
   })
 
-  .service('components', function ($http, $templateCache) {
-    var components = [];
+  .service('components', function ($http, $q, $templateCache) {
+    var deferred = $q.defer();
 
     // Gets the components template and parses it to return an object.
     $http.get('components/components.html', {cache: $templateCache})
       .success(function (response) {
+        var components = [];
+
         jQuery('<div>' + response + '</div>').find('component')
           .each(function (i, component) {
             var object = {};
@@ -82,11 +86,13 @@ angular.module('bricksApp.ui', [
             });
             components.push(object);
           });
+
+        deferred.resolve(components);
       });
 
     return {
       all: function () {
-        return components;
+        return deferred.promise;
       }
     };
   });

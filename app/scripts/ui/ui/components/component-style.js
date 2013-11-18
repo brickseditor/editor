@@ -10,7 +10,7 @@ angular.module('bricksApp.ui')
       templateUrl: 'scripts/ui/ui/components/component-style.html',
       link: function (scope, element, attrs, uiCtrl) {
         var form = element.find('form');
-        var allComponents = components.all();
+
         scope.component = {};
         scope.options = {};
         scope.update = function () {};
@@ -31,17 +31,19 @@ angular.module('bricksApp.ui')
           scope.component = {};
           form.empty();
 
-          allComponents.some(function (component) {
-            var condition;
+          components.all().then(function (list) {
+            list.some(function (component) {
+              var condition;
 
-            scope.selection = uiCtrl.selection();
-            condition = scope.selection.is(component.selector);
+              scope.selection = uiCtrl.selection();
+              condition = scope.selection.is(component.selector);
 
-            if (condition) {
-              scope.component = component;
-            }
+              if (condition) {
+                scope.component = component;
+              }
 
-            return condition;
+              return condition;
+            });
           });
 
           if (scope.component['admin-script']) {
