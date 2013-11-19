@@ -1,6 +1,16 @@
 {
-  "name": "bricks",
+  "name": "bricks-editor",
   "version": "0.0.0",
+  "main": "index.html",
+  "window": {
+    "title": "Bricks Editor",
+    "toolbar": false,
+    "width": 1024,
+    "height": 600,
+    "min_width": 800,
+    "min_height": 600,
+    "show": false
+  },
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -21,6 +31,7 @@
     "grunt-karma": "~0.6.2",
     "grunt-newer": "~0.5.4",
     "grunt-ngmin": "~0.0.2",
+    "grunt-node-webkit-builder": "~0.1.11",
     "grunt-rev": "~0.1.0",
     "grunt-svgmin": "~0.2.0",
     "grunt-usemin": "https://github.com/yeoman/grunt-usemin/archive/6bc03b4325ed5244ee36c7a62dce53cbdc80d667.tar.gz",

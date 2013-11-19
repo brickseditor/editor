@@ -230,6 +230,12 @@ module.exports = function (grunt) {
           src: [
             'generated/*'
           ]
+        }, {
+          expand: true,
+          dest: '<%= yeoman.dist %>',
+          src: [
+            'package.json'
+          ]
         }]
       },
       styles: {
@@ -290,6 +296,18 @@ module.exports = function (grunt) {
           dest: '.tmp/components.js'
         }]
       }
+    },
+    nodewebkit: {
+      dist: {
+        options: {
+          build_dir: 'build', // jshint ignore:line
+          mac: true,
+          win: true,
+          linux32: false,
+          linux64: false
+        },
+        src: ['<%= yeoman.dist %>/**/*']
+      }
     }
   });
 
@@ -334,6 +352,7 @@ module.exports = function (grunt) {
   grunt.registerTask('default', [
     'newer:jshint',
     'test',
-    'build'
+    'build',
+    'nodewebkit'
   ]);
 };
