@@ -29,4 +29,4 @@ If you're interested in contributing, please read the
 ## License
 
 Bricks is released under the
-[GNU Affero General Public License](https://www.gnu.org/licenses/agpl-3.0.html).
+[GNU General Public License](https://www.gnu.org/licenses/gpl.html).
