@@ -189,12 +189,15 @@ body {
 }
 
 #apps {
-  float: right;
-  padding-right: (@navbar-padding-vertical / 2) - 1;
+  float: left;
 
-  .btn {
-    width: (@sidebar-width - @navbar-padding-vertical) / 2;
+  > ul > li > a {
+    width: @sidebar-width;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .dropdown-menu {
+    width: @sidebar-width;
   }
 }

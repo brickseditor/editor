@@ -70,24 +70,7 @@ angular.module('bricksApp.apps', [])
     };
   })
 
-  .directive('apps', function ($document, $http, apps) {
-    var escape = function (string) {
-      var escapes = {
-        '\'':     '\'',
-        '\\':     '\\',
-        '\r':     'r',
-        '\n':     'n',
-        '\t':     't',
-        '\u2028': 'u2028',
-        '\u2029': 'u2029'
-      };
-      var escaper = /\\|'|\r|\n|\t|\u2028|\u2029/g;
-
-      return string.replace(escaper, function (match) {
-        return '\\' + escapes[match];
-      });
-    };
-
+  .directive('apps', function ($document, apps) {
     return {
       replace: true,
       restrict: 'E',
@@ -143,47 +126,93 @@ angular.module('bricksApp.apps', [])
         scope.hideAppsModal = function () {
           scope.showAppsModal = false;
         };
+      }
+    };
+  })
 
-        scope.download = function () {
-          var zip = new JSZip();
-          var root = zip.folder(scope.currentApp.name);
+  .directive('exportApp', function ($http) {
+    var loadHtml = function () {
+      return $http.get('build.html', {cache: true})
+        .then(function (response) {
+          return response.data;
+        });
+    };
 
-          $http.get('build.html', {cache: true})
-          .then(function (response) {
-            var app = '<script>window.bricksApp = JSON.parse(\'' +
-              escape(angular.toJson(scope.currentApp)) +
-              '\');</script>';
-            var html = response.data.replace('</head>', app + '\n</head>');
-            root.file('index.html', html);
+    var loadScripts = function () {
+      return $http.get('scripts/build.js', {cache: true})
+        .then(function (response) {
+          return response.data;
+        });
+    };
 
-            return $http.get('bower_components/node-uuid/uuid.js', {
-              cache: true
-            });
-          })
+    var loadFiles = (function () {
+      var files = {};
 
-          .then(function (response) {
-            scope.scripts = response.data;
+      return loadHtml()
+        .then(function (html) {
+          files.html = html;
+          return loadScripts();
+        })
+        .then(function (scripts) {
+          files.scripts = scripts;
+          return files;
+        });
+    })();
 
-            return $http.get('scripts/storage/storage.js', {
-              cache: true
-            });
-          })
+    var createZip = function (name, files) {
+      var zip = new JSZip();
 
-          .then(function (response) {
-            scope.scripts += response.data;
+      zip.folder(name)
+        .file('index.html', files.html)
+        .folder('scripts')
+          .file('build.js', files.scripts);
 
-            return $http.get('scripts/preview.js', {
-              cache: true
-            });
-          })
+      return zip;
+    };
 
-          .then(function (response) {
-            root.folder('scripts')
-            .file('build.js', scope.scripts + response.data);
+    var escapeJson = function (string) {
+      var escapes = {
+        '\'':     '\'',
+        '\\':     '\\',
+        '\r':     'r',
+        '\n':     'n',
+        '\t':     't',
+        '\u2028': 'u2028',
+        '\u2029': 'u2029'
+      };
+      var escaper = /\\|\'|\r|\n|\t|\u2028|\u2029/g;
 
-            saveAs(zip.generate({type: 'blob'}), scope.currentApp.name + '.zip');
-          });
+      return string.replace(escaper, function (match) {
+        return '\\' + escapes[match];
+      });
+    };
+
+    return {
+      restrict: 'A',
+      link: function (scope, element) {
+        scope.exportZip = function (zip, filename) {
+          saveAs(zip.generate({type: 'blob'}), filename);
         };
+
+        element.on('click', function (e) {
+          e.preventDefault();
+
+          loadFiles.then(function (files) {
+            var inlineScript = '<script>window.bricksApp = JSON.parse(\'' +
+              escapeJson(angular.toJson(scope.currentApp)) +
+              '\');</script>';
+
+            files = angular.copy(files);
+            files.html = files.html.replace(
+              '</head>',
+              '\n' + inlineScript + '\n</head>'
+            );
+
+            var zip = createZip(scope.currentApp.name, files);
+
+            scope.exportZip(zip, scope.currentApp.name + '.zip');
+          });
+        });
       }
     };
   });

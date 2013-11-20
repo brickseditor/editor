@@ -18,15 +18,16 @@ module.exports = function (grunt) {
       },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
-        tasks: ['newer:copy:styles', 'autoprefixer']
+        tasks: ['concat:server', 'newer:copy:styles', 'autoprefixer']
       },
       components: {
         files: ['<%= yeoman.app %>/components/*.html'],
-        tasks: ['concat:components']
+        tasks: ['concat:server']
       },
-      test: {
+      tests: {
         files: [
           '<%= yeoman.app %>/scripts/**/*.js',
+          'test/mock/**/*.js',
           'test/spec/**/*.js'
         ],
         tasks: ['karma']
@@ -123,9 +124,16 @@ module.exports = function (grunt) {
     // not used since Uglify task does concat,
     // but still available if needed
     concat: {
-      components: {
+      server: {
         files: {
-          '.tmp/components/components.html': ['<%= yeoman.app %>/components/*.html']
+          '.tmp/components/components.html': [
+            '<%= yeoman.app %>/components/*.html'
+          ],
+          '.tmp/scripts/build.js': [
+            '<%= yeoman.app %>/bower_components/node-uuid/uuid.js',
+            '<%= yeoman.app %>/scripts/storage/storage.js',
+            '<%= yeoman.app %>/scripts/preview.js'
+          ]
         }
       },
       dist: {
@@ -217,6 +225,7 @@ module.exports = function (grunt) {
             '*.{ico,png,txt}',
             '.htaccess',
             '.nojekyll',
+            '.tmp/scripts/build.js',
             'bower_components/**/*',
             'images/{,*/}*.{gif,webp}',
             'styles/fonts/*',
@@ -249,12 +258,12 @@ module.exports = function (grunt) {
       server: [
         'less',
         'copy:styles',
-        'concat:components'
+        'concat:server'
       ],
       test: [
         'less',
         'copy:styles',
-        'concat:components'
+        'concat:server'
       ],
       dist: [
         'less',
@@ -262,7 +271,7 @@ module.exports = function (grunt) {
         'imagemin',
         'svgmin',
         'htmlmin',
-        'concat:components'
+        'concat:server'
       ]
     },
     karma: {

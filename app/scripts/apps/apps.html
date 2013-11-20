@@ -1,28 +1,32 @@
 <div id="apps">
-  <div class="btn-group">
-    <button type="button" class="btn btn-default dropdown-toggle"
-      ng-click="toggleAppsMenu()">
-      {{currentApp.name}} <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" role="menu" ng-show="showAppsMenu">
-      <li ng-repeat="app in apps"
-      ng-class="{disabled: app.id === currentApp.id}">
-      <a href="" ng-click="selectApp(app)">
-        {{app.name}}
+  <ul class="nav navbar-nav">
+    <li class="dropdown">
+      <a href="" class="dropdown-toggle" ng-click="toggleAppsMenu()">
+        {{currentApp.name}} <b class="caret"></b>
       </a>
-      </li>
-      <li class="divider"></li>
-      <li>
-      <a href="" ng-click="toggleAppsModal()">
-        <span class="glyphicon glyphicon-plus"></span>
-        New App
-      </a>
-      </li>
-    </ul>
-  </div>
-  <button class="btn btn-primary navbar-btn" ng-click="download()">
-    Download
-  </button>
+      <ul class="dropdown-menu" ng-show="showAppsMenu">
+        <li>
+          <a href="" export-app>
+            <span class="fa fa-download"></span> Export
+          </a>
+        </li>
+        <li class="divider"></li>
+        <li class="dropdown-header">Switch App</li>
+        <li ng-repeat="app in apps" ng-class="{disabled: app.id === currentApp.id}">
+          <a href="" ng-click="selectApp(app)">
+            {{app.name}}
+          </a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a href="" ng-click="toggleAppsModal()">
+            <span class="fa fa-plus"></span>
+            New App
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
 
   <modal title="'New App'" submit="addApp()" close="hideAppsModal()"
     open="showAppsModal">
