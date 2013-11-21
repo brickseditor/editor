@@ -32,7 +32,7 @@
     <div class="container" ng-view=""></div>
 
     <script>
-    if (window.require) {
+    if (typeof process === 'object' && process.versions && process.versions['node-webkit']) {
       window.addEventListener('load', function() {
         require('nw.gui').Window.get().show();
       });
