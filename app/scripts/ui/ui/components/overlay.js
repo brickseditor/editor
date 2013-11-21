@@ -2,35 +2,44 @@
 
 angular.module('bricksApp.ui')
 
-  .factory('Overlay', function () {
-    var Overlay = function (element, events) {
-      var iframe = this.iframe = angular.element('iframe[edit-frame]');
+  .service('Overlay', function () {
+    var Overlay = function (element, iframe) {
+      var _this = this;
 
       this.element = element;
+      this.iframe = iframe;
 
       iframe.on('load', function () {
-        iframe.contents().on(events);
+        iframe.contents().on('scroll', _this.reposition.bind(_this));
       });
     };
 
     // Set the overlay position and dimensions according to the
     // target element and the iframe.
     Overlay.prototype.moveTo = function (target) {
-      if (target.closest('div[ng-view]').length === 0) {
+      this.target = target;
+      this.element.css({
+        display: 'block',
+        width: target.outerWidth() + 'px',
+        height: target.outerHeight() + 'px'
+      });
+      this.reposition();
+    };
+
+    Overlay.prototype.reposition = function () {
+      if (!this.target) {
         return;
       }
 
-      var iframeWindow = this.iframe[0].contentWindow;
-      var top = this.iframe[0].offsetTop - iframeWindow.pageYOffset;
-      var left = this.iframe[0].offsetLeft - iframeWindow.pageXOffset;
-      var offset = target.offset();
+      var iframeDocument = this.iframe.contents();
+      var iframeOffset = this.iframe.offset();
+      var targetOffset = this.target.offset();
+      var top = iframeOffset.top + targetOffset.top - iframeDocument.scrollTop();
+      var left = iframeOffset.left + targetOffset.left - iframeDocument.scrollLeft();
 
-      return this.element.css({
-        display: 'block',
-        width: target.outerWidth() + 'px',
-        height: target.outerHeight() + 'px',
-        top: (top + offset.top) + 'px',
-        left: (left + offset.left) + 'px'
+      this.element.css({
+        top: top + 'px',
+        left: left + 'px'
       });
     };
 
@@ -44,14 +53,20 @@ angular.module('bricksApp.ui')
       restrict: 'E',
       template: '<div class="overlay-highlight"></div>',
       link: function (scope, element) {
-        var overlay = new Overlay(element, {
-          'click mouseout': function () {
-            element.hide();
-          },
-          mouseover: function (e) {
-            overlay.moveTo(angular.element(e.target));
-          }
+        var iframe = angular.element('iframe[edit-frame]');
+
+        iframe.on('load', function () {
+          iframe.contents().on({
+            'click mouseout': function () {
+              element.hide();
+            },
+            mouseover: function (e) {
+              overlay.moveTo(angular.element(e.target));
+            }
+          });
         });
+
+        var overlay = new Overlay(element, iframe);
       }
     };
   })
@@ -71,19 +86,24 @@ angular.module('bricksApp.ui')
             '<span class="fa fa-trash-o"></span></a>' +
         '</div></div>',
       link: function (scope, element, attrs, uiCtrl) {
-        var overlay = new Overlay(element, {
-          click: function (e) {
+        var iframe = angular.element('iframe[edit-frame]');
+
+        iframe.on('load', function () {
+          iframe.contents().on('click', function (e) {
             if (element.is(':visible') && scope.selected[0] === e.target) {
               element.hide();
               scope.selected = null;
             } else {
               var target = angular.element(e.target);
-              if (overlay.moveTo(target)) {
+              if (target.closest('div[ng-view]').length !== 0) {
+                overlay.moveTo(target);
                 scope.selected = target;
               }
             }
-          }
+          });
         });
+
+        var overlay = new Overlay(element, iframe);
 
         var setSelector = function (element) {
           var id = element.attr('id');
