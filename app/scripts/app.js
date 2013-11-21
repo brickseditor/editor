@@ -15,6 +15,13 @@ angular.module('bricksApp', [
     'bricksApp.ui'
   ])
 
+  .constant(
+    'IS_NODE_WEBKIT',
+    typeof process === 'object' && process.versions &&
+      process.versions['node-webkit']
+  )
+
+
   .config(function ($routeProvider) {
     $routeProvider
       .otherwise({

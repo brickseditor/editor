@@ -151,8 +151,7 @@ module.exports = function (grunt) {
         files: {
           src: [
             '<%= yeoman.dist %>/scripts/**/*.js',
-            '!<%= yeoman.dist %>/scripts/preview.js',
-            '!<%= yeoman.dist %>/scripts/storage/storage.js',
+            '!<%= yeoman.dist %>/scripts/{build,preview,storage/storage}.js',
             '<%= yeoman.dist %>/styles/{,*/}*.css',
             '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
             '<%= yeoman.dist %>/styles/fonts/*'
@@ -225,7 +224,6 @@ module.exports = function (grunt) {
             '*.{ico,png,txt}',
             '.htaccess',
             '.nojekyll',
-            '.tmp/scripts/build.js',
             'bower_components/**/*',
             'images/{,*/}*.{gif,webp}',
             'styles/fonts/*',
@@ -244,6 +242,13 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>',
           src: [
             'package.json'
+          ]
+        }, {
+          expand: true,
+          cwd: '.tmp',
+          dest: '<%= yeoman.dist %>',
+          src: [
+            'scripts/build.js'
           ]
         }]
       },
@@ -285,7 +290,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '.tmp/concat/scripts',
-          src: ['*.js', '!preview.js', '!storage/storage.js'],
+          src: ['*.js', '!build.js', '!preview.js', '!storage/storage.js'],
           dest: '.tmp/concat/scripts'
         }]
       }
