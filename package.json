@@ -1,9 +1,9 @@
 {
-  "name": "bricks-editor",
+  "name": "Bricks",
   "version": "0.0.0",
   "main": "index.html",
   "window": {
-    "title": "Bricks Editor",
+    "title": "Bricks",
     "toolbar": false,
     "width": 1024,
     "height": 600,
