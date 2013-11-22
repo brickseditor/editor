@@ -8,10 +8,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title></title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="styles/07a32032.main.css"/>
+        <link rel="stylesheet" href="styles/4fcce010.main.css"/>
 </head>
   <body ng-app="bricksApp">
     <!--[if lt IE 7]>
@@ -28,22 +27,19 @@
     <div class="container" ng-view=""></div>
 
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-44902338-1', 'sorich87.github.io');
-      ga('send', 'pageview');
-
+    if (typeof process === 'object' && process.versions && process.versions['node-webkit']) {
+      window.addEventListener('load', function() {
+        require('nw.gui').Window.get().show();
+      });
+    }
     </script>
 
-        <script src="//cdn.firebase.com/v0/firebase.js"></script>
+        <script src="https://cdn.firebase.com/v0/firebase.js"></script>
 
-        <script src="scripts/88d13e64.plugins.js"></script>
+        <script src="scripts/26372bcb.plugins.js"></script>
 
         <script src="scripts/39137e2f.modules.js"></script>
 
-        <script src="scripts/a6258889.scripts.js"></script>
+        <script src="scripts/d0d8377f.scripts.js"></script>
 </body>
 </html>
