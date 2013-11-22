@@ -5,33 +5,7 @@ angular.module('bricksApp.ui')
     return {
       require: '^ui',
       link: function (scope, element, attrs, uiCtrl) {
-        var hadDraggable, dragging;
-        var iframe = element;
         var dropTarget, view;
-
-        // Makes an element on the page draggable, saves previous
-        // draggable status and the element being dragged.
-        // Used to restore draggable attribute of an element if
-        // necessary.
-        var makeDraggable = function (e) {
-          var element = angular.element(e.target);
-
-          if (!element.is('html, body, div[ng-view]')) {
-            hadDraggable = e.target.draggable;
-            e.target.draggable = true;
-
-            element.on('dragstart', function (e) {
-              e.originalEvent.dataTransfer.effectAllowed = 'move';
-              dragging = angular.element(e.target);
-            });
-          }
-        };
-
-        var destroyDraggable = function (e) {
-          if (!hadDraggable) {
-            e.target.removeAttribute('draggable');
-          }
-        };
 
         // Insert a node or HTML code after an element, into the body
         // element or an empty one.
@@ -79,26 +53,32 @@ angular.module('bricksApp.ui')
           dropTarget.addClass('bricks-dragover');
         };
 
-        var dragleave = function () {
+        var removeClass = function () {
           dropTarget.removeClass('bricks-dragover');
+          if (dropTarget.attr('class') === '') {
+            dropTarget.removeAttr('class');
+          }
+        };
+
+        var dragleave = function () {
+          removeClass();
         };
 
         // Insert element being dragged or component html and update
         // template property of the scope.
         var drop = function (e) {
-          var html;
-
           e.stopPropagation();
 
-          if (dragging) {
-            dragging[0].removeAttribute('draggable');
-            html = dragging;
-            dragging = null;
+          var html = element.data('dragging');
+          element.removeData('dragging');
+
+          if (html) {
+            html.removeAttr('draggable');
           } else {
             html = e.originalEvent.dataTransfer.getData('text/plain');
           }
 
-          dropTarget.removeClass('bricks-dragover');
+          removeClass();
           insertComponent(html, e.target);
           uiCtrl.updateTemplate();
           scope.$apply();
@@ -106,17 +86,15 @@ angular.module('bricksApp.ui')
           return false;
         };
 
-        iframe.on('load', function () {
-          var page = iframe.contents();
+        element.on('load', function () {
+          var page = element.contents();
 
           view = page.find('div[ng-view]');
 
           page.on({
             dragover: dragover,
             dragleave: dragleave,
-            drop: drop,
-            mousedown: makeDraggable,
-            mouseup: destroyDraggable
+            drop: drop
           });
         });
       }
