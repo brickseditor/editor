@@ -16,8 +16,7 @@ angular.module('bricksApp.ui', [
     return {
       controller: function ($scope, $element) {
         var iframe = $element.find('iframe');
-        var selectedElement, view;
-        var currentPage = apps.current().pages[0];
+        var currentPage, selectedElement, view;
 
         // Changes the scope template attribute.
         var updateTemplate = function () {
@@ -48,7 +47,7 @@ angular.module('bricksApp.ui', [
             current.template = beautify.html(current.template);
             currentPage = current;
           } else {
-            return currentPage;
+            return currentPage || apps.current().pages[0];
           }
         };
 

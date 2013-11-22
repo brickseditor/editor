@@ -21,12 +21,14 @@ module.exports = function(config) {
       'app/bower_components/jquery/jquery.js',
       'app/bower_components/js-beautify/js/lib/beautify-html.js',
       'app/bower_components/jszip/jszip.js',
+      'app/bower_components/lodash/dist/lodash.js',
       'app/bower_components/node-uuid/uuid.js',
       'app/bower_components/angular/angular.js',
       'app/bower_components/ng-grid/build/ng-grid.js',
       'app/bower_components/angular-*/*.js',
       'app/scripts/**/*.js',
       'app/scripts/*.js',
+      'app/scripts/**/*.html',
       'test/spec/**/*.js'
     ],
 
@@ -35,6 +37,14 @@ module.exports = function(config) {
       'app/bower_components/angular-*/*.min.js',
       'app/scripts/preview.js'
     ],
+
+    preprocessors: {
+      'app/scripts/**/*.html': 'ng-html2js'
+    },
+
+    ngHtml2JsPreprocessor: {
+      stripPrefix: 'app/'
+    },
 
     // web server port
     port: 8080,

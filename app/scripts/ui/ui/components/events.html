@@ -6,48 +6,67 @@
   </div>
   <div class="panel-collapse" ng-show="open">
     <div class="panel-body">
-      <form>
+      <div class="form-group">
+        <ul class="events" ng-repeat="event in events">
+          <li>
+            <a href="" class="text-danger" ng-click="removeEvent(event)">
+              <span class="fa fa-times"></span>
+            </a>
+            <b>on {{event.type}}</b> {{event.action}}
+            <span ng-show="event.action !== 'custom'">{{event.object}}</span>
+          </li>
+        </ul>
+        <p><button class="btn btn-default btn-sm" ng-show="!showForm"
+          ng-click="showForm = true">Add event</button></p>
+      </div>
+
+      <form action="" name="newEventForm" ng-show="showForm"
+        ng-submit="addEvent(event)">
         <div class="form-group">
           <label class="control-label" for="eventEvent">Event</label>
-          <select class="form-control input-sm" id="eventType"
-            ng-model="event.type" ng-disabled="!selection"
-            ng-options="name for name in names">
+          <select class="form-control input-sm" id="eventType" name="type"
+            ng-model="event.type" ng-options="type for type in types()"
+            required validation-class>
             <option value=""></option>
           </select>
         </div>
 
         <div class="form-group">
           <label class="control-label" for="eventAction">Action</label>
-          <select class="form-control input-sm" id="eventAction"
-            ng-model="event.action" ng-disabled="!selection"
-            ng-options="k as v for (k,v) in actions">
+          <select class="form-control input-sm" id="eventAction" name="action"
+            ng-model="event.action" ng-options="k as v for (k,v) in actions"
+            required validation-class>
             <option value=""></option>
           </select>
         </div>
 
         <div class="form-group" ng-if="event.action === 'custom'">
           <label class="control-label" for="eventObject">Object</label>
-          <input class="form-control" id="eventObject"
-            ng-model="event.object">
+          <input class="form-control" id="eventObject" name="object"
+            ng-model="event.object" required validation-class>
         </div>
 
         <div class="form-group"
           ng-if="['add' , 'update', 'remove'].indexOf(event.action) > -1">
           <label class="control-label" for="eventObject">Object</label>
-          <select class="form-control input-sm" id="eventObject"
-            ng-model="event.object" ng-disabled="!selection"
-            ng-options="table.name as table.name for table in app.tables">
+          <select class="form-control input-sm" id="eventObject" name="object"
+            ng-options="table.name as table.name for table in app.tables"
+            ng-model="event.object" required validation-class>
             <option value=""></option>
           </select>
         </div>
 
         <div class="form-group" ng-if="event.action === 'visit'">
           <label class="control-label" for="eventObject">Page</label>
-          <select class="form-control input-sm" id="eventObject"
-            ng-model="event.object" ng-disabled="!selection"
-            ng-options="page.url as page.url for page in app.pages">
+          <select class="form-control input-sm" id="eventObject" name="object"
+            ng-options="page.url as page.url for page in app.pages"
+            ng-model="event.object" required validation-class>
             <option value=""></option>
           </select>
+        </div>
+
+        <div class="form-group">
+          <button class="btn btn-primary btn-sm">Save event</button></p>
         </div>
       </form>
     </div>

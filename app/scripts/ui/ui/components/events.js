@@ -11,13 +11,24 @@ angular.module('bricksApp.ui')
       link: function (scope, element, attrs, uiCtrl) {
         scope.selection = null;
         scope.app = apps.current();
-        scope.event = {};
+        scope.events = [];
 
-        scope.names = (
-          'blur change click copy cut dblclick focus keydown keyup ' +
-          'keypress mousedown mouseenter mouseleave mousemove mouseout ' +
-          'mouseover mouseup paste submit'
-        ).split(' ');
+        // Return all the possible events types except those which were
+        // already used
+        scope.types = function () {
+          var types = ('blur change click copy cut dblclick focus keydown ' +
+            'keyup keypress mousedown mouseenter mouseleave mousemove ' +
+            'mouseout mouseover mouseup paste submit').split(' ');
+
+          if (scope.events.length > 0) {
+            var usedTypes = scope.events.map(function (event) {
+              return event.type;
+            });
+
+            return _.difference(types, usedTypes);
+          }
+          return types;
+        };
 
         scope.actions = {
           add: 'add row',
@@ -27,34 +38,66 @@ angular.module('bricksApp.ui')
           custom: 'custom'
         };
 
-        var parseEvent = function (selection, type) {
-          var event = selection.attr('ng-' + type);
+        var isAction = function (action) {
+          return action && Object.keys(scope.actions).indexOf(action) > -1;
+        };
 
-          if (event) {
-            scope.event.type = type;
-            scope.event.action = event.split('(')[0];
+        var attributeToEvent = function (attr, type) {
+          var event = {};
 
-            if (scope.event.action &&
-                Object.keys(scope.actions).indexOf(scope.event.action) > -1) {
-              var part2 = event.split('\'')[1];
+          if (attr) {
+            event.type = type;
+            event.action = attr.split('(')[0];
 
-              if (scope.event.action === 'visit') {
-                scope.event.object = part2.replace(/{{(\w+)\.id}}/, ':$1');
+            if (event.action !== 'custom' && isAction(event.action)) {
+              var part2 = attr.split('\'')[1];
+
+              if (event.action === 'visit') {
+                event.object = part2.replace(/{{(\w+)\.id}}/, ':$1');
               } else {
-                scope.event.object = part2;
+                event.object = part2;
               }
             } else {
-              scope.event.action = 'custom';
-              scope.event.object = event;
+              event.action = 'custom';
+              event.object = attr;
             }
+
+            return event;
           }
+        };
+
+        var eventToAttribute = function (event) {
+          var attr;
+
+          switch (event.action) {
+            case 'custom':
+              attr = event.object;
+              break;
+
+            case 'visit':
+              var url = event.object.replace(/:(\w+)/, '{{$1.id}}');
+              attr = event.action + '(\'' + url + '\')';
+              break;
+
+            default:
+              attr = event.action +
+                '(\'' + event.object + '\', ' + event.object + ')';
+              break;
+          }
+
+          return attr;
         };
 
         scope.$on('selection', function () {
           scope.selection = uiCtrl.selection();
-          scope.event = {};
-          scope.names.forEach(function (event) {
-            parseEvent(scope.selection, event);
+          scope.events = [];
+          scope.showForm = false;
+          scope.types().forEach(function (type) {
+            var attr = scope.selection.attr('ng-' + type);
+            var event = attributeToEvent(attr, type);
+            if (event) {
+              scope.events.push(event);
+            }
           });
 
           $timeout(function () {
@@ -62,35 +105,26 @@ angular.module('bricksApp.ui')
           });
         });
 
-        scope.$watch('event', function (event) {
-          var attrValue;
-
-          if (!scope.selection) {
-            return;
-          }
-
-          if (event.type && event.action && event.object) {
-            switch (event.action) {
-              case 'custom':
-                attrValue = event.object;
-                break;
-
-              case 'visit':
-                var url = event.object.replace(/:(\w+)/, '{{$1.id}}');
-                attrValue = event.action + '(\'' + url + '\')';
-                break;
-
-              default:
-                attrValue = event.action +
-                  '(\'' + event.object + '\', ' + event.object + ')';
-            }
-            scope.selection.attr('ng-' + event.type, attrValue);
-          } else {
-            scope.selection.removeAttr('ng-' + event.type);
-          }
+        scope.addEvent = function (event) {
+          scope.events.push(event);
+          scope.selection.attr('ng-' + event.type, eventToAttribute(event));
 
           uiCtrl.updateTemplate();
-        }, true);
+
+          scope.event = {};
+          scope.showForm = false;
+        };
+
+        scope.removeEvent = function (event) {
+          scope.events.some(function (e, i) {
+            if (event === e) {
+              scope.events.splice(i, 1);
+              scope.selection.removeAttr('ng-' + event.type);
+            }
+          });
+
+          uiCtrl.updateTemplate();
+        };
       }
     };
   });
