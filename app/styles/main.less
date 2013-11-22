@@ -193,8 +193,16 @@ body {
 
   > ul > li > a {
     width: @sidebar-width;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+    > span {
+      display: block;
+      float: left;
+      max-width: @sidebar-width - 50px;
+      padding-right: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   .dropdown-menu {
