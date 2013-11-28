@@ -60,6 +60,12 @@ angular.module('bricksApp.database', [
       enablePaging: true,
       enablePinning: true,
       enableRowSelection: false,
+      pagingOptions: {
+        pageSizes: [20, 50, 100], 
+        pageSize: 20,
+        totalServerItems: 0,
+        currentPage: 1
+      },
       showFooter: true
     };
 
