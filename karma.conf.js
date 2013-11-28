@@ -39,12 +39,15 @@ module.exports = function(config) {
     ],
 
     preprocessors: {
+      'app/scripts/**/*.js': 'coverage',
       'app/scripts/**/*.html': 'ng-html2js'
     },
 
     ngHtml2JsPreprocessor: {
       stripPrefix: 'app/'
     },
+
+    reporters: ['coverage'],
 
     // web server port
     port: 8080,
