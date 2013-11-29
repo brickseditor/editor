@@ -52,8 +52,16 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
       Storage.remove(table, instance);
     };
 
-    $scope.visit = function (url) {
-      $location.path(url);
+    $scope.visit = function (url, table) {
+      var path;
+
+      if (table) {
+        path = url.replace(/:(\w+)/, table.id);
+      } else {
+        path = url;
+      }
+
+      $location.path(path);
     };
 
     eval($window.bricksApp.js); // jshint ignore:line

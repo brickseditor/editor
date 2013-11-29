@@ -50,13 +50,7 @@ angular.module('bricksApp.ui')
             event.action = attr.split('(')[0];
 
             if (event.action !== 'custom' && isAction(event.action)) {
-              var part2 = attr.split('\'')[1];
-
-              if (event.action === 'visit') {
-                event.object = part2.replace(/{{(\w+)\.id}}/, ':$1');
-              } else {
-                event.object = part2;
-              }
+              event.object = attr.split('\'')[1];
             } else {
               event.action = 'custom';
               event.object = attr;
@@ -75,8 +69,9 @@ angular.module('bricksApp.ui')
               break;
 
             case 'visit':
-              var url = event.object.replace(/:(\w+)/, '{{$1.id}}');
-              attr = event.action + '(\'' + url + '\')';
+              var params = event.object.match(/:(\w+)/);
+              params = params ? ', ' + params[1] : '';
+              attr = event.action + '(\'' + event.object + '\'' + params + ')';
               break;
 
             default:

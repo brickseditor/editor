@@ -16,7 +16,7 @@ describe('Directive: events', function () {
     var ui = $compile(angular.element('<div ui>'))($rootScope);
     var selection = angular.element(
       '<input ng-focus="custom()" ng-change="add(\'puppy\', puppy)"' +
-      'ng-dblclick="visit(\'/puppies/{{puppy.id}}\')">'
+      'ng-dblclick="visit(\'/puppies/:puppy\', puppy)">'
     );
 
     uiCtrl = ui.controller('ui');
@@ -55,6 +55,7 @@ describe('Directive: events', function () {
     var events = [
       {type: 'change', action: 'remove', object: 'cat'},
       {type: 'dblclick', action: 'visit', object: '/cats/:cat'},
+      {type: 'submit', action: 'visit', object: '/cats'},
       {type: 'focus', action: 'custom', object: 'meow()'}
     ];
 
@@ -66,10 +67,11 @@ describe('Directive: events', function () {
     expect(scope.events).toEqual(events);
 
     expect(scope.selection.attr('ng-change')).toBe('remove(\'cat\', cat)');
-    expect(scope.selection.attr('ng-dblclick')).toBe('visit(\'/cats/{{cat.id}}\')');
+    expect(scope.selection.attr('ng-dblclick')).toBe('visit(\'/cats/:cat\', cat)');
+    expect(scope.selection.attr('ng-submit')).toBe('visit(\'/cats\')');
     expect(scope.selection.attr('ng-focus')).toBe('meow()');
 
-    expect(uiCtrl.updateTemplate.calls.length).toEqual(3);
+    expect(uiCtrl.updateTemplate.calls.length).toEqual(4);
   });
 
   it('removeEvent() should remove the event from the selection', function () {
