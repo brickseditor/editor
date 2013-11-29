@@ -25,18 +25,17 @@ angular.module('bricksApp.ui')
 
         // Sets the selected element and its corresponding component, appends
         // the component admin template to the directive element and executes
-        // the compoent admin scripts.
+        // the component admin scripts.
         scope.$on('selection', function () {
           scope.options = {};
           scope.component = {};
           form.empty();
 
+          scope.selection = uiCtrl.selection();
+
           components.all().then(function (list) {
             list.some(function (component) {
-              var condition;
-
-              scope.selection = uiCtrl.selection();
-              condition = scope.selection.is(component.selector);
+              var condition = scope.selection.is(component.selector);
 
               if (condition) {
                 scope.component = component;
@@ -44,15 +43,15 @@ angular.module('bricksApp.ui')
 
               return condition;
             });
+
+            if (scope.component['admin-script']) {
+              eval(scope.component['admin-script']); // jshint ignore:line
+            }
+
+            if (scope.component.admin) {
+              form.append($compile(scope.component.admin)(scope));
+            }
           });
-
-          if (scope.component['admin-script']) {
-            eval(scope.component['admin-script']); // jshint ignore:line
-          }
-
-          if (scope.component.admin) {
-            form.append($compile(scope.component.admin)(scope));
-          }
 
           $timeout(function () {
             scope.$apply();
