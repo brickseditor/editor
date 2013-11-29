@@ -47,7 +47,10 @@ module.exports = function(config) {
       stripPrefix: 'app/'
     },
 
-    reporters: ['coverage'],
+    reporters: [
+      'coverage',
+      'progress'
+    ],
 
     // web server port
     port: 8080,
