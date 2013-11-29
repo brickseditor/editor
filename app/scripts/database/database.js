@@ -44,13 +44,11 @@ angular.module('bricksApp.database', [
       }
     };
 
-    storage.init($scope.app).then(function (res) {
-      Storage = res;
+    var Storage = storage($scope.app);
 
-      if ($scope.app.tables) {
-        $scope.selectTable(0);
-      }
-    });
+    if ($scope.app.tables) {
+      $scope.selectTable(0);
+    }
 
     $scope.gridOptions = {
       columnDefs: 'columns',
@@ -76,12 +74,8 @@ angular.module('bricksApp.database', [
     $scope.newRow = {};
     $scope.columnToDelete = {};
 
-    $scope.$watch(function () {
-      if ($scope.currentTable && $scope.currentTable.name) {
-        return Storage.all($scope.currentTable.name);
-      }
-    }, function (data) {
-      $scope.data = data;
+    $scope.$watch('currentTable', function (table) {
+      $scope.data = Storage.all(table.name);
     });
 
     // Watch for changes to the current app and set the current table.
@@ -90,15 +84,14 @@ angular.module('bricksApp.database', [
     }, function (id) {
       if ($scope.app.id !== id) {
         $scope.app = apps.current();
-        storage.init($scope.app).then(function (res) {
-          Storage = res;
 
-          if ($scope.app.tables) {
-            $scope.selectTable(0);
-          } else {
-            $scope.app.tables = [];
-          }
-        });
+        var Storage = storage($scope.app);
+
+        if ($scope.app.tables) {
+          $scope.selectTable(0);
+        } else {
+          $scope.app.tables = [];
+        }
       }
     });
 
@@ -110,6 +103,10 @@ angular.module('bricksApp.database', [
         }, angular.copy(defaultTableColumns));
       }
     }, true);
+
+    $scope.$on('ngGridEventEndCellEdit', function (e){
+      Storage.update($scope.currentTable.name, e.targetScope.row.entity);
+    });
 
     $scope.hasTables = function () {
       return $scope.app.tables && $scope.app.tables.length > 0;

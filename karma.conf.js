@@ -11,7 +11,6 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/mock/**/*.js',
       'app/bower_components/Blob.js/Blob.js',
       'app/bower_components/FileSaver/FileSaver.js',
       'app/bower_components/codemirror/lib/codemirror.js',
@@ -25,6 +24,7 @@ module.exports = function(config) {
       'app/bower_components/node-uuid/uuid.js',
       'app/bower_components/angular/angular.js',
       'app/bower_components/ng-grid/build/ng-grid.js',
+      'test/mock/**/*.js',
       'app/bower_components/angular-*/*.js',
       'app/scripts/**/*.js',
       'app/scripts/*.js',
