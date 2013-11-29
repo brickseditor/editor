@@ -11,7 +11,7 @@
     "angular-route": "1.2.0",
     "angular-animate": "1.2.0",
     "node-uuid": "~1.4.1",
-    "angular-ui-codemirror": "~0.0.5",
+    "angular-ui-codemirror": "0.0.5",
     "font-awesome": "~4.0.0",
     "js-beautify": "~1.4.1",
     "Blob.js": "https://github.com/eligrey/Blob.js/archive/b5453eee554f109a23c096615415a035de2183f4.zip",
