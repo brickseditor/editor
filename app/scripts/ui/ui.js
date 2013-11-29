@@ -14,6 +14,7 @@ angular.module('bricksApp.ui', [
 
   .directive('ui', function (apps, beautify, components) {
     return {
+      scope: true,
       controller: function ($scope, $element) {
         var iframe = $element.find('iframe');
         var currentPage, selectedElement, view;
@@ -23,18 +24,11 @@ angular.module('bricksApp.ui', [
           if (!view) {
             view = iframe.contents().find('div[ng-view]');
           }
-          currentPage.template = beautify.html(view.html());
-        };
-
-        var selectElement = function (element) {
-          if (!element.is('html, body, [ng-view]')) {
-            selectedElement = element;
-            $scope.$broadcast('selection');
-          }
+          page().template = beautify.html(view.html());
         };
 
         var selection = function (element) {
-          if (element) {
+          if (element && !element.is('html, body, [ng-view]')) {
             selectedElement = element;
             $scope.$broadcast('selection');
           } else {
@@ -47,36 +41,33 @@ angular.module('bricksApp.ui', [
             current.template = beautify.html(current.template);
             currentPage = current;
           } else {
-            return currentPage || apps.current().pages[0];
+            if (!currentPage) {
+              currentPage = apps.current().pages[0];
+            }
+            return currentPage;
           }
         };
 
+        components.all().then(function (all) {
+          $scope.components = all;
+        });
+
         return {
-          iframe: iframe,
           updateTemplate: updateTemplate,
-          selectElement: selectElement,
           selection: selection,
           page: page
         };
-      },
-
-      link: function (scope) {
-        components.all().then(function (all) {
-          scope.components = all;
-        });
       }
     };
   })
 
-  .service('components', function ($http, $q, $templateCache) {
-    var deferred = $q.defer();
-
+  .service('components', function ($http, $templateCache) {
     // Gets the components template and parses it to return an object.
-    $http.get('components/components.html', {cache: $templateCache})
-      .success(function (response) {
+    var promise = $http.get('components/components.html', {cache: $templateCache})
+      .then(function (response) {
         var components = [];
 
-        jQuery('<div>' + response + '</div>').find('component')
+        jQuery('<div>' + response.data + '</div>').find('component')
           .each(function (i, component) {
             var object = {};
 
@@ -86,12 +77,12 @@ angular.module('bricksApp.ui', [
             components.push(object);
           });
 
-        deferred.resolve(components);
+        return components;
       });
 
     return {
       all: function () {
-        return deferred.promise;
+        return promise;
       }
     };
   });

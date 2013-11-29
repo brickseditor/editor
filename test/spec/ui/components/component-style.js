@@ -9,13 +9,13 @@ describe('Directive: componentStyle', function () {
   beforeEach(inject(function ($compile, $rootScope, $templateCache) {
     $templateCache.put(
       'components/components.html',
-      '<components><component>' +
+      '<component>' +
         '<name>test</name>' +
         '<template><div>test</div></template>' +
         '<selector>.test</selector>' +
         '<admin><div class="admin">admin</div></admin>' +
         '<admin-script>scope.options.test = "yes"</admin-script>' +
-        '<component></components>'
+        '<component>'
     );
 
     var ui = $compile(angular.element('<div ui>'))($rootScope);

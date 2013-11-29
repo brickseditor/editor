@@ -10,7 +10,7 @@ angular.module('bricksApp.ui')
 
         var select = function (e) {
           e.preventDefault();
-          uiCtrl.selectElement(angular.element(e.target));
+          uiCtrl.selection(angular.element(e.target));
         };
 
         // Display the template HTML code.

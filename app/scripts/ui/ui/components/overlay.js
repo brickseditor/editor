@@ -163,7 +163,7 @@ angular.module('bricksApp.ui')
           if (selected) {
             overlay.moveTo(selected);
             setSelector(selected);
-            uiCtrl.selectElement(scope.selected);
+            uiCtrl.selection(scope.selected);
           }
         });
 
