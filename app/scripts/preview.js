@@ -40,16 +40,22 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
     }
 
     $scope.add = function (table, instance) {
-      Storage.add(table, angular.copy(instance));
-      $scope[table] = {};
+      Storage.add(table, angular.copy(instance), function () {
+        $scope[table] = {};
+        $scope.$broadcast('database-row-added');
+      });
     };
 
     $scope.update = function (table, instance) {
-      Storage.update(table, instance);
+      Storage.update(table, instance, function () {
+        $scope.$broadcast('database-row-updated');
+      });
     };
 
     $scope.remove = function (table, instance) {
-      Storage.remove(table, instance);
+      Storage.remove(table, instance, function () {
+        $scope.$broadcast('database-row-removed');
+      });
     };
 
     $scope.visit = function (url, table) {
@@ -66,3 +72,25 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
 
     eval($window.bricksApp.js); // jshint ignore:line
   });
+
+angular.forEach(
+  {
+    'database-row-added': 'eventDatabaseRowAdded',
+    'database-row-updated': 'eventDatabaseRowUpdated',
+    'database-row-removed': 'eventDatabaseRowRemoved'
+  },
+  function (directiveName, eventName) {
+    angular.module('bricksApp').directive(directiveName, function ($parse) {
+      return {
+        compile: function ($element, attr) {
+          var fn = $parse(attr[directiveName]);
+          return function (scope, element, attr) {
+            scope.$on(eventName, function (e) {
+              fn(scope, {$event: e});
+            });
+          };
+        }
+      };
+    });
+  }
+);

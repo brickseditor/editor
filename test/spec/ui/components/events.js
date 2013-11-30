@@ -1,21 +1,17 @@
 'use strict';
 
 describe('Directive: events', function () {
-  var element, scope, types, uiCtrl;
+  var element, scope, uiCtrl;
 
   beforeEach(module('bricksApp.ui'));
   beforeEach(module('scripts/ui/ui/components/events.html'));
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache) {
-    types = ('blur change click copy cut dblclick focus keydown ' +
-             'keyup keypress mousedown mouseenter mouseleave mousemove ' +
-             'mouseout mouseover mouseup paste submit').split(' ');
-
     $templateCache.put('components/components.html', '');
 
     var ui = $compile(angular.element('<div ui>'))($rootScope);
     var selection = angular.element(
-      '<input ng-focus="custom()" ng-change="add(\'puppy\', puppy)"' +
+      '<input event-database-row-added="custom()" ng-change="add(\'puppy\', puppy)"' +
       'ng-dblclick="visit(\'/puppies/:puppy\', puppy)">'
     );
 
@@ -31,13 +27,15 @@ describe('Directive: events', function () {
     scope = element.isolateScope();
   }));
 
-  it('types() should return the event types except the used ones', function () {
-    expect(scope.types()).toEqual(types);
-
+  it('types() should not return the used events', function () {
     scope.$broadcast('selection');
 
     scope.events = [{type: 'click'}, {type: 'change'}];
-    expect(scope.types()).toEqual(_.without(types, 'click', 'change'));
+    var types = scope.types();
+
+    expect(types.indexOf('database row added')).not.toBe(-1);
+    expect(types.indexOf('click')).toBe(-1);
+    expect(types.indexOf('change')).toBe(-1);
   });
 
   it('on selection should read the events from the selection attributes', function () {
@@ -47,7 +45,7 @@ describe('Directive: events', function () {
     expect(scope.events).toEqual([
       {type: 'change', action: 'add', object: 'puppy'},
       {type: 'dblclick', action: 'visit', object: '/puppies/:puppy'},
-      {type: 'focus', action: 'custom', object: 'custom()'}
+      {type: 'database row added', action: 'custom', object: 'custom()'}
     ]);
   });
 

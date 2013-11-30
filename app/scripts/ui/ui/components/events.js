@@ -9,6 +9,16 @@ angular.module('bricksApp.ui')
       scope: {},
       templateUrl: 'scripts/ui/ui/components/events.html',
       link: function (scope, element, attrs, uiCtrl) {
+        var nativeTypes = (
+          'blur change click copy cut dblclick focus keydown ' +
+          'keyup keypress mousedown mouseenter mouseleave mousemove ' +
+          'mouseout mouseover mouseup paste submit'
+        ).split(' ');
+
+        var appTypes = (
+          'database row added, database row updated, database row removed'
+        ).split(', ');
+
         scope.selection = null;
         scope.app = apps.current();
         scope.events = [];
@@ -16,16 +26,14 @@ angular.module('bricksApp.ui')
         // Return all the possible events types except those which were
         // already used
         scope.types = function () {
-          var types = ('blur change click copy cut dblclick focus keydown ' +
-            'keyup keypress mousedown mouseenter mouseleave mousemove ' +
-            'mouseout mouseover mouseup paste submit').split(' ');
+          var types = nativeTypes.concat(appTypes);
 
           if (scope.events.length > 0) {
             var usedTypes = scope.events.map(function (event) {
               return event.type;
             });
 
-            return _.difference(types, usedTypes);
+            types = _.difference(types, usedTypes);
           }
           return types;
         };
@@ -83,12 +91,21 @@ angular.module('bricksApp.ui')
           return attr;
         };
 
+        var attributeName = function (type) {
+          if (appTypes.indexOf(type) > -1) {
+            return 'event-' + type.replace(/\s/g, '-');
+          } else {
+            return 'ng-' + type;
+          }
+        };
+
         scope.$on('selection', function () {
           scope.selection = uiCtrl.selection();
           scope.events = [];
           scope.showForm = false;
+
           scope.types().forEach(function (type) {
-            var attr = scope.selection.attr('ng-' + type);
+            var attr = scope.selection.attr(attributeName(type));
             var event = attributeToEvent(attr, type);
             if (event) {
               scope.events.push(event);
@@ -102,7 +119,7 @@ angular.module('bricksApp.ui')
 
         scope.addEvent = function (event) {
           scope.events.push(event);
-          scope.selection.attr('ng-' + event.type, eventToAttribute(event));
+          scope.selection.attr(attributeName(event.type), eventToAttribute(event));
 
           uiCtrl.updateTemplate();
 
@@ -114,7 +131,7 @@ angular.module('bricksApp.ui')
           scope.events.some(function (e, i) {
             if (event === e) {
               scope.events.splice(i, 1);
-              scope.selection.removeAttr('ng-' + event.type);
+              scope.selection.removeAttr(attributeName(event.type));
             }
           });
 
