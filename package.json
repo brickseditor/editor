@@ -36,7 +36,7 @@
     "grunt-svgmin": "~0.2.0",
     "grunt-usemin": "https://github.com/yeoman/grunt-usemin/archive/6bc03b4325ed5244ee36c7a62dce53cbdc80d667.tar.gz",
     "jshint-stylish": "~0.1.3",
-    "karma-coverage": "~0.1.2",
+    "karma-coverage": "0.1.2",
     "karma-mocha": "~0.1.0",
     "karma-ng-html2js-preprocessor": "~0.1.0",
     "karma-ng-scenario": "~0.1.0",
