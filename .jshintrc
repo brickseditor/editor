@@ -23,7 +23,6 @@
     "JSZip": false,
     "angular": false,
     "Firebase": false,
-    "jQuery": false,
     "html_beautify": false,
     "saveAs": false,
     "uuid": false

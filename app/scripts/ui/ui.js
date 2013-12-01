@@ -67,7 +67,7 @@ angular.module('bricksApp.ui', [
       .then(function (response) {
         var components = [];
 
-        jQuery('<div>' + response.data + '</div>').find('component')
+        angular.element('<div>' + response.data + '</div>').find('component')
           .each(function (i, component) {
             var object = {};
 
