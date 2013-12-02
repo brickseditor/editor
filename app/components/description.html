@@ -10,23 +10,23 @@
   </template>
   <selector>dl</selector>
   <options>
-    <div class="form-group">
-      <label for="optionsDefinitionStyle">Style</label>
-      <select id="optionsDefinitionStyle" ng-model="options.style"
-        ng-options="k for k in ['normal', 'horizontal']"
-        ng-change="change()">
-      </select>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" id="optionsDescriptionStyle"
+          ng-model="options.horizontal" ng-change="change()">
+        Horizontal style
+      </label>
     </div>
   </options>
   <script>
     if (scope.selection.hasClass('dl-horizontal')) {
-      scope.options.style = 'horizontal';
+      scope.options.horizontal = true;
     } else {
-      scope.options.style = 'normal';
+      scope.options.horizontal = false;
     }
 
     scope.update = function () {
-      if (scope.options.style === 'horizontal') {
+      if (scope.options.horizontal) {
         scope.selection.addClass('dl-horizontal');
       } else {
         scope.selection.removeClass('dl-horizontal');
