@@ -35,7 +35,6 @@ describe('Directive: componentStyle', function () {
 
   it('should set the scope objects used by the components', function () {
     expect(scope.options).toEqual({});
-    expect(scope.select).toEqual(uiCtrl.selection);
     expect(typeof(scope.update)).toBe('function');
     expect(typeof(scope.change)).toBe('function');
   });
@@ -44,6 +43,7 @@ describe('Directive: componentStyle', function () {
     spyOn(scope, 'update');
     scope.change();
     expect(scope.update).toHaveBeenCalled();
+    expect(uiCtrl.selection).toHaveBeenCalled();
     expect(uiCtrl.updateTemplate).toHaveBeenCalled();
   });
 

@@ -25,7 +25,7 @@
       newElement = angular.element(newElement);
       newElement.append(scope.selection.contents());
       scope.selection.replaceWith(newElement);
-      scope.select(newElement);
+      scope.selection = newElement;
     };
   </script>
 </component>

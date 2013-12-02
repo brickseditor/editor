@@ -28,7 +28,8 @@ angular.module('bricksApp.ui', [
         };
 
         var selection = function (element) {
-          if (element && !element.is('html, body, [ng-view]')) {
+          if (element && !element.is('html, body, [ng-view]') &&
+              selectedElement !== element) {
             selectedElement = element;
             $scope.$broadcast('selection');
           } else {

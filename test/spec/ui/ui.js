@@ -91,6 +91,16 @@ describe('Directive: ui', function () {
     expect(uiCtrl.selection()).toBe(element);
   });
 
+  it('should not set the selected element twice', function () {
+    var element = angular.element('<div>');
+
+    spyOn(scope, '$broadcast');
+    uiCtrl.selection(element);
+    uiCtrl.selection(element);
+
+    expect(scope.$broadcast.calls.length).toBe(1);
+  });
+
   it('should update the template', function () {
     var iframe = element.find('iframe');
 

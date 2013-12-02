@@ -38,18 +38,12 @@
     scope.update = function () {
       var newElement = document.createElement(scope.options.type);
       newElement = angular.element(newElement);
-      newElement.append(scope.selection.contents());
-
-      if (scope.options.style === 'unstyled') {
-        newElement.removeClass('list-inline').addClass('list-unstyled');
-      } else if (scope.options.style === 'inline') {
-        newElement.removeClass('list-unstyled').addClass('list-inline');
-      } else {
-        newElement.removeClass('list-unstyled').removeClass('list-inline');
-      }
+      newElement.append(scope.selection.contents())
+        .removeClass('list-inline list-unstyled')
+        .addClass('list-' + scope.options.style);
 
       scope.selection.replaceWith(newElement);
-      scope.select(newElement);
+      scope.selection = newElement;
     };
   </script>
 </component>

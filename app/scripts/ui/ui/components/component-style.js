@@ -14,12 +14,12 @@ angular.module('bricksApp.ui')
         scope.component = {};
         scope.options = {};
         scope.update = function () {};
-        scope.select = uiCtrl.selection;
 
         // Update the selected DOM element and emit a change event to be
         // received by the iframe.
         scope.change = function () {
           scope.update();
+          uiCtrl.selection(scope.selection);
           uiCtrl.updateTemplate();
         };
 
