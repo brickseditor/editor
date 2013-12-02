@@ -73,7 +73,9 @@ angular.module('bricksApp.database', [
     $scope.columnToDelete = {};
 
     $scope.$watch('currentTable', function (table) {
-      $scope.data = Storage.all(table.name);
+      if (table && table.name) {
+        $scope.data = Storage.all(table.name);
+      }
     });
 
     // Watch for changes to the current app and set the current table.
