@@ -8,7 +8,7 @@
     </ul>
   </template>
   <selector>ul, ol</selector>
-  <admin>
+  <options>
     <div class="form-group">
       <label for="optionsListType">Type</label>
       <select id="optionsListType" ng-model="options.type"
@@ -24,8 +24,8 @@
         <option value="">normal</option>
       </select>
     </div>
-  </admin>
-  <admin-script>
+  </options>
+  <script>
     scope.options.types = {UL: 'unordered', OL: 'ordered'};
     scope.options.type = scope.selection.prop('nodeName');
 
@@ -51,5 +51,5 @@
       scope.selection.replaceWith(newElement);
       scope.select(newElement);
     };
-  </admin-script>
+  </script>
 </component>

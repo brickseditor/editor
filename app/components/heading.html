@@ -4,7 +4,7 @@
     <h1>This is a heading.</h1>
   </template>
   <selector>h1, h2, h3, h4, h5, h6</selector>
-  <admin>
+  <options>
     <div class="form-group">
       <label for="optionsHeadingType">Type</label>
       <select id="optionsHeadingType" ng-model="options.type"
@@ -12,8 +12,8 @@
         ng-change="change()">
       </select>
     </div>
-  </admin>
-  <admin-script>
+  </options>
+  <script>
     scope.options.types = Array.apply(0, Array(6)).map(function (x, i) {
       var j = i + 1;
       return {value: 'H' + j, label: 'heading ' + j};
@@ -27,5 +27,5 @@
       scope.selection.replaceWith(newElement);
       scope.select(newElement);
     };
-  </admin-script>
+  </script>
 </component>

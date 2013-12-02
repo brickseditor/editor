@@ -9,7 +9,7 @@
     </dl>
   </template>
   <selector>dl</selector>
-  <admin>
+  <options>
     <div class="form-group">
       <label for="optionsDefinitionStyle">Style</label>
       <select id="optionsDefinitionStyle" ng-model="options.style"
@@ -17,8 +17,8 @@
         ng-change="change()">
       </select>
     </div>
-  </admin>
-  <admin-script>
+  </options>
+  <script>
     if (scope.selection.hasClass('dl-horizontal')) {
       scope.options.style = 'horizontal';
     } else {
@@ -32,5 +32,5 @@
         scope.selection.removeClass('dl-horizontal');
       }
     };
-  </admin-script>
+  </script>
 </component>

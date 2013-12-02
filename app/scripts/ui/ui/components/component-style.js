@@ -44,12 +44,12 @@ angular.module('bricksApp.ui')
               return condition;
             });
 
-            if (scope.component['admin-script']) {
-              eval(scope.component['admin-script']); // jshint ignore:line
+            if (scope.component['script']) {
+              eval(scope.component['script']); // jshint ignore:line
             }
 
-            if (scope.component.admin) {
-              form.append($compile(scope.component.admin)(scope));
+            if (scope.component.options) {
+              form.append($compile(scope.component.options)(scope));
             }
           });
 

@@ -4,7 +4,7 @@
     <img src="http://placehold.it/100x100" alt="">
   </template>
   <selector>img</selector>
-  <admin>
+  <options>
     <div class="form-group">
       <label for="optionsImageSrc">URL</label>
       <input type="text" id="optionsImageSrc" ng-model="options.src"
@@ -16,8 +16,8 @@
         ng-options="k for k in ['yes', 'no']" ng-change="change()">
       </select>
     </div>
-  </admin>
-  <admin-script>
+  </options>
+  <script>
     scope.options.src = scope.selection.attr('src');
 
     if (scope.selection.hasClass('img-responsive')) {
@@ -35,5 +35,5 @@
         scope.selection.removeClass('img-responsive');
       }
     };
-  </admin-script>
+  </script>
 </component>

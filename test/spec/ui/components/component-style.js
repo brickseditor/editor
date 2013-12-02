@@ -13,8 +13,8 @@ describe('Directive: componentStyle', function () {
         '<name>test</name>' +
         '<template><div>test</div></template>' +
         '<selector>.test</selector>' +
-        '<admin><div class="admin">admin</div></admin>' +
-        '<admin-script>scope.options.test = "yes"</admin-script>' +
+        '<options><div class="admin">admin</div></options>' +
+        '<script>scope.options.test = "yes"</script>' +
         '<component>'
     );
 
