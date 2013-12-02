@@ -36,7 +36,6 @@
     "commit": "ebe7c24e5511579479715665ee13f0d31f2ba2c0"
   },
   "_source": "git://github.com/angular-ui/ui-codemirror.git",
-  "_target": "~0.0.5",
-  "_originalSource": "angular-ui-codemirror",
-  "_direct": true
+  "_target": "0.0.5",
+  "_originalSource": "angular-ui-codemirror"
 }

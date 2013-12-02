@@ -248,8 +248,9 @@
 
 angular.module('bricksApp.storage', ['firebase'])
 
-  .factory('localData', function ($q, $window) {
+  .service('localStorage', function ($window) {
     var data = {};
+    var indexes = {};
     var prefix;
 
     var getTable = function (tableName) {
@@ -257,121 +258,303 @@ angular.module('bricksApp.storage', ['firebase'])
       return dataString ? angular.fromJson(dataString) : [];
     };
 
-    var saveTable = function (tableName) {
+    var saveTable = function (tableName, success, error) {
       var dataString = data[tableName] ?
         angular.toJson(data[tableName]) :
         '';
-      $window.localStorage.setItem(prefix + tableName, dataString);
+      var saved = false;
+
+      try {
+        $window.localStorage.setItem(prefix + tableName, dataString);
+        saved = true;
+      } catch (e) {
+        if (error) {
+          error();
+        }
+      } finally {
+        if (saved && success) {
+          success();
+        }
+      }
     };
 
-    return function (app, scope) {
-      var deferred = $q.defer();
+    var getIndex = function (tableName, id) {
+      var index;
 
-      data = scope.data;
+      if (indexes[tableName]) {
+        index = indexes[tableName][id];
+      } else {
+        index = -1;
+      }
+
+      return index;
+    };
+
+    var updateIndexes = function (tableName, start) {
+      start = start || 0;
+
+      indexes[tableName] = indexes[tableName] || [];
+
+      for (var i = start; i < data[tableName].length; i++) {
+        var id = data[tableName][i].id;
+        indexes[tableName][id] = i;
+      }
+    };
+
+    var load = function (tableName, success) {
+      if (!data[tableName]) {
+        data[tableName] = getTable(tableName);
+        updateIndexes(tableName);
+      }
+
+      if (success) {
+        success();
+      }
+
+      return data[tableName];
+    };
+
+    var Storage = function (app) {
       prefix = 'bricks_app_' + app.id + '_';
 
-      app.tables.forEach(function (table) {
-        scope.data[table.name] = getTable(table.name);
-
-        scope.$watch('data.' + table.name, function () {
-          saveTable(table.name);
-        }, true);
-      });
-
-      deferred.resolve();
-
-      return deferred.promise;
+      return Storage;
     };
-  })
 
-  .factory('firebaseData', function ($rootScope, angularFire) {
-    return function (app, scope) {
-      return angularFire(new Firebase(
-        'https://' + app.settings.firebase + '.firebaseio.com'
-      ), scope, 'data');
+    Storage.all = function (tableName, success, error) {
+      return load(tableName, success, error);
     };
-  })
 
-  .service('storage', function ($q, $rootScope, firebaseData, localData) {
-    var Storage = $rootScope.$new();
+    Storage.get = function (tableName, id, success, error) {
+      load(tableName);
 
-    Storage.init = function (app) {
-      var promise;
+      var index = getIndex(tableName, id);
 
-      Storage.data = {};
+      if (index > -1) {
+        if (success) {
+          success();
+        }
 
-      if (app.storage === 'firebase') {
-        promise = firebaseData(app, Storage);
-      } else {
-        promise = localData(app, Storage);
+        return data[tableName][index];
       }
 
-      return promise.then(function () {
-        return Storage;
-      });
-    };
-
-    Storage.all = function (tableName) {
-      if (tableName) {
-        return Storage.data[tableName];
-      } else {
-        return Storage.data;
+      if (error) {
+        error();
       }
     };
 
-    Storage.get = function (tableName, id) {
-      var row;
+    Storage.add = function (tableName, row, success, error) {
+      load(tableName);
 
-      if (Storage.data[tableName]) {
-        Storage.data[tableName].some(function (storedRow) {
-          if (storedRow.id === id) {
-            row = storedRow;
-            return true;
-          }
-        });
-      }
-
-      return row;
-    };
-
-    Storage.add = function (tableName, row) {
       var date = (new Date()).toISOString().split('.')[0].replace('T', ' ');
 
       row.id = uuid();
       row.created_at = date; // jshint ignore:line
       row.updated_at = date; // jshint ignore:line
 
-      Storage.data[tableName] = Storage.data[tableName] || [];
-      Storage.data[tableName].push(row);
+      data[tableName] = data[tableName] || [];
+      indexes[tableName] = indexes[tableName] || {};
+
+      var index = data[tableName].length;
+
+      indexes[tableName][row.id] = index;
+      data[tableName][index] = row;
+
+      saveTable(tableName, success, error);
     };
 
-    Storage.update = function (tableName, row) {
-      if (Storage.data[tableName]) {
-        Storage.data[tableName].some(function (storedRow, i) {
-          if (storedRow.id === row.id) {
-            Storage.data[tableName][i] = row;
-            return true;
-          }
-        });
+    Storage.update = function (tableName, row, success, error) {
+      load(tableName);
+
+      var index = getIndex(tableName, row.id);
+
+      if (index > -1) {
+        data[tableName][index] = row;
+
+        return saveTable(tableName, success, error);
+      }
+
+      if (error) {
+        error();
       }
     };
 
-    Storage.remove = function (tableName, row) {
-      if (Storage.data[tableName]) {
-        Storage.data[tableName].some(function (storedRow, i) {
-          if (storedRow.id === row.id) {
-            Storage.data[tableName].splice(i, 1);
-            return true;
-          }
-        });
+    Storage.remove = function (tableName, row, success, error) {
+      load(tableName);
+
+      var index = getIndex(tableName, row.id);
+
+      if (index > -1) {
+        data[tableName].splice(index, 1);
+        updateIndexes(tableName, index);
+
+        return saveTable(tableName, success, error);
+      }
+
+      if (error) {
+        error();
       }
     };
 
-    Storage.clear = function (tableName) {
-      Storage.data[tableName].length = 0;
+    Storage.clear = function (tableName, success, error) {
+      load(tableName);
+
+      indexes[tableName] = {};
+      data[tableName].length = 0;
+
+      saveTable(tableName, success, error);
     };
 
     return Storage;
+  })
+
+  .factory('firebaseStorage', function (Firebase, angularFireCollection) {
+    var data = {};
+    var url;
+
+    var Storage = function (app) {
+      url = 'https://' + app.settings.firebase + '.firebaseio.com/';
+      return Storage;
+    };
+
+    var load = function (tableName, success, error) {
+      if (data[tableName]) {
+        if (success) {
+          success();
+        }
+      } else {
+        var ref = new Firebase(url + tableName);
+
+        ref.once('value', function () {
+          if (success) {
+            success();
+          }
+        }, function () {
+          if (error) {
+            error();
+          }
+        });
+
+        data[tableName] = angularFireCollection(
+          ref,
+          null,
+          function (action, item) {
+            if (action === 'item_added' && !item.id) {
+              item.id = item.$id;
+              item.$ref.child('id').set(item.$id);
+            }
+          }
+        );
+      }
+      return data[tableName];
+    };
+
+    Storage.all = function (tableName, success, error) {
+      return load(tableName, success, error);
+    };
+
+    Storage.get = function (tableName, id, success, error) {
+      var row = {};
+
+      load(tableName, function () {
+        var result = data[tableName].getByName(id);
+
+        if (result) {
+          angular.copy(result, row);
+
+          if (success) {
+            success();
+          }
+        } else {
+          if (error) {
+            error();
+          }
+        }
+      });
+
+      return row;
+    };
+
+    Storage.add = function (tableName, row, success, error) {
+      var date = (new Date()).toISOString().split('.')[0].replace('T', ' ');
+
+      row.created_at = date; // jshint ignore:line
+      row.updated_at = date; // jshint ignore:line
+
+      load(tableName, function () {
+        data[tableName].add(row, function (err) {
+          if (err) {
+            if (error) {
+              error();
+            }
+          } else {
+            if (success) {
+              success();
+            }
+          }
+        });
+      });
+    };
+
+    Storage.update = function (tableName, row, success, error) {
+      load(tableName, function () {
+        data[tableName].update(row, function (err) {
+          if (err) {
+            if (error) {
+              error();
+            }
+          } else {
+            if (success) {
+              success();
+            }
+          }
+        });
+      });
+    };
+
+    Storage.remove = function (tableName, row, success, error) {
+      load(tableName, function () {
+        data[tableName].remove(row, function (err) {
+          if (err) {
+            if (error) {
+              error();
+            }
+          } else {
+            if (success) {
+              success();
+            }
+          }
+        });
+      });
+    };
+
+    Storage.clear = function (tableName, success, error) {
+      (new Firebase(url + tableName)).remove(function (err) {
+        if (err) {
+          if (error) {
+            error();
+          }
+        } else {
+          if (success) {
+            success();
+          }
+        }
+      });
+    };
+
+    return Storage;
+  })
+
+  .factory('storage', function ($injector) {
+    return function (app) {
+      var storage;
+
+      if (app.storage) {
+        storage = app.storage + 'Storage';
+      } else {
+        storage = 'localStorage';
+      }
+      return $injector.get(storage)(app);
+    };
   });
 
 'use strict';
@@ -384,7 +567,7 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
         template: page.template,
         resolve: {
           Storage: ['$window', 'storage', function ($window, storage) {
-            return storage.init($window.bricksApp);
+            return storage($window.bricksApp);
           }]
         }
       });
@@ -401,12 +584,13 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
 
   .controller('MainCtrl', function ($location, $parse, $routeParams, $scope, $window, Storage) {
     var routeKeys = Object.keys($routeParams);
+    var data = {};
 
-    $scope.$watch(function () {
-      return Storage.all();
-    }, function (data) {
-      $scope.data = data;
+    $window.bricksApp.tables.forEach(function (table) {
+      data[table.name] = Storage.all(table.name);
     });
+
+    $scope.data = data;
 
     if (routeKeys.length > 0) {
       routeKeys.forEach(function (table) {
@@ -415,21 +599,57 @@ angular.module('bricksApp', ['ngRoute', 'bricksApp.storage'])
     }
 
     $scope.add = function (table, instance) {
-      Storage.add(table, angular.copy(instance));
-      $scope[table] = {};
+      Storage.add(table, angular.copy(instance), function () {
+        $scope[table] = {};
+        $scope.$broadcast('database-row-added');
+      });
     };
 
     $scope.update = function (table, instance) {
-      Storage.update(table, instance);
+      Storage.update(table, instance, function () {
+        $scope.$broadcast('database-row-updated');
+      });
     };
 
     $scope.remove = function (table, instance) {
-      Storage.remove(table, instance);
+      Storage.remove(table, instance, function () {
+        $scope.$broadcast('database-row-removed');
+      });
     };
 
-    $scope.visit = function (url) {
-      $location.path(url);
+    $scope.visit = function (url, table) {
+      var path;
+
+      if (table) {
+        path = url.replace(/:(\w+)/, table.id);
+      } else {
+        path = url;
+      }
+
+      $location.path(path);
     };
 
     eval($window.bricksApp.js); // jshint ignore:line
   });
+
+angular.forEach(
+  {
+    'database-row-added': 'eventDatabaseRowAdded',
+    'database-row-updated': 'eventDatabaseRowUpdated',
+    'database-row-removed': 'eventDatabaseRowRemoved'
+  },
+  function (directiveName, eventName) {
+    angular.module('bricksApp').directive(directiveName, function ($parse) {
+      return {
+        compile: function ($element, attr) {
+          var fn = $parse(attr[directiveName]);
+          return function (scope) {
+            scope.$on(eventName, function (e) {
+              fn(scope, {$event: e});
+            });
+          };
+        }
+      };
+    });
+  }
+);
