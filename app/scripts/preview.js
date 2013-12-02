@@ -84,7 +84,7 @@ angular.forEach(
       return {
         compile: function ($element, attr) {
           var fn = $parse(attr[directiveName]);
-          return function (scope, element, attr) {
+          return function (scope) {
             scope.$on(eventName, function (e) {
               fn(scope, {$event: e});
             });

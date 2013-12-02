@@ -44,8 +44,8 @@ angular.module('bricksApp.ui')
               return condition;
             });
 
-            if (scope.component['script']) {
-              eval(scope.component['script']); // jshint ignore:line
+            if (scope.component.script) {
+              eval(scope.component.script); // jshint ignore:line
             }
 
             if (scope.component.options) {

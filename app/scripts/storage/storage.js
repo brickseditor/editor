@@ -45,7 +45,7 @@ angular.module('bricksApp.storage', ['firebase'])
     };
 
     var updateIndexes = function (tableName, start) {
-      var start = start || 0;
+      start = start || 0;
 
       indexes[tableName] = indexes[tableName] || [];
 
@@ -75,7 +75,7 @@ angular.module('bricksApp.storage', ['firebase'])
     };
 
     Storage.all = function (tableName, success, error) {
-      return load(tableName);
+      return load(tableName, success, error);
     };
 
     Storage.get = function (tableName, id, success, error) {

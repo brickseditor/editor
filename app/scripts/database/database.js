@@ -14,8 +14,6 @@ angular.module('bricksApp.database', [
   })
 
   .controller('DatabaseCtrl', function ($scope, $window, apps, storage) {
-    var Storage;
-
     var defaultTableColumns = [{
       field: 'actions',
       displayName: '',
@@ -59,7 +57,7 @@ angular.module('bricksApp.database', [
       enablePinning: true,
       enableRowSelection: false,
       pagingOptions: {
-        pageSizes: [20, 50, 100], 
+        pageSizes: [20, 50, 100],
         pageSize: 20,
         totalServerItems: 0,
         currentPage: 1
@@ -85,7 +83,7 @@ angular.module('bricksApp.database', [
       if ($scope.app.id !== id) {
         $scope.app = apps.current();
 
-        var Storage = storage($scope.app);
+        Storage = storage($scope.app);
 
         if ($scope.app.tables) {
           $scope.selectTable(0);
