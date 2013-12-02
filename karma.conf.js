@@ -29,6 +29,7 @@ module.exports = function(config) {
       'app/scripts/**/*.js',
       'app/scripts/*.js',
       'app/scripts/**/*.html',
+      'app/components/*.html',
       'test/spec/**/*.js'
     ],
 
@@ -40,7 +41,8 @@ module.exports = function(config) {
 
     preprocessors: {
       'app/scripts/**/*.js': 'coverage',
-      'app/scripts/**/*.html': 'ng-html2js'
+      'app/scripts/**/*.html': 'ng-html2js',
+      'app/components/*.html': 'ng-html2js'
     },
 
     ngHtml2JsPreprocessor: {

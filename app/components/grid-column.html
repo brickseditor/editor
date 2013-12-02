@@ -9,62 +9,75 @@
   </selector>
   <options>
     <div class="form-group">
-      <label for="optionsGridColumnWidth">Column width</label>
-      <select id="optionsGridColumnWidth" ng-model="options.width"
-        ng-options="k for k in options.widths" ng-change="change()">
+      <label for="optionsGridColumnXs">Width on phones</label>
+      <select id="optionsGridColumnXs" class="form-control"
+        ng-options="k for k in options.zeroToTwelve" ng-change="change()"
+        ng-model="options.widths.xs">
+        <option value="">auto</option>
       </select>
     </div>
     <div class="form-group">
-      <label for="optionsGridColumnDevices">Collapse on</label>
-      <select id="optionsGridColumnDevices" ng-model="options.devices"
-        ng-change="change()">
-        <option value="lg">all small and medium screens</option>
-        <option value="md">tablets and phones</option>
-        <option value="sm">phones only</option>
-        <option value="xs">neither</option>
+      <label for="optionsGridColumnSm">Width on tablets</label>
+      <select id="optionsGridColumnSm" class="form-control"
+        ng-options="k for k in options.zeroToTwelve" ng-change="change()"
+        ng-model="options.widths.sm">
+        <option value="">same as phones</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="optionsGridColumnMd">Width on desktops</label>
+      <select id="optionsGridColumnMd" class="form-control"
+        ng-options="k for k in options.zeroToTwelve" ng-change="change()"
+        ng-model="options.widths.md">
+        <option value="">same as tablets</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="optionsGridColumnLg">Width on large desktops</label>
+      <select id="optionsGridColumnLg" class="form-control"
+        ng-options="k for k in options.zeroToTwelve" ng-change="change()"
+        ng-model="options.widths.lg">
+        <option value="">same as desktops</option>
       </select>
     </div>
   </options>
   <script>
-    var classes = [];
-    var currentDeviceWidthClass = '';
+    var screens = ['xs', 'sm', 'md', 'lg'];
+    var currentClasses = [];
 
-    scope.options.widths = Array.apply(0, Array(12)).map(function (x, i) {
+    scope.options.zeroToTwelve = Array.apply(0, Array(12)).map(function (x, i) {
       return i + 1 + '';
     });
 
-    // Gets all the column classes of the element.
-    scope.selection.attr('class').split(' ').forEach(function (c) {
-      if (c.indexOf('col-') === 0) {
-        c = c.split('-');
-        classes.push({
-          devices: c[1],
-          width: c[2]
-        });
-      }
-    });
+    // Gets all the column widths of the element.
+    scope.options.widths = {};
 
-    // Gets the width and column type of the current element.
-    ['xs', 'sm', 'md', 'lg'].some(function (t) {
-      classes.some(function (c) {
-        if (c.devices === t) {
-          scope.options.devices = c.devices;
-          scope.options.width = c.width;
-          currentDeviceWidthClass = 'col-' + c.devices + '-' + c.width;
-          return true;
+    var classes = scope.selection.attr('class');
+    if (classes) {
+      classes.split(' ').forEach(function (className) {
+        var parts = className.split('-');
+        var isColumn = parts[0] === 'col';
+        var isBootstrapColumn = screens.indexOf(parts[1]) > -1;
+
+        if (parts.length === 3 && isColumn && isBootstrapColumn) {
+          currentClasses.push(className);
+          scope.options.widths[parts[1]] = parts[2];
         }
       });
-    });
+    }
 
     // Updates the selection classes.
     scope.update = function () {
-      var newDeviceWidthClass = 'col-' + scope.options.devices + '-' +
-                                scope.options.width;
+      var newClasses = [];
+      Object.keys(scope.options.widths).forEach(function (screen) {
+        newClasses.push('col-' + screen + '-' + scope.options.widths[screen]);
+      });
 
-      scope.selection.removeClass(currentDeviceWidthClass)
-        .addClass(newDeviceWidthClass);
+      scope.selection
+        .removeClass(currentClasses.join(' '))
+        .addClass(newClasses.join(' '));
 
-      currentDeviceWidthClass = newDeviceWidthClass;
+      currentClasses = angular.copy(newClasses);
     };
   </script>
 </component>
