@@ -3,23 +3,23 @@
   "version": "0.0.0",
   "dependencies": {
     "angular": "1.2.0",
-    "json3": "~3.2.4",
-    "jquery": "~1.10.2",
-    "bootstrap": "~3.0.0",
-    "es5-shim": "~2.1.0",
+    "json3": "3.2.4",
+    "jquery": "1.10.2",
+    "bootstrap": "3.0.0",
+    "es5-shim": "2.1.0",
     "angular-resource": "1.2.0",
     "angular-route": "1.2.0",
     "angular-animate": "1.2.0",
-    "node-uuid": "~1.4.1",
+    "node-uuid": "1.4.1",
     "angular-ui-codemirror": "0.0.5",
-    "font-awesome": "~4.0.0",
-    "js-beautify": "~1.4.1",
+    "font-awesome": "4.0.0",
+    "js-beautify": "1.4.1",
     "Blob.js": "https://github.com/eligrey/Blob.js/archive/b5453eee554f109a23c096615415a035de2183f4.zip",
     "FileSaver": "https://github.com/eligrey/FileSaver.js/archive/d8c81c105f3f952326ead7700c8cf6da2690eba0.zip",
     "jszip": "https://github.com/Stuk/jszip/archive/7718693d50a35d48824204d6781f24c0b0a1d818.zip",
-    "ng-grid": "~2.0.7",
+    "ng-grid": "2.0.7",
     "angular-fire": "https://github.com/firebase/angularFire/archive/4041dadae6705eaf8178afb963f277f3b2bed6b2.zip",
-    "lodash": "~2.3.0"
+    "lodash": "2.3.0"
   },
   "devDependencies": {
     "angular-mocks": "1.2.0"
