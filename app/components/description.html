@@ -1,5 +1,4 @@
-<component>
-  <name>Description</name>
+<component name="bootstrap-description" title="Description">
   <template>
     <dl>
       <dt>Defined Term 1</dt>
@@ -13,24 +12,28 @@
     <div class="checkbox">
       <label>
         <input type="checkbox" id="optionsDescriptionStyle"
-          ng-model="options.horizontal" ng-change="change()">
+          ng-model="options.horizontal" ng-change="update()">
         Horizontal style
       </label>
     </div>
   </options>
   <script>
-    if (scope.selection.hasClass('dl-horizontal')) {
-      scope.options.horizontal = true;
-    } else {
-      scope.options.horizontal = false;
-    }
+    register('bootstrap-description', function (selection) {
+      var options = this.options = {};
 
-    scope.update = function () {
-      if (scope.options.horizontal) {
-        scope.selection.addClass('dl-horizontal');
+      if (selection.hasClass('dl-horizontal')) {
+        options.horizontal = true;
       } else {
-        scope.selection.removeClass('dl-horizontal');
+        options.horizontal = false;
       }
-    };
+
+      this.update = function () {
+        if (options.horizontal) {
+          selection.addClass('dl-horizontal');
+        } else {
+          selection.removeClass('dl-horizontal');
+        }
+      };
+    });
   </script>
 </component>

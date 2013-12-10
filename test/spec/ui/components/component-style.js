@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Directive: componentStyle', function () {
-  var element, scope, uiCtrl;
+  var element, scope, selection, uiCtrl;
 
   beforeEach(module('bricksApp.ui'));
   beforeEach(module('scripts/ui/ui/components/component-style.html'));
@@ -13,13 +13,16 @@ describe('Directive: componentStyle', function () {
         '<name>test</name>' +
         '<template><div>test</div></template>' +
         '<selector>.test</selector>' +
-        '<options><div class="admin">admin</div></options>' +
-        '<script>scope.options.test = "yes"</script>' +
+        '<options><div class="admin">{{options.test}}</div></options>' +
+        '<script>register("test", function (selection) {' +
+        'this.options = {test: selection[0].tagName}; this.update = function () {};' +
+        '});</script>' +
         '<component>'
     );
 
     var ui = $compile(angular.element('<div ui>'))($rootScope);
-    var selection = angular.element('<div class="test">');
+
+    selection = angular.element('<div class="test">');
 
     uiCtrl = ui.controller('ui');
     spyOn(uiCtrl, 'selection').andReturn(selection);
@@ -33,16 +36,9 @@ describe('Directive: componentStyle', function () {
     scope = element.isolateScope();
   }));
 
-  it('should set the scope objects used by the components', function () {
-    expect(scope.options).toEqual({});
-    expect(typeof(scope.update)).toBe('function');
-    expect(typeof(scope.change)).toBe('function');
-  });
-
   it('should update the template', function () {
-    spyOn(scope, 'update');
-    scope.change();
-    expect(scope.update).toHaveBeenCalled();
+    scope.selection = selection;
+    scope.$digest();
     expect(uiCtrl.selection).toHaveBeenCalled();
     expect(uiCtrl.updateTemplate).toHaveBeenCalled();
   });
@@ -50,11 +46,12 @@ describe('Directive: componentStyle', function () {
   it('should set the selected element', inject(function ($timeout) {
     scope.$emit('selection');
     $timeout.flush();
+
+    var admin = element.find('form .admin');
+
     expect(scope.selection[0].tagName).toBe('DIV');
     expect(scope.selection[0].className).toBe('test');
-    expect(scope.component.name).toBe('test');
-    expect(scope.component.template).toBe('<div>test</div>');
-    expect(scope.options.test).toBe('yes');
-    expect(element.find('form .admin').length).toBe(1);
+    expect(admin.length).toBe(1);
+    expect(admin.html()).toBe(selection[0].tagName);
   }));
 });

@@ -49,7 +49,7 @@ angular.module('bricksApp.ui', [
           }
         };
 
-        components.all().then(function (all) {
+        components.all(function (all) {
           $scope.components = all;
         });
 
@@ -62,28 +62,78 @@ angular.module('bricksApp.ui', [
     };
   })
 
-  .service('components', function ($http, $templateCache) {
+  .service('components', function ($compile, $http, $rootScope, $templateCache) {
     // Gets the components template and parses it to return an object.
     var promise = $http.get('components/components.html', {cache: $templateCache})
       .then(function (response) {
-        var components = [];
+        var components = {};
+
+        var register = function (name, script) {
+          components[name].script = script;
+        };
 
         angular.element('<div>' + response.data + '</div>').find('component')
           .each(function (i, component) {
-            var object = {};
+            var object = {
+              name: component.getAttribute('name'),
+              title: component.getAttribute('title')
+            };
 
             [].forEach.call(component.children, function (child) {
               object[child.nodeName.toLowerCase()] = child.innerHTML.trim();
             });
-            components.push(object);
+            components[object.name] = object;
+
+            if (object.script) {
+              (new Function('register', object.script))(register);
+            }
           });
 
         return components;
       });
 
+    var compileOptions = function (component, element) {
+      if (!component.options) {
+        return;
+      }
+
+      var scope = $rootScope.$new(true);
+
+      if (component.script) {
+        angular.extend(scope, new component.script(element));
+      }
+
+      return $compile(component.options)(scope);
+    };
+
     return {
-      all: function () {
-        return promise;
+      all: function (cb) {
+        promise.then(cb);
+      },
+
+      each: function (cb) {
+        promise.then(function (components) {
+          Object.keys(components).forEach(function (name) {
+            cb(components[name]);
+          });
+        });
+      },
+
+      forElement: function (element, cb) {
+        promise.then(function (components) {
+          Object.keys(components).forEach(function (name) {
+            var component = angular.copy(components[name]);
+
+            if (!element.is) {
+              element = angular.element(element);
+            }
+
+            if (element.is(component.selector)) {
+              component.options = compileOptions(component, element);
+              cb(component);
+            }
+          });
+        });
       }
     };
   });

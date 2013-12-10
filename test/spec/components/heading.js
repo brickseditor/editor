@@ -1,53 +1,42 @@
 'use strict';
 
 describe('Component: heading', function () {
-  var options, component, scope, template;
+  var components, scope;
 
-  beforeEach(module('bricksApp'));
+  beforeEach(module('bricksApp.ui'));
   beforeEach(module('components/heading.html'));
 
-  beforeEach(inject(function ($compile, $rootScope, $templateCache) {
-    var componentXML = $templateCache.get('components/heading.html');
-    componentXML = angular.element(componentXML);
+  beforeEach(inject(function (_$rootScope_, _$templateCache_, _components_) {
+    _$templateCache_.put(
+      'components/components.html',
+      _$templateCache_.get('components/heading.html')
+    );
 
-    component = {};
-    [].forEach.call(componentXML[0].children, function (child) {
-      component[child.nodeName.toLowerCase()] = child.innerHTML.trim();
-    });
-
-    options = $compile('<form>' + component.options + '</form>')($rootScope);
-    scope = $rootScope;
-    scope.options = {};
+    scope = _$rootScope_;
+    components = _components_;
   }));
 
   it('should read the type of the selected node', function () {
-    scope.selection = angular.element('<h3>');
-    eval(component['script']);
-    scope.$digest();
+    components.forElement('<h3>', function (component) {
+      var select = component.options.find('#optionsHeadingType option:selected');
+      expect(select.text()).toBe('heading 3');
+    });
 
-    var select = options.find('#optionsHeadingType option:selected');
-    expect(select.text()).toBe('heading 3');
-
-    scope.selection = angular.element('<h5>');
-    eval(component['script']);
-    scope.$digest();
-
-    var select = options.find('#optionsHeadingType option:selected');
-    expect(select.text()).toBe('heading 5');
+    components.forElement('<h5>', function (component) {
+      var select = component.options.find('#optionsHeadingType option:selected');
+      expect(select.text()).toBe('heading 5');
+    });
   });
 
   it('should change the type of the selected node', function () {
-    scope.selection = angular.element('<h2>');
-    eval(component['script']);
+    var element = angular.element('<h2>');
 
-    scope.options.type = 'H4';
-    scope.update();
+    components.forElement(element, function (component) {
+      scope.options.type = 'H4';
+      expect(element.prop('nodeName')).toBe('H4');
 
-    expect(scope.selection.prop('nodeName')).toBe('H4');
-
-    scope.options.type = 'H6';
-    scope.update();
-
-    expect(scope.selection.prop('nodeName')).toBe('H6');
+      scope.options.type = 'H6';
+      expect(element.prop('nodeName')).toBe('H6');
+    });
   });
 });

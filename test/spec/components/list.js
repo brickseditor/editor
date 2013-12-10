@@ -1,94 +1,75 @@
 'use strict';
 
 describe('Component: list', function () {
-  var options, component, scope, template;
+  var components, scope;
 
-  beforeEach(module('bricksApp'));
+  beforeEach(module('bricksApp.ui'));
   beforeEach(module('components/list.html'));
 
-  beforeEach(inject(function ($compile, $rootScope, $templateCache) {
-    var componentXML = $templateCache.get('components/list.html');
-    componentXML = angular.element(componentXML);
+  beforeEach(inject(function (_$rootScope_, _$templateCache_, _components_) {
+    _$templateCache_.put(
+      'components/components.html',
+      _$templateCache_.get('components/list.html')
+    );
 
-    component = {};
-    [].forEach.call(componentXML[0].children, function (child) {
-      component[child.nodeName.toLowerCase()] = child.innerHTML.trim();
-    });
-
-    options = $compile('<form>' + component.options + '</form>')($rootScope);
-    scope = $rootScope;
-    scope.options = {};
+    scope = _$rootScope_;
+    components = _components_;
   }));
 
   it('should read the type of the selected list', function () {
-    scope.selection = angular.element('<ul>');
-    eval(component['script']);
-    scope.$digest();
+    components.forElement('<ul>', function (component) {
+      expect(component.options.find('#optionsListType').val()).toBe('UL');
+    });
 
-    expect(options.find('#optionsListType').val()).toBe('UL');
-
-    scope.selection = angular.element('<ol>');
-    eval(component['script']);
-    scope.$digest();
-
-    expect(options.find('#optionsListType').val()).toBe('OL');
+    components.forElement('<ol>', function (component) {
+      expect(component.options.find('#optionsListType').val()).toBe('OL');
+    });
   });
 
   it('should change the type of the selected node', function () {
-    scope.selection = angular.element('<ol>');
-    eval(component['script']);
+    var element = angular.element('<ol>');
 
-    scope.options.type = 'UL';
-    scope.update();
+    components.forElement(element, function (component) {
+      scope.options.type = 'UL';
+      expect(element.prop('nodeName')).toBe('UL');
 
-    expect(scope.selection.prop('nodeName')).toBe('UL');
-
-    scope.options.type = 'OL';
-    scope.update();
-
-    expect(scope.selection.prop('nodeName')).toBe('OL');
+      scope.options.type = 'OL';
+      expect(element.prop('nodeName')).toBe('OL');
+    });
   });
 
   it('should read the style of the selected list', function () {
-    scope.selection = angular.element('<ol>');
-    eval(component['script']);
-    scope.$digest();
+    components.forElement('<ol>', function (component) {
+      var select = component.options.find('#optionsListStyle option:selected');
+      expect(select.text()).toBe('normal');
+    });
 
-    var select = options.find('#optionsListStyle option:selected');
-    expect(select.text()).toBe('normal');
+    components.forElement('<ol class="list-unstyled">', function (component) {
+      var select = component.options.find('#optionsListStyle option:selected');
+      expect(select.text()).toBe('unstyled');
+    });
 
-    scope.selection = angular.element('<ol class="list-unstyled">');
-    eval(component['script']);
-    scope.$digest();
-
-    var select = options.find('#optionsListStyle option:selected');
-    expect(select.text()).toBe('unstyled');
-
-    scope.selection = angular.element('<ol class="list-inline">');
-    eval(component['script']);
-    scope.$digest();
-
-    var select = options.find('#optionsListStyle option:selected');
-    expect(select.text()).toBe('inline');
+    components.forElement('<ol class="list-inline">', function (component) {
+      var select = options.find('#optionsListStyle option:selected');
+      expect(select.text()).toBe('inline');
+    });
   });
 
   it('should change the style of the selected list', function () {
-    scope.selection = angular.element('<ul>');
-    eval(component['script']);
+    var element = angular.element('<ul>');
 
-    scope.options.style = 'unstyled';
-    scope.update();
-    expect(scope.selection.hasClass('list-unstyled')).toBe(true);
-    expect(scope.selection.hasClass('list-inline')).toBe(false);
+    components.forElement(element, function (component) {
+      scope.options.style = 'unstyled';
+      expect(element.hasClass('list-unstyled')).toBe(true);
+      expect(element.hasClass('list-inline')).toBe(false);
 
-    scope.options.style = 'inline';
-    scope.update();
-    expect(scope.selection.hasClass('list-unstyled')).toBe(false);
-    expect(scope.selection.hasClass('list-inline')).toBe(true);
+      scope.options.style = 'inline';
+      expect(element.hasClass('list-unstyled')).toBe(false);
+      expect(element.hasClass('list-inline')).toBe(true);
 
-    scope.options.style = '';
-    scope.update();
-    expect(scope.selection.hasClass('list-unstyled')).toBe(false);
-    expect(scope.selection.hasClass('list-inline')).toBe(false);
+      scope.options.style = '';
+      expect(element.hasClass('list-unstyled')).toBe(false);
+      expect(element.hasClass('list-inline')).toBe(false);
+    });
   });
 });

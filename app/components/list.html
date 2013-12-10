@@ -1,5 +1,4 @@
-<component>
-  <name>List</name>
+<component name="bootstrap-list" title="List">
   <template>
     <ul>
       <li>List item 1.</li>
@@ -13,37 +12,41 @@
       <label for="optionsListType">Type</label>
       <select id="optionsListType" ng-model="options.type"
         ng-options="k as v for (k,v) in options.types"
-        ng-change="change()">
+        ng-change="update()">
       </select>
     </div>
     <div class="form-group">
       <label for="optionsListStyle">Style</label>
       <select id="optionsListStyle" ng-model="options.style"
         ng-options="k for k in ['unstyled', 'inline']"
-        ng-change="change()">
+        ng-change="update()">
         <option value="">normal</option>
       </select>
     </div>
   </options>
   <script>
-    scope.options.types = {UL: 'unordered', OL: 'ordered'};
-    scope.options.type = scope.selection.prop('nodeName');
+    register('bootstrap-list', function (selection) {
+      var options = this.options = {};
 
-    if (scope.selection.hasClass('list-unstyled')) {
-      scope.options.style = 'unstyled';
-    } else if (scope.selection.hasClass('list-inline')) {
-      scope.options.style = 'inline';
-    }
+      options.types = {UL: 'unordered', OL: 'ordered'};
+      options.type = selection.prop('nodeName');
 
-    scope.update = function () {
-      var newElement = document.createElement(scope.options.type);
-      newElement = angular.element(newElement);
-      newElement.append(scope.selection.contents())
-        .removeClass('list-inline list-unstyled')
-        .addClass('list-' + scope.options.style);
+      if (selection.hasClass('list-unstyled')) {
+        options.style = 'unstyled';
+      } else if (selection.hasClass('list-inline')) {
+        options.style = 'inline';
+      }
 
-      scope.selection.replaceWith(newElement);
-      scope.selection = newElement;
-    };
+      this.update = function () {
+        var newElement = document.createElement(options.type);
+        newElement = angular.element(newElement);
+        newElement.append(selection.contents())
+          .removeClass('list-inline list-unstyled')
+          .addClass('list-' + options.style);
+
+        selection.replaceWith(newElement);
+        selection = newElement;
+      };
+    });
   </script>
 </component>

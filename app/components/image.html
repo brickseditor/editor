@@ -1,5 +1,4 @@
-<component>
-  <name>Image</name>
+<component name="bootstrap-image" title="Image">
   <template>
     <img src="http://placehold.it/100x100" alt="">
   </template>
@@ -8,32 +7,36 @@
     <div class="form-group">
       <label for="optionsImageSrc">URL</label>
       <input type="text" id="optionsImageSrc" ng-model="options.src"
-        ng-change="change()">
+        ng-change="update()">
     </div>
     <div class="form-group">
       <label for="optionsImageResponsive">Responsive</label>
       <select id="optionsImageResponsive" ng-model="options.responsive"
-        ng-options="k for k in ['yes', 'no']" ng-change="change()">
+        ng-options="k for k in ['yes', 'no']" ng-change="update()">
       </select>
     </div>
   </options>
   <script>
-    scope.options.src = scope.selection.attr('src');
+    register('bootstrap-image', function (selection) {
+      var options = this.options = {};
 
-    if (scope.selection.hasClass('img-responsive')) {
-      scope.options.responsive = 'yes';
-    } else {
-      scope.options.responsive = 'no';
-    }
+      options.src = selection.attr('src');
 
-    scope.update = function () {
-      scope.selection.attr('src', scope.options.src);
-
-      if (scope.options.responsive === 'yes') {
-        scope.selection.addClass('img-responsive');
+      if (selection.hasClass('img-responsive')) {
+        options.responsive = 'yes';
       } else {
-        scope.selection.removeClass('img-responsive');
+        options.responsive = 'no';
       }
-    };
+
+      this.update = function () {
+        selection.attr('src', options.src);
+
+        if (options.responsive === 'yes') {
+          selection.addClass('img-responsive');
+        } else {
+          selection.removeClass('img-responsive');
+        }
+      };
+    });
   </script>
 </component>

@@ -1,5 +1,4 @@
-<component>
-  <name>Heading</name>
+<component name="bootstrap-heading" title="Heading">
   <template>
     <h1>This is a heading.</h1>
   </template>
@@ -9,23 +8,27 @@
       <label for="optionsHeadingType">Type</label>
       <select id="optionsHeadingType" ng-model="options.type"
         ng-options="k.value as k.label for k in options.types"
-        ng-change="change()">
+        ng-change="update()">
       </select>
     </div>
   </options>
   <script>
-    scope.options.types = Array.apply(0, Array(6)).map(function (x, i) {
-      var j = i + 1;
-      return {value: 'H' + j, label: 'heading ' + j};
-    });
-    scope.options.type = scope.selection.prop('nodeName');
+    register('bootstrap-heading', function () {
+      var options = this.options = {};
 
-    scope.update = function () {
-      var newElement = document.createElement(scope.options.type);
-      newElement = angular.element(newElement);
-      newElement.append(scope.selection.contents());
-      scope.selection.replaceWith(newElement);
-      scope.selection = newElement;
-    };
+      options.types = Array.apply(0, Array(6)).map(function (x, i) {
+        var j = i + 1;
+        return {value: 'H' + j, label: 'heading ' + j};
+      });
+      options.type = selection.prop('nodeName');
+
+      this.update = function () {
+        var newElement = document.createElement(options.type);
+        newElement = angular.element(newElement);
+        newElement.append(selection.contents());
+        selection.replaceWith(newElement);
+        selection = newElement;
+      };
+    });
   </script>
 </component>
