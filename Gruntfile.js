@@ -332,6 +332,7 @@ module.exports = function (grunt) {
     }
 
     grunt.task.run([
+      'newer:jshint',
       'clean:server',
       'concurrent:server',
       'autoprefixer',
