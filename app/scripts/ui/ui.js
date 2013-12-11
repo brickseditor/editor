@@ -85,7 +85,7 @@ angular.module('bricksApp.ui', [
             components[object.name] = object;
 
             if (object.script) {
-              (new Function('register', object.script))(register);
+              (new Function('register', object.script))(register); // jshint ignore:line
             }
           });
 
