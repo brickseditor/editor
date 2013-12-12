@@ -7,7 +7,7 @@ describe('Service: components', function () {
 
   beforeEach(inject(function (_$templateCache_, _$timeout_, _components_) {
     _$templateCache_.put(
-      'components/components.html',
+      'plugins/components.html',
       '<component><name>test 1</name></component>' +
         '<component><name>test 2</name>' +
         '<selector>.test</selector>' +
@@ -82,7 +82,7 @@ describe('Directive: ui', function () {
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache) {
     $templateCache.put(
-      'components/components.html',
+      'plugins/components.html',
       '<component><name>test 1</name></component>' +
         '<component><name>test 2</name></component>'
     );

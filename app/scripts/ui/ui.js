@@ -64,7 +64,7 @@ angular.module('bricksApp.ui', [
 
   .service('components', function ($compile, $http, $rootScope, $templateCache) {
     // Gets the components template and parses it to return an object.
-    var promise = $http.get('components/components.html', {cache: $templateCache})
+    var promise = $http.get('plugins/components.html', {cache: $templateCache})
       .then(function (response) {
         var components = {};
 

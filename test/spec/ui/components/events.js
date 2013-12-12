@@ -7,7 +7,7 @@ describe('Directive: events', function () {
   beforeEach(module('scripts/ui/ui/components/events.html'));
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache) {
-    $templateCache.put('components/components.html', '');
+    $templateCache.put('plugins/components.html', '');
 
     var ui = $compile(angular.element('<div ui>'))($rootScope);
     var selection = angular.element(

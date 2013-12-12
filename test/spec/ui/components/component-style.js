@@ -8,7 +8,7 @@ describe('Directive: componentStyle', function () {
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache) {
     $templateCache.put(
-      'components/components.html',
+      'plugins/components.html',
       '<component>' +
         '<name>test</name>' +
         '<template><div>test</div></template>' +
