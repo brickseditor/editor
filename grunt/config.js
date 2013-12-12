@@ -12,10 +12,6 @@ module.exports = function (bricks) {
         files: ['<%= bricks.app %>/styles/{,*/}*.css'],
         tasks: ['concat:server', 'newer:copy:styles', 'autoprefixer']
       },
-      components: {
-        files: '<%= bricks.plugins.components %>',
-        tasks: ['concat:server']
-      },
       tests: {
         files: [
           '<%= bricks.app %>/scripts/**/*.js',
@@ -114,12 +110,11 @@ module.exports = function (bricks) {
         }
       }
     },
-    // not used since Uglify task does concat,
-    // but still available if needed
     concat: {
       server: {
         files: {
           '.tmp/plugins/components.html': '<%= bricks.plugins.components %>',
+          '.tmp/plugins/styles.css': '<%= bricks.plugins.styles %>',
           '.tmp/scripts/build.js': [
             '<%= bricks.app %>/bower_components/node-uuid/uuid.js',
             '<%= bricks.app %>/scripts/storage/storage.js',
@@ -144,6 +139,7 @@ module.exports = function (bricks) {
             '<%= bricks.dist %>/scripts/**/*.js',
             '!<%= bricks.dist %>/scripts/{build,preview,storage/storage}.js',
             '<%= bricks.dist %>/styles/{,*/}*.css',
+            '!<%= bricks.dist %>/styles/build.css',
             '<%= bricks.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
             '<%= bricks.dist %>/styles/fonts/*'
           ]
@@ -239,7 +235,9 @@ module.exports = function (bricks) {
           cwd: '.tmp',
           dest: '<%= bricks.dist %>',
           src: [
-            'scripts/build.js'
+            'plugins/styles.css',
+            'scripts/build.js',
+            'styles/build.css'
           ]
         }]
       },
@@ -281,7 +279,10 @@ module.exports = function (bricks) {
         files: [{
           expand: true,
           cwd: '.tmp/concat/scripts',
-          src: ['*.js', '!build.js', '!preview.js', '!storage/storage.js'],
+          src: [
+            '*.js',
+            '!{build,preview,storage/storage}.js'
+          ],
           dest: '.tmp/concat/scripts'
         }]
       }

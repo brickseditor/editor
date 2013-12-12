@@ -11,6 +11,7 @@ describe('Directive: exportApp', function () {
   beforeEach(inject(function (_$compile_, _$httpBackend_, _$rootScope_) {
     $httpBackend = _$httpBackend_;
     $httpBackend.when('GET', 'build.html').respond('<head></head>test html');
+    $httpBackend.when('GET', 'plugins/styles.css').respond('style');
     $httpBackend.when('GET', 'scripts/build.js').respond('script');
 
     _$rootScope_.currentApp = {name: 'test'};
@@ -32,6 +33,7 @@ describe('Directive: exportApp', function () {
       expect(zipApp.save).toHaveBeenCalledWith('test', {
         'index.html' : '<head>\n<script>window.bricksApp = ' +
           'JSON.parse(\'{"name":"test"}\');</script>\n</head>test html',
+        'styles/build.css': 'style',
         'scripts/build.js': 'script'
       });
     });

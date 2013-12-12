@@ -1,34 +1,22 @@
 'use strict';
 
 angular.module('bricksApp.apps')
-  .directive('exportApp', function ($http, zipApp) {
-    var loadHtml = function () {
-      return $http.get('build.html', {cache: true})
-        .then(function (response) {
-          return response.data;
-        });
+  .directive('exportApp', function ($http, $q, zipApp) {
+    var urls = {
+      'index.html': $http.get('build.html', {cache: true}),
+      'styles/build.css': $http.get('plugins/styles.css', {cache: true}),
+      'scripts/build.js': $http.get('scripts/build.js', {cache: true})
     };
 
-    var loadScripts = function () {
-      return $http.get('scripts/build.js', {cache: true})
-        .then(function (response) {
-          return response.data;
-        });
-    };
+    var files = $q.all(urls)
+      .then(function (responses) {
+        var files = {};
 
-    var loadFiles = (function () {
-      var files = {};
-
-      return loadHtml()
-        .then(function (html) {
-          files['index.html'] = html;
-          return loadScripts();
-        })
-        .then(function (scripts) {
-          files['scripts/build.js'] = scripts;
-          return files;
+        Object.keys(responses).forEach(function (file) {
+          files[file] = responses[file].data;
         });
-    })();
+        return files;
+      });
 
     var escapeJson = function (string) {
       var escapes = {
@@ -54,7 +42,7 @@ angular.module('bricksApp.apps')
       },
       link: function (scope, element) {
         scope.exportApp = function () {
-          return loadFiles.then(function (files) {
+          return files.then(function (files) {
             var inlineScript = '<script>window.bricksApp = JSON.parse(\'' +
               escapeJson(angular.toJson(scope.app())) +
               '\');</script>';

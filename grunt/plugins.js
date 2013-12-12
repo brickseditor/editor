@@ -20,26 +20,37 @@ module.exports = function (grunt, pluginsDir) {
     return configs;
   }
 
-  function getComponentsFiles(configs) {
-    var files = [];
+  function getFiles(configs) {
+    var files = {components: [], styles: []};
 
     Object.keys(configs).forEach(function (pluginDir) {
-      var file = path.join(
-        pluginsDir,
-        pluginDir,
-        configs[pluginDir].components,
-        '*.html'
-      );
-      files.push(file);
+      var base = pluginsDir + '/' + pluginDir + '/';
+
+      if (configs[pluginDir].components) {
+        var components = [].concat(configs[pluginDir].components);
+
+        components.forEach(function (component) {
+          files.components.push(base + component);
+        });
+      }
+
+      if (configs[pluginDir].styles) {
+        var styles = [].concat(configs[pluginDir].styles);
+
+        styles.forEach(function (style) {
+          files.styles.push(base + style);
+        });
+      }
     });
 
     return files;
   }
 
-  var configs = getPluginsConfigs(pluginsDir);
+  var files = getFiles(getPluginsConfigs(pluginsDir));
 
   return {
     path: pluginsDir,
-    components: getComponentsFiles(configs)
+    components: files.components,
+    styles: files.styles
   };
 };
