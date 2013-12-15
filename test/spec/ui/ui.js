@@ -1,13 +1,15 @@
 'use strict';
 
 describe('Service: components', function () {
-  var $timeout, components;
+  var $httpBackend, components;
 
   beforeEach(angular.mock.module('bricksApp.ui'));
 
-  beforeEach(inject(function (_$templateCache_, _$timeout_, _components_) {
-    _$templateCache_.put(
-      'plugins/components.html',
+  beforeEach(inject(function (_$httpBackend_, _components_) {
+    $httpBackend = _$httpBackend_;
+    components = _components_;
+
+    $httpBackend.when('GET', 'plugins/components.html').respond(
       '<component><name>test 1</name></component>' +
         '<component><name>test 2</name>' +
         '<selector>.test</selector>' +
@@ -15,10 +17,13 @@ describe('Service: components', function () {
         '<script>register("test 2", function (element) {' +
         'this.name = "test"});</script></component>'
     );
-
-    $timeout = _$timeout_;
-    components = _components_;
+    $httpBackend.expectGET('plugins/components.html');
   }));
+
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('should give the list of components', function () {
     components.all(function (all) {
@@ -28,6 +33,7 @@ describe('Service: components', function () {
       expect(keys[0]).toBe('test 1');
       expect(keys[1]).toBe('test 2');
     });
+    $httpBackend.flush();
   });
 
   it('should iterate the list of components', function () {
@@ -35,12 +41,11 @@ describe('Service: components', function () {
     components.each(function (component) {
       all.push(component);
     });
+    $httpBackend.flush();
 
-    $timeout(function () {
-      expect(all.length).toBe(2);
-      expect(all[0].name).toBe('test 1');
-      expect(all[1].name).toBe('test 2');
-    });
+    expect(all.length).toBe(2);
+    expect(all[0].name).toBe('test 1');
+    expect(all[1].name).toBe('test 2');
   });
 
   it('should give the components for an element', function () {
@@ -49,16 +54,15 @@ describe('Service: components', function () {
     components.forElement(element, function (component) {
       all.push(component);
     });
+    $httpBackend.flush();
 
-    $timeout(function () {
-      expect(all[0].name).toBe('test 2');
-      expect(all[0].options[0].textContent).toBe('test');
-    });
+    expect(all[0].name).toBe('test 2');
+    expect(all[0].options[0].textContent).toBe('test');
   });
 });
 
 describe('Directive: ui', function () {
-  var controller, element, scope, uiCtrl;
+  var $httpBackend, controller, element, scope, uiCtrl;
 
   beforeEach(module('bricksApp.ui'));
 
@@ -80,26 +84,32 @@ describe('Directive: ui', function () {
     }
   }));
 
-  beforeEach(inject(function ($compile, $rootScope, $templateCache) {
-    $templateCache.put(
-      'plugins/components.html',
+  beforeEach(inject(function (_$compile_, _$httpBackend_, _$rootScope_) {
+    $httpBackend = _$httpBackend_;
+    $httpBackend.when('GET', 'plugins/components.html').respond(
       '<component><name>test 1</name></component>' +
         '<component><name>test 2</name></component>'
     );
+    $httpBackend.expectGET('plugins/components.html');
 
-    element = $compile('<div ui><iframe src="about:blank"></div>')($rootScope);
-    element.appendTo(window.document.body);
+    element = _$compile_(
+      '<div ui><iframe src="about:blank"></div>'
+    )(_$rootScope_).appendTo(window.document.body);
+
     scope = element.scope();
     uiCtrl = element.controller('ui');
+
+    $httpBackend.flush();
   }));
 
-  it('should load the components', inject(function ($timeout) {
-    $timeout(function () {
-      scope.components.all(function (components) {
-        expect(Object.keys(components).length).toBe(2);
-      });
-    });
-  }));
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should load the components', function () {
+    expect(Object.keys(scope.components).length).toBe(2);
+  });
 
   it('should get the first page of the current app by default', function () {
     expect(uiCtrl.page().url).toBe('/first');
